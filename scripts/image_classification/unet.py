@@ -2,7 +2,7 @@ from keras_applications import get_submodules_from_kwargs
 
 from .seg_commonblocks import Conv2dBn
 from .seg_utils import freeze_model, filter_keras_submodules
-from ..seg_backbonesfactory.backbones_factory import Backbones
+from .seg_backbonesfactory.backbones_factory import Backbones
 
 backend = None
 layers = None
