@@ -200,7 +200,7 @@ class TaskGenerator:
         :return: a batch of support set tensor and query set tensor
         
         '''
-        folders = self.metatrain_folders
+        folders = self.metatrain_folders[:1200] #descard 200 for validation
         # Shuffle root folder in order to prevent repeat
         batch_set = []
         self.label_map = []
@@ -224,12 +224,15 @@ class TaskGenerator:
         # return [meta_batchsz * (support_x, support_y, query_x, query_y)]
         return batch_set
     
-    def test_batch(self):
+    def test_batch(self,test):
         '''
         :return: a batch of support set tensor and query set tensor
         
         '''
-        folders = self.metaval_folders
+        if test:
+          folders = self.metaval_folders
+        else:
+          folders = self.metatrain_folders[1200:] #use 200 of 1400 folders for evalaution
         print ('Sample test batch from {} classes'.format(len(folders)))
         # Shuffle root folder in order to prevent repeat
         batch_set = []
@@ -259,7 +262,7 @@ if __name__ == '__main__':
     tasks.mode = 'train'
     for i in range(20):
         batch_set = tasks.train_batch()
-        tasks.print_label_map()
+        # tasks.print_label_map()
         print (len(batch_set))
         time.sleep(5)
     
