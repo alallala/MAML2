@@ -167,7 +167,7 @@ def maml_train(model, batch_generator):
     meta_lr = args.meta_lr
     ckpt_dir = args.ckpt_dir + args.dataset+'/{}way{}shot/'.format(n_way, k_shot)
     print ('Start training process of {}-way {}-shot {}-query problem'.format(args.n_way, args.k_shot, args.k_query))
-    print ('{} steps, inner_lr: {}, meta_lr:{}, meta_batchsz:{}'.format(total_batches, inner_lr, meta_lr, meta_batchsz))
+    print ('{} iterations, inner_lr: {}, meta_lr:{}, meta_batch_size:{}'.format(total_batches, inner_lr, meta_lr, meta_batchsz))
 
     # Initialize Tensorboard writer
     current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -262,7 +262,7 @@ def maml_train(model, batch_generator):
             
     # Main loop
     start = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    print ('Start at {}'.format(start))
+    # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
     start = time.time()
     for step in range(total_batches+1):
@@ -286,7 +286,7 @@ def maml_train(model, batch_generator):
         if step % print_steps == 0 and step > 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
             batch_acc = [acc.numpy() for acc in batch_acc]
-            print ('[STEP. {}] Task Losses: {}; Task Accuracies: {}; Time to run {} Steps: {}'.format(step, batch_loss, batch_acc, print_steps, time.time()-start))
+            print ('[Iter. {}] Task Losses: {}; Task Accuracies: {};'.format(step, batch_loss, batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -297,22 +297,22 @@ def maml_train(model, batch_generator):
 
         # Evaluating model
         if step % test_steps == 0 and step > 0:
-            test_set = batch_generator.test_batch()
-            batch_generator.print_label_map()
+            test_set = batch_generator.test_batch(test=False) #use validation folders
+            # batch_generator.print_label_map()
             test_loss, test_acc = _maml_finetune_step(test_set)
             with summary_writer.as_default():
-                tf.summary.scalar('test loss', tf.reduce_mean(test_loss), step=step)
-                tf.summary.scalar('test accuracy', tf.reduce_mean(test_acc), step=step)
+                tf.summary.scalar('validation loss', tf.reduce_mean(test_loss), step=step)
+                tf.summary.scalar('validation accuracy', tf.reduce_mean(test_acc), step=step)
             # Tensor to list            
             test_loss = [loss.numpy() for loss in test_loss]
             test_acc = [acc.numpy() for acc in test_acc]
             # Record test history
             test_losses.append(test_loss)
             test_accs.append(test_acc)
-            print ('Test Losses: {}, Test Accuracys: {}'.format(test_loss, test_acc))
+            print ('Validation Losses: {}, Validation Accuracys: {}'.format(test_loss, test_acc))
             print ('=====================================================================')
         # Meta train step            
-    
+    '''
     # Record training history
     os.chdir(args.his_dir)
     losses_plot, = plt.plot(losses, label = "Train Acccuracy", color='coral')
@@ -347,16 +347,17 @@ def maml_train(model, batch_generator):
     for i in range(len(test_losses)):
         f.write(str(test_losses[i]) + '\n')
     f.close()
-
+    '''
     return model
 
+#TESTING MODEL ON TEST SET
 def eval_model(model, batch_generator, num_steps=None):
     if num_steps is None:
         num_steps = (0, 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
     # Generate a batch data
-    batch_set = batch_generator.test_batch()
+    batch_set = batch_generator.test_batch(test=True)
     # Print the label map of each task
-    batch_generator.print_label_map()
+    # batch_generator.print_label_map()
     # Use a copy of current model
     copied_model = model
     # Initialize optimizer
@@ -452,8 +453,8 @@ if __name__ == '__main__':
     argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=40000)
     # Log options
     argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5000)
-    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=5)
-    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
+    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
+    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=50)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
     argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../historys/')
@@ -464,7 +465,7 @@ if __name__ == '__main__':
     model = MetaLearner(args=args)
     print ('Build model')
     model = MetaLearner.initialize(model)
-    model.summary()
+    # model.summary()
     tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     batch_generator = TaskGenerator(args)
