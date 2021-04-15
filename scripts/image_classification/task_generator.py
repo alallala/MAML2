@@ -231,9 +231,11 @@ class TaskGenerator:
         '''
         if test:
           folders = self.metaval_folders
+          p_str = 'test'
         else:
           folders = self.metatrain_folders[1200:] #use 200 of 1400 folders for evalaution
-        print ('Sample test batch from {} classes'.format(len(folders)))
+          p_str = 'validation'
+        print ('Sample '+p_str+' batch of tasks from {} classes'.format(len(folders)))
         # Shuffle root folder in order to prevent repeat
         batch_set = []
         self.label_map = [] 
