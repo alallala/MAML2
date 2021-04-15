@@ -283,15 +283,15 @@ def maml_train(model, batch_generator):
             tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
         
         # Print train result
-        if step % print_steps == 0 and step > 0:
+        if step % print_steps == 0 or step == 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
             batch_acc = [acc.numpy() for acc in batch_acc]
             '''uncomment to display loss and acc for each task in meta batch'''
-            #print ('[Iter. {}] Task loss: {}; Task accuracy: {};'.format(step, batch_loss, batch_acc))
+            #print ('[Iter. {}] Task loss: {:.3f}; Task accuracy: {:.3f};'.format(step, batch_loss, batch_acc))
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {}; avg tasks Accuracy: {};'.format(step, mean_batch_loss, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}; avg tasks Accuracy: {:.3f};'.format(step, mean_batch_loss, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -318,8 +318,8 @@ def maml_train(model, batch_generator):
             mean_test_loss = np.array(test_loss).mean()
             mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
-            #print ('Validation Losses: {}, Validation Accuracys: {}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {}, avg Validation tasks accuracy: {}'.format(mean_test_loss,mean_test_acc))
+            #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
+            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accuracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
             print ('=====================================================================')
         # Meta train step            
     '''
@@ -464,7 +464,7 @@ if __name__ == '__main__':
     # Log options
     argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5000)
     argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
-    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
+    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=50)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
     argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../historys/')
