@@ -33,96 +33,103 @@ class MetaLearner(tf.keras.models.Model):
         :param filters: Number of filters in conv layers
         :param img_size: Size of input image, [84, 84, 3] for miniimagenet
         :param n_way: Number of classes
+        :param seg_n_way: Number of segmentation classes
         :param name: Name of model
         """
         super(MetaLearner, self).__init__()
-        # for miniimagener dataset set conv2d kernel size=[32, 3, 3]
-        # for ominiglot dataset set conv2d kernel size=[64, 3, 3]
-        if args is not None:
-            if args.dataset == 'miniimagenet':
-                self.filters = 32
-                self.ip_size = (1, 84, 84, 3)
-                self.op_channel = args.n_way    
-                self.with_bn = args.with_bn
-                self.training = True if args.mode is 'train' else False
-            if args.dataset == 'omniglot':
-                self.filters = 64
-                self.ip_size = (1, 28, 28, 1)
-                self.op_channel = args.n_way    
-                self.with_bn = args.with_bn
-                self.training = True if args.mode is 'train' else False
-        else:
-            self.filters = 32
-            self.ip_size = (1, 84, 84, 3)
-            self.op_channel = 5    
-            self.training = True
-            if bn is not None:
-                self.with_bn     = bn
-            else: 
-                self.with_bn     = False
+        if args.classification = True
+                # for miniimagener dataset set conv2d kernel size=[32, 3, 3]
+                # for ominiglot dataset set conv2d kernel size=[64, 3, 3]
+                if args is not None:
+                    if args.dataset == 'miniimagenet':
+                        self.filters = 32
+                        self.ip_size = (1, 84, 84, 3)
+                        self.op_channel = args.n_way    
+                        self.with_bn = args.with_bn
+                        self.training = True if args.mode is 'train' else False
+                    if args.dataset == 'omniglot':
+                        self.filters = 64
+                        self.ip_size = (1, 28, 28, 1)
+                        self.op_channel = args.n_way    
+                        self.with_bn = args.with_bn
+                        self.training = True if args.mode is 'train' else False
+                else:
+                    self.filters = 32
+                    self.ip_size = (1, 84, 84, 3)
+                    self.op_channel = 5    
+                    self.training = True
+                    if bn is not None:
+                        self.with_bn     = bn
+                    else: 
+                        self.with_bn     = False
 
-        if self.with_bn is True:
-            # Build model layers
-            self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.bn_1 = tf.keras.layers.BatchNormalization(axis=-1)
-            self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                if self.with_bn is True:
+                    # Build model layers
+                    self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.bn_1 = tf.keras.layers.BatchNormalization(axis=-1)
+                    self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.bn_2 = tf.keras.layers.BatchNormalization(axis=-1)
-            self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.bn_2 = tf.keras.layers.BatchNormalization(axis=-1)
+                    self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.bn_3 = tf.keras.layers.BatchNormalization(axis=-1)
-            self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.bn_3 = tf.keras.layers.BatchNormalization(axis=-1)
+                    self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.bn_4 = tf.keras.layers.BatchNormalization(axis=-1)
-            self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.bn_4 = tf.keras.layers.BatchNormalization(axis=-1)
+                    self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.fc = tf.keras.layers.Flatten()
-            self.out = tf.keras.layers.Dense(self.op_channel)
-        
-        elif self.with_bn is False:
-            self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.fc = tf.keras.layers.Flatten()
+                    self.out = tf.keras.layers.Dense(self.op_channel)
 
-            self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                elif self.with_bn is False:
+                    self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-            self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+                    self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-            self.fc = tf.keras.layers.Flatten()
-            self.out = tf.keras.layers.Dense(self.op_channel)
+                    self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
+                    self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+
+                    self.fc = tf.keras.layers.Flatten()
+                    self.out = tf.keras.layers.Dense(self.op_channel)
     
     @property
     def inner_weights(self):
         '''
         :return model weights
         '''
-        if self.with_bn is True:
-            weights = [
-                self.conv_1.kernel, self.conv_1.bias,
-                self.bn_1.gamma, self.bn_1.beta,
-                self.conv_2.kernel, self.conv_2.bias,
-                self.bn_2.gamma, self.bn_2.beta,
-                self.conv_3.kernel, self.conv_3.bias,
-                self.bn_3.gamma, self.bn_3.beta,
-                self.conv_4.kernel, self.conv_4.bias,
-                self.bn_4.gamma, self.bn_4.beta,
-                self.out.kernel, self.out.bias
-            ]   
-        elif self.with_bn is False:
-            weights = [
-                self.conv_1.kernel, self.conv_1.bias,
-                self.conv_2.kernel, self.conv_2.bias,
-                self.conv_3.kernel, self.conv_3.bias,
-                self.conv_4.kernel, self.conv_4.bias,
-                self.out.kernel, self.out.bias
-            ]
+        if args.classification:
+            if self.with_bn is True:
+                weights = [
+                    self.conv_1.kernel, self.conv_1.bias,
+                    self.bn_1.gamma, self.bn_1.beta,
+                    self.conv_2.kernel, self.conv_2.bias,
+                    self.bn_2.gamma, self.bn_2.beta,
+                    self.conv_3.kernel, self.conv_3.bias,
+                    self.bn_3.gamma, self.bn_3.beta,
+                    self.conv_4.kernel, self.conv_4.bias,
+                    self.bn_4.gamma, self.bn_4.beta,
+                    self.out.kernel, self.out.bias
+                ]   
+            elif self.with_bn is False:
+                weights = [
+                    self.conv_1.kernel, self.conv_1.bias,
+                    self.conv_2.kernel, self.conv_2.bias,
+                    self.conv_3.kernel, self.conv_3.bias,
+                    self.conv_4.kernel, self.conv_4.bias,
+                    self.out.kernel, self.out.bias
+                ]
+        else:
+            weights = []
+            for layer in model.layers:
+                weights.append(layer.get_weights()) '''self does not have model !!!!!!!!!!!!! '''
         return weights
 
     @classmethod
@@ -130,8 +137,11 @@ class MetaLearner(tf.keras.models.Model):
         '''
         :return initialized model
         '''
-        ip_size = model.ip_size
-        model.build(ip_size)
+        if args.classification = True: 
+            ip_size = model.ip_size
+            model.build(ip_size)
+        else: #if segmentation 
+            model = Unet(classes=self.seg_n_way,encoder_weights=None) 
         return model
 
     @classmethod
