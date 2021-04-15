@@ -12,7 +12,7 @@ import os
 import numpy as np 
 import cv2
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '/gpu:0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def loss_fn(y, pred_y):
