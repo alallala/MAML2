@@ -146,56 +146,59 @@ class MetaLearner(tf.keras.models.Model):
 
     @classmethod
     def hard_copy(cls, model, args):
-        copied_model = cls(args)
-        copied_model.build(model.ip_size)
+        if args.classification:
+            copied_model = cls(args)
+            copied_model.build(model.ip_size)
 
-        if copied_model.with_bn is True:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            copied_model.bn_1.gamma = model.bn_1.gamma
-            copied_model.bn_1.beta = model.bn_1.beta
-            # copied_model.max_pool_1 = model.max_pool_1
+            if copied_model.with_bn is True:
+                copied_model.conv_1.kernel = model.conv_1.kernel
+                copied_model.conv_1.bias = model.conv_1.bias
+                copied_model.bn_1.gamma = model.bn_1.gamma
+                copied_model.bn_1.beta = model.bn_1.beta
+                # copied_model.max_pool_1 = model.max_pool_1
 
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            copied_model.bn_2.gamma = model.bn_2.gamma
-            copied_model.bn_2.beta = model.bn_2.beta
-            # copied_model.max_pool_2 = model.max_pool_2
-            
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            copied_model.bn_3.gamma = model.bn_3.gamma
-            copied_model.bn_3.beta = model.bn_3.beta
-            # copied_model.max_pool_3 = model.max_pool_3
+                copied_model.conv_2.kernel = model.conv_2.kernel
+                copied_model.conv_2.bias = model.conv_2.bias
+                copied_model.bn_2.gamma = model.bn_2.gamma
+                copied_model.bn_2.beta = model.bn_2.beta
+                # copied_model.max_pool_2 = model.max_pool_2
 
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            copied_model.bn_4.gamma = model.bn_4.gamma
-            copied_model.bn_4.beta = model.bn_4.beta
-            # copied_model.max_pool_4 = model.max_pool_4
+                copied_model.conv_3.kernel = model.conv_3.kernel
+                copied_model.conv_3.bias = model.conv_3.bias
+                copied_model.bn_3.gamma = model.bn_3.gamma
+                copied_model.bn_3.beta = model.bn_3.beta
+                # copied_model.max_pool_3 = model.max_pool_3
 
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
-            
-        elif copied_model.with_bn is False:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            # copied_model.max_pool_1 = model.max_pool_1
+                copied_model.conv_4.kernel = model.conv_4.kernel
+                copied_model.conv_4.bias = model.conv_4.bias
+                copied_model.bn_4.gamma = model.bn_4.gamma
+                copied_model.bn_4.beta = model.bn_4.beta
+                # copied_model.max_pool_4 = model.max_pool_4
 
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            # copied_model.max_pool_2 = model.max_pool_2
-            
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            # copied_model.max_pool_3 = model.max_pool_3
+                copied_model.out.kernel = model.out.kernel
+                copied_model.out.bias = model.out.bias
 
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            # copied_model.max_pool_4 = model.max_pool_4
+            elif copied_model.with_bn is False:
+                copied_model.conv_1.kernel = model.conv_1.kernel
+                copied_model.conv_1.bias = model.conv_1.bias
+                # copied_model.max_pool_1 = model.max_pool_1
 
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
+                copied_model.conv_2.kernel = model.conv_2.kernel
+                copied_model.conv_2.bias = model.conv_2.bias
+                # copied_model.max_pool_2 = model.max_pool_2
+
+                copied_model.conv_3.kernel = model.conv_3.kernel
+                copied_model.conv_3.bias = model.conv_3.bias
+                # copied_model.max_pool_3 = model.max_pool_3
+
+                copied_model.conv_4.kernel = model.conv_4.kernel
+                copied_model.conv_4.bias = model.conv_4.bias
+                # copied_model.max_pool_4 = model.max_pool_4
+
+                copied_model.out.kernel = model.out.kernel
+                copied_model.out.bias = model.out.bias
+        else:
+            copied_model = keras.models.clone_model(model) 
         
         return copied_model
 
