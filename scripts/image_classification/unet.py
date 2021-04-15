@@ -1,8 +1,8 @@
 from keras_applications import get_submodules_from_kwargs
 
 from ._common_blocks import Conv2dBn
-from ._utils import freeze_model, filter_keras_submodules
-from ..backbones.backbones_factory import Backbones
+from .seg_utils import freeze_model, filter_keras_submodules
+from ..seg_backbonesFactory.backbones_factory import Backbones
 
 backend = None
 layers = None
