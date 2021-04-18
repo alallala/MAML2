@@ -35,12 +35,13 @@ def write_histogram(model, writer, step):
                 tf.summary.histogram(layer.name+':beta', layer.beta, step=step)
 
 
+'''
 def write_gradient(grads, writer, step, with_bn=True):
-    '''
+    
     :param grads: Gradients on query set
     :param writer: tf.summary writer
     :param step: Current training step
-    '''
+    
     if with_bn:
         name = [
             'conv_0:kernel_grad', 'conv_0:bias_grad', 'batch_normalization_1:gamma_grad', 'batch_normalization_1:beta_grad',
@@ -61,6 +62,7 @@ def write_gradient(grads, writer, step, with_bn=True):
         with writer.as_default():
             for idx, grad in enumerate(grads):
                 tf.summary.histogram(name[idx], grad, step=step)
+'''
 
 
 def restore_model(model, weights_dir):
@@ -83,7 +85,7 @@ def copy_model(model, x):
 
     :return copied model
     '''
-    copied_model = MetaLearner()
+    copied_model = MetaLearner().initialize_Unet()
     copied_model(x)
     copied_model.set_weights(model.get_weights())
     return copied_model
@@ -146,10 +148,12 @@ def apply_gradients(optimizer, gradients, variables):
     '''
     optimizer.apply_gradients(zip(gradients, variables))
 
+'''
 def regular_train_step(model, x, y, optimizer):
     gradients = compute_gradients(model, x, y, loss_fn=loss_fn)
     apply_gradients(optimizer, gradients, model.trainable_variables)
     return model
+'''
 
 def maml_train(model, batch_generator):
     # Set parameters
@@ -413,7 +417,7 @@ def eval_model(model, batch_generator, num_steps=None):
                 print ('Task losses: {}'.format(qry_loss.numpy()))
                 print ('Task accs: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
-    
+    '''
     for idx in range(len(batch_set)):
         l_x=[]
         l_y=[]
@@ -438,7 +442,7 @@ def eval_model(model, batch_generator, num_steps=None):
         plt.legend(legend)
         plt.title('Task {} Fine Tuning Process'.format(idx+1))
         plt.show()
-
+    '''
 
 
 if __name__ == '__main__':
