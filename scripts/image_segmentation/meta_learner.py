@@ -15,337 +15,252 @@ import cv2
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-def loss_fn(y, pred_y):
-    '''
-    :param pred_y: Prediction output of model
-    :param y: Ground truth
 
-    :return loss value:
-    '''
-    return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
+backend = None
+layers = None
+models = None
+keras_utils = None
 
-class MetaLearner(tf.keras.models.Model):
-    """
-    Meta Learner
-    """
-    def __init__(self, args=None, bn=None):
-        """
-        :param filters: Number of filters in conv layers
-        :param img_size: Size of input image, [84, 84, 3] for miniimagenet
-        :param n_way: Number of classes
-        :param name: Name of model
-        """
-        super(MetaLearner, self).__init__()
 
-            # for miniimagener dataset set conv2d kernel size=[32, 3, 3]
-            # for ominiglot dataset set conv2d kernel size=[64, 3, 3]
-            if args is not None:
-                if args.dataset == 'miniimagenet':
-                    self.filters = 32
-                    self.ip_size = (1, 84, 84, 3)
-                    self.op_channel = args.n_way    
-                    self.with_bn = args.with_bn
-                    self.training = True if args.mode is 'train' else False
-                if args.dataset == 'omniglot':
-                    self.filters = 64
-                    self.ip_size = (1, 28, 28, 1)
-                    self.op_channel = args.n_way    
-                    self.with_bn = args.with_bn
-                    self.training = True if args.mode is 'train' else False
-            else:
-                self.filters = 32
-                self.ip_size = (1, 84, 84, 3)
-                self.op_channel = 5    
-                self.training = True
-                if bn is not None:
-                    self.with_bn     = bn
-                else: 
-                    self.with_bn     = False
+def get_submodules():
+    return {
+        'backend': backend,
+        'models': models,
+        'layers': layers,
+        'utils': keras_utils,
+    }
 
-            if self.with_bn is True:
-                # Build model layers
-                self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.bn_1 = tf.keras.layers.BatchNormalization(axis=-1)
-                self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+def Conv3x3BnReLU(filters, use_batchnorm, name=None):
+    kwargs = get_submodules()
 
-                self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.bn_2 = tf.keras.layers.BatchNormalization(axis=-1)
-                self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+    def wrapper(input_tensor):
+        return Conv2dBn(
+            filters,
+            kernel_size=3,
+            activation='relu',
+            kernel_initializer='he_uniform',
+            padding='same',
+            use_batchnorm=use_batchnorm,
+            name=name,
+            **kwargs
+        )(input_tensor)
 
-                self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.bn_3 = tf.keras.layers.BatchNormalization(axis=-1)
-                self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+    return wrapper
 
-                self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.bn_4 = tf.keras.layers.BatchNormalization(axis=-1)
-                self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
 
-                self.fc = tf.keras.layers.Flatten()
-                self.out = tf.keras.layers.Dense(self.op_channel)
+def DecoderUpsamplingX2Block(filters, stage, use_batchnorm=False):
+    up_name = 'decoder_stage{}_upsampling'.format(stage)
+    conv1_name = 'decoder_stage{}a'.format(stage)
+    conv2_name = 'decoder_stage{}b'.format(stage)
+    concat_name = 'decoder_stage{}_concat'.format(stage)
 
-            elif self.with_bn is False:
-                self.conv_1 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.max_pool_1 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+    concat_axis = 3 if backend.image_data_format() == 'channels_last' else 1
 
-                self.conv_2 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.max_pool_2 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+    def wrapper(input_tensor, skip=None):
+        x = layers.UpSampling2D(size=2, name=up_name)(input_tensor)
 
-                self.conv_3 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.max_pool_3 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+        if skip is not None:
+            x = layers.Concatenate(axis=concat_axis, name=concat_name)([x, skip])
 
-                self.conv_4 = tf.keras.layers.Conv2D(filters=self.filters, kernel_size=(3,3), strides=(1,1), padding='SAME', kernel_initializer='glorot_normal')
-                self.max_pool_4 = tf.keras.layers.MaxPool2D(pool_size=(2,2))
+        x = Conv3x3BnReLU(filters, use_batchnorm, name=conv1_name)(x)
+        x = Conv3x3BnReLU(filters, use_batchnorm, name=conv2_name)(x)
 
-                self.fc = tf.keras.layers.Flatten()
-                self.out = tf.keras.layers.Dense(self.op_channel)
-                    
-        
-            
+        return x
+
+    return wrapper
+
+
+def DecoderTransposeX2Block(filters, stage, use_batchnorm=False):
+    transp_name = 'decoder_stage{}a_transpose'.format(stage)
+    bn_name = 'decoder_stage{}a_bn'.format(stage)
+    relu_name = 'decoder_stage{}a_relu'.format(stage)
+    conv_block_name = 'decoder_stage{}b'.format(stage)
+    concat_name = 'decoder_stage{}_concat'.format(stage)
+
+    concat_axis = bn_axis = 3 if backend.image_data_format() == 'channels_last' else 1
+
+    def layer(input_tensor, skip=None):
+
+        x = layers.Conv2DTranspose(
+            filters,
+            kernel_size=(4, 4),
+            strides=(2, 2),
+            padding='same',
+            name=transp_name,
+            use_bias=not use_batchnorm,
+        )(input_tensor)
+
+        if use_batchnorm:
+            x = layers.BatchNormalization(axis=bn_axis, name=bn_name)(x)
+
+        x = layers.Activation('relu', name=relu_name)(x)
+
+        if skip is not None:
+            x = layers.Concatenate(axis=concat_axis, name=concat_name)([x, skip])
+
+        x = Conv3x3BnReLU(filters, use_batchnorm, name=conv_block_name)(x)
+
+        return x
+
+    return layer
+
+def build_unet(
+        backbone,
+        decoder_block,
+        skip_connection_layers,
+        decoder_filters=(256, 128, 64, 32, 16),
+        n_upsample_blocks=5,
+        classes=1,
+        activation='sigmoid',
+        use_batchnorm=True,
+):
+    input_ = backbone.input
+    x = backbone.output
+
+    # extract skip connections
+    skips = ([backbone.get_layer(name=i).output if isinstance(i, str)
+              else backbone.get_layer(index=i).output for i in skip_connection_layers])
+
+    # add center block if previous operation was maxpooling (for vgg models)
+    if isinstance(backbone.layers[-1], layers.MaxPooling2D):
+        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block1')(x)
+        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block2')(x)
+
+    # building decoder blocks
+    for i in range(n_upsample_blocks):
+
+        if i < len(skips):
+            skip = skips[i]
+        else:
+            skip = None
+
+        x = decoder_block(decoder_filters[i], stage=i, use_batchnorm=use_batchnorm)(x, skip)
+
+    # model head (define number of output classes)
+    x = layers.Conv2D(
+        filters=classes,
+        kernel_size=(3, 3),
+        padding='same',
+        use_bias=True,
+        kernel_initializer='glorot_uniform',
+        name='final_conv',
+    )(x)
+    x = layers.Activation(activation, name=activation)(x)
+
+    # create keras model instance
+    model = models.Model(input_, x)
+
+    return model
+
+class MetaLeaner():
+    def __init__(self,args=None):
     
-    @property
-    def inner_weights(self):
-        '''
-        :return model weights
-        '''
-    
-        if self.with_bn is True:
-            weights = [
-                self.conv_1.kernel, self.conv_1.bias,
-                self.bn_1.gamma, self.bn_1.beta,
-                self.conv_2.kernel, self.conv_2.bias,
-                self.bn_2.gamma, self.bn_2.beta,
-                self.conv_3.kernel, self.conv_3.bias,
-                self.bn_3.gamma, self.bn_3.beta,
-                self.conv_4.kernel, self.conv_4.bias,
-                self.bn_4.gamma, self.bn_4.beta,
-                self.out.kernel, self.out.bias
-            ]   
-        elif self.with_bn is False:
-            weights = [
-                self.conv_1.kernel, self.conv_1.bias,
-                self.conv_2.kernel, self.conv_2.bias,
-                self.conv_3.kernel, self.conv_3.bias,
-                self.conv_4.kernel, self.conv_4.bias,
-                self.out.kernel, self.out.bias
-            ]
-   
-        return weights
+        self.classes = args.n_way #ADD TO MAIN 
+        self.decoder_filters = args.dec_filters #ADD TO MAIN 
+        self.backbone_name='vgg16',
+        self.input_shape=(None, None, 3),
+        self.activation='sigmoid',
+        self.weights=None,
+        self.encoder_weights='imagenet',
+        self.encoder_freeze=False,
+        self.encoder_features='default',
+        self.decoder_block_type='upsampling',
+        self.decoder_use_batchnorm=True,
+        **kwargs #?????????
 
-    @classmethod
-    def initialize(cls, model):
-        '''
-        :return initialized model
-        '''
-        
-        ip_size = model.ip_size
-        model.build(ip_size)
-    
+     
+    def initialize_Unet(self): #it should be initialize()
+
+        global backend, layers, models, keras_utils
+        submodule_args = filter_keras_submodules(kwargs)
+        backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
+
+        if decoder_block_type == 'upsampling':
+            decoder_block = DecoderUpsamplingX2Block
+        elif decoder_block_type == 'transpose':
+            decoder_block = DecoderTransposeX2Block
+        else:
+            raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
+                             'Got: {}'.format(decoder_block_type))
+
+        backbone = Backbones.get_backbone(
+            backbone_name=self.backbone_name
+            input_shape=self.input_shape,
+            weights=self.encoder_weights,
+            include_top=False,
+            **kwargs,
+        )
+
+        if self.encoder_features == 'default':
+            self.encoder_features = Backbones.get_feature_layers(self.backbone_name, n=4)
+
+        model = build_unet(
+            backbone=self.backbone,
+            decoder_block=self.decoder_block,
+            skip_connection_layers=self.encoder_features,
+            decoder_filters=self.decoder_filters,
+            classes=self.classes,
+            activation=self.activation,
+            n_upsample_blocks=len(self.decoder_filters),
+            use_batchnorm=self.decoder_use_batchnorm,
+        )
+
+        # lock encoder weights for fine-tuning
+        if self.encoder_freeze:
+            freeze_model(self.backbone, **kwargs)
+
+        # loading model weights
+        if self.weights is not None:
+            model.load_weights(self.weights)
+
         return model
-
-    @classmethod
-    def hard_copy(cls, model, args):
         
-        copied_model = cls(args)
-        copied_model.build(model.ip_size)
-
-        if copied_model.with_bn is True:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            copied_model.bn_1.gamma = model.bn_1.gamma
-            copied_model.bn_1.beta = model.bn_1.beta
-            # copied_model.max_pool_1 = model.max_pool_1
-
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            copied_model.bn_2.gamma = model.bn_2.gamma
-            copied_model.bn_2.beta = model.bn_2.beta
-            # copied_model.max_pool_2 = model.max_pool_2
-
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            copied_model.bn_3.gamma = model.bn_3.gamma
-            copied_model.bn_3.beta = model.bn_3.beta
-            # copied_model.max_pool_3 = model.max_pool_3
-
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            copied_model.bn_4.gamma = model.bn_4.gamma
-            copied_model.bn_4.beta = model.bn_4.beta
-            # copied_model.max_pool_4 = model.max_pool_4
-
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
-
-        elif copied_model.with_bn is False:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            # copied_model.max_pool_1 = model.max_pool_1
-
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            # copied_model.max_pool_2 = model.max_pool_2
-
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            # copied_model.max_pool_3 = model.max_pool_3
-
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            # copied_model.max_pool_4 = model.max_pool_4
-
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
+    def inner_weights(model):
+        weights = [layer.trainable_weights for layer in model.layers]
+        return weights
         
-        return copied_model
-
-    
-    @classmethod
-    def meta_update(cls, model, args, alpha=0.01, grads=None):
+        
+    def hard_copy(cls,model,args):
+        ml_instance = cls(args)
+        copied_model = ml_instance.initialize_Unet()
+        copied_model.set_weights(model.get_weights())
+        
+    def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
+        
         '''
-        :param cls: Class MetaLearner
-        :param model: Model to be copied
-        :param alpah: The inner learning rate when update the fast weights
-        :param grads: Gradients to generate fast weights
-    
+        :parama cls: class MetaLeaner
+        :param model: model to be copied
+        :param alpha: the inner learning rate when update fast weights
+        :param grads: gradients to generate fast weights
+        
         :return model with fast weights
         '''
-        # Make a hard copy of target model
-        # If with bn layers, call like copied_model = cls(bn=True)
-        copied_model = cls(args)
-        '''
-        !!!!!!!!!!!
-        IMPORTANT
-        !!!!!!!!!!!
-        Must call copied_model.build(input_shape) to build up model weights before calling copied_model(x)
-        If not, when we call copied_model(x) tf will reinitialize the model weights and overwrite the fast weights
-        At the same time, GradientTape will fail to record it and the gradients will return Nones
-        '''
-        copied_model.build(model.ip_size)
-
-        if copied_model.with_bn is True:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            copied_model.bn_1.gamma = model.bn_1.gamma
-            copied_model.bn_1.beta = model.bn_1.beta
-            # copied_model.max_pool_1 = model.max_pool_1
-
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            copied_model.bn_2.gamma = model.bn_2.gamma
-            copied_model.bn_2.beta = model.bn_2.beta
-            # copied_model.max_pool_2 = model.max_pool_2
-            
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            copied_model.bn_3.gamma = model.bn_3.gamma
-            copied_model.bn_3.beta = model.bn_3.beta
-            # copied_model.max_pool_3 = model.max_pool_3
-
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            copied_model.bn_4.gamma = model.bn_4.gamma
-            copied_model.bn_4.beta = model.bn_4.beta
-            # copied_model.max_pool_4 = model.max_pool_4
-
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
-
-            # if call with gradients, apply it by using SGD
-            # Manually apply Gradient descent as the task-level optimizer
-            if grads is not None:
-                copied_model.conv_1.kernel = copied_model.conv_1.kernel - alpha * grads[0]
-                copied_model.conv_1.bias = copied_model.conv_1.bias - alpha * grads[1]
-                copied_model.bn_1.gamma = copied_model.bn_1.gamma - alpha * grads[2]
-                copied_model.bn_1.beta = copied_model.bn_1.beta - alpha * grads[3]
-
-                copied_model.conv_2.kernel = copied_model.conv_2.kernel - alpha * grads[4]
-                copied_model.conv_2.bias = copied_model.conv_2.bias - alpha * grads[5]
-                copied_model.bn_2.gamma = copied_model.bn_2.gamma - alpha * grads[6]
-                copied_model.bn_2.beta = copied_model.bn_2.beta - alpha * grads[7]
-
-                copied_model.conv_3.kernel = copied_model.conv_3.kernel - alpha * grads[8]
-                copied_model.conv_3.bias = copied_model.conv_3.bias - alpha * grads[9]
-                copied_model.bn_3.gamma = copied_model.bn_3.gamma - alpha * grads[10]
-                copied_model.bn_3.beta = copied_model.bn_3.beta - alpha * grads[11]
-
-                copied_model.conv_4.kernel = copied_model.conv_4.kernel - alpha * grads[12]
-                copied_model.conv_4.bias = copied_model.conv_4.bias - alpha * grads[13]
-                copied_model.bn_4.gamma = copied_model.bn_4.gamma - alpha * grads[14]
-                copied_model.bn_4.beta = copied_model.bn_4.beta - alpha * grads[15]
-
-                copied_model.out.kernel = copied_model.out.kernel - alpha * grads[16]
-                copied_model.out.bias = copied_model.out.bias - alpha * grads[17]
-
-        elif copied_model.with_bn is False:
-            copied_model.conv_1.kernel = model.conv_1.kernel
-            copied_model.conv_1.bias = model.conv_1.bias
-            # copied_model.max_pool_1 = model.max_pool_1
-
-            copied_model.conv_2.kernel = model.conv_2.kernel
-            copied_model.conv_2.bias = model.conv_2.bias
-            # copied_model.max_pool_2 = model.max_pool_2
-            
-            copied_model.conv_3.kernel = model.conv_3.kernel
-            copied_model.conv_3.bias = model.conv_3.bias
-            # copied_model.max_pool_3 = model.max_pool_3
-
-            copied_model.conv_4.kernel = model.conv_4.kernel
-            copied_model.conv_4.bias = model.conv_4.bias
-            # copied_model.max_pool_4 = model.max_pool_4
-
-            copied_model.out.kernel = model.out.kernel
-            copied_model.out.bias = model.out.bias
-
-            # if call with gradients, apply it by using SGD
-            # Manually apply Gradient descent as the task-level optimizer
-            if grads is not None:
-                copied_model.conv_1.kernel = copied_model.conv_1.kernel - alpha * grads[0]
-                copied_model.conv_1.bias = copied_model.conv_1.bias - alpha * grads[1]
-
-                copied_model.conv_2.kernel = copied_model.conv_2.kernel - alpha * grads[2]
-                copied_model.conv_2.bias = copied_model.conv_2.bias - alpha * grads[3]
-
-                copied_model.conv_3.kernel = copied_model.conv_3.kernel - alpha * grads[4]
-                copied_model.conv_3.bias = copied_model.conv_3.bias - alpha * grads[5]
-
-                copied_model.conv_4.kernel = copied_model.conv_4.kernel - alpha * grads[6]
-                copied_model.conv_4.bias = copied_model.conv_4.bias - alpha * grads[7]
-
-                copied_model.out.kernel = copied_model.out.kernel - alpha * grads[8]
-                copied_model.out.bias = copied_model.out.bias - alpha * grads[9]
+        ml_instance = cls(args)
+        copied_model = ml_instance.initialize_Unet()
+        copied_model.set_weights(model.get_weights())
+        
+        #manually update weights, we just consider trainable weights
+        #because gradients passed in input are computed from inner weights function
+        #by watching inner trainable weights
+        
+        new_weights  = []
+        g = 0
+        for i in range(0,len(copied_model.weights)):
+            if copied_model.weights[i].trainable:
+                new_weights.append(copied_model.weights[i] - alpha*grads[g])
+                g += 1
+            else:
+                new_weights.append(copied_model.weights[i])
+         
+        copied_model.set_weights(new_weights)
         
         return copied_model
-
-    def call(self, x):
-        '''
-        @TODO Change network to conv-relu-bn-maxpool
-        '''
-        if self.with_bn is True:
-            # Conv block #1
-            x = self.max_pool_1(tf.keras.activations.relu(self.bn_1(self.conv_1(x), training=self.training)))
-            # Conv block #2
-            x = self.max_pool_2(tf.keras.activations.relu(self.bn_2(self.conv_2(x), training=self.training)))
-            # Conv block #3
-            x = self.max_pool_3(tf.keras.activations.relu(self.bn_3(self.conv_3(x), training=self.training)))
-            # Conv block #4
-            x = self.max_pool_4(tf.keras.activations.relu(self.bn_4(self.conv_4(x), training=self.training)))
         
-        elif self.with_bn is False:
-            # Conv block #1
-            x = self.max_pool_1(tf.keras.activations.relu(self.conv_1(x)))
-            # Conv block #2
-            x = self.max_pool_2(tf.keras.activations.relu(self.conv_2(x)))
-            # Conv block #3
-            x = self.max_pool_3(tf.keras.activations.relu(self.conv_3(x)))
-            # Conv block #4
-            x = self.max_pool_4(tf.keras.activations.relu(self.conv_4(x)))
-
-        # Fully Connect Layer
-        x = self.fc(x)
-        # Logits Output
-        logits = self.out(x)
-        # Prediction
-        pred = tf.keras.activations.softmax(logits)
         
-        return logits, pred
-
+    
+                
+                
+        
+         
+        
+        
