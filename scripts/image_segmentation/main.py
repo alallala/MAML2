@@ -16,6 +16,7 @@ import time
 import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
+from losses import CategoricalCELoss
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -89,16 +90,17 @@ def copy_model(model, x):
     copied_model(x)
     copied_model.set_weights(model.get_weights())
     return copied_model
-
+'''
 def loss_fn(y, pred_y):
-    '''
+    
     :param pred_y: Prediction output of model
     :param y: Ground truth
 
     :return loss value:
-    '''
+    
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
-
+'''
+    
 def accuracy_fn(y, pred_y):
     '''
     :param pred_y: Prediction output of model
@@ -110,7 +112,7 @@ def accuracy_fn(y, pred_y):
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
 
-def compute_loss(model, x, y, loss_fn=loss_fn):
+def compute_loss(model, x, y):
     '''
     :param model: A neural net
     :param x: Train data
@@ -119,22 +121,22 @@ def compute_loss(model, x, y, loss_fn=loss_fn):
 
     :return Loss value
     '''
-    _, pred_y = model(x)
-    loss = loss_fn(y, pred_y)
+    _, pred_y = model(x) #unet returns only pred_y
+    loss = CategoricalCELoss(y, pred_y)
     return loss, pred_y
 
-def compute_gradients(model, x, y, loss_fn=loss_fn):
+def compute_gradients(model, x, y):
     '''
     :param model: Neural network
     :param x: Input tensor
     :param y: Ground truth of input tensor
-    :param loss_fn: loss function
+    :param loss_fn: loss function #NO
 
     :return Gradient tensor
     '''
     with tf.GradientTape() as tape:
-        _, pred = model(x)
-        loss = loss_fn(y, pred)
+        _, pred = model(x) #only y_pred
+        loss = CategoricalCELoss(y, pred)
         grads = tape.gradient(loss, model.trainable_variables)
     return grads
 
