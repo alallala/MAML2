@@ -78,8 +78,8 @@ def restore_model(model, weights_dir):
     latest_weights = tf.train.latest_checkpoint(weights_dir)
     ckpt.restore(latest_weights)
     return model
-
-def copy_model(model, x):
+ 
+def copy_model(model, x): #NEVER USED 
     '''
     :param model: model to be copied
     :param x: a set of data, used to build the copied model
