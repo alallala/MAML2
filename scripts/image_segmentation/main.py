@@ -20,12 +20,13 @@ from losses import CategoricalCELoss
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+'''
 def write_histogram(model, writer, step):
-    '''
+    
     :param model: A model
     :param writer: tf.summary writer
     :param step: Current training step
-    '''
+   
     with writer.as_default():
         for idx, layer in enumerate(model.layers):
             if 'conv' in layer.name or 'dense' in layer.name:
@@ -35,7 +36,7 @@ def write_histogram(model, writer, step):
                 tf.summary.histogram(layer.name+':gamma', layer.gamma, step=step)
                 tf.summary.histogram(layer.name+':beta', layer.beta, step=step)
 
-
+'''
 '''
 def write_gradient(grads, writer, step, with_bn=True):
     
@@ -79,7 +80,9 @@ def restore_model(model, weights_dir):
     ckpt.restore(latest_weights)
     return model
  
-def copy_model(model, x): #NEVER USED 
+#NEVER USED copy_model func
+''' 
+def copy_model(model, x): 
     '''
     :param model: model to be copied
     :param x: a set of data, used to build the copied model
@@ -90,7 +93,7 @@ def copy_model(model, x): #NEVER USED
     copied_model(x)
     copied_model.set_weights(model.get_weights())
     return copied_model
-'''
+
 def loss_fn(y, pred_y):
     
     :param pred_y: Prediction output of model
@@ -99,18 +102,19 @@ def loss_fn(y, pred_y):
     :return loss value:
     
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
-'''
+
     
 def accuracy_fn(y, pred_y):
-    '''
+    
     :param pred_y: Prediction output of model
     :param y: Ground truth
 
     :return accuracy value:
-    '''
+    
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
+'''
 
 def compute_loss(model, x, y):
     '''
@@ -121,7 +125,7 @@ def compute_loss(model, x, y):
 
     :return Loss value
     '''
-    _, pred_y = model(x) #unet returns only pred_y
+    pred_y = model(x) 
     loss = CategoricalCELoss(y, pred_y)
     return loss, pred_y
 
@@ -135,7 +139,7 @@ def compute_gradients(model, x, y):
     :return Gradient tensor
     '''
     with tf.GradientTape() as tape:
-        _, pred = model(x) #only y_pred
+        pred = model(x) #only y_pred
         loss = CategoricalCELoss(y, pred)
         grads = tape.gradient(loss, model.trainable_variables)
     return grads
@@ -151,7 +155,7 @@ def apply_gradients(optimizer, gradients, variables):
     optimizer.apply_gradients(zip(gradients, variables))
 
 '''
-def regular_train_step(model, x, y, optimizer):
+def regular_train_step(model, x, y, optimizer): #NEVER USED 
     gradients = compute_gradients(model, x, y, loss_fn=loss_fn)
     apply_gradients(optimizer, gradients, model.trainable_variables)
     return model
@@ -159,8 +163,8 @@ def regular_train_step(model, x, y, optimizer):
 
 def maml_train(model, batch_generator):
     # Set parameters
-    visual = args.visual
-    n_way = args.n_way
+    visual = False #args.visual
+    n_way = args.n_way 
     k_shot = args.k_shot
     total_batches = args.total_batches
     meta_batchsz = args.meta_batchsz
@@ -186,12 +190,12 @@ def maml_train(model, batch_generator):
     # Initialize Checkpoint handle
     checkpoint = tf.train.Checkpoint(maml_model=model)
     losses = []
-    accs = []
+    #accs = []
     test_losses = []
-    test_accs = []
+    #test_accs = []
 
     test_min_losses = []
-    test_max_accs = []
+    #test_max_accs = []
 
     def _maml_finetune_step(test_set):
         # Set up recorders for test batch
@@ -201,7 +205,7 @@ def maml_train(model, batch_generator):
         copied_model = MetaLearner.hard_copy(model, args)
         for idx, task in enumerate(test_set):
             # Slice task to support set and query set
-            support_x, support_y, query_x, query_y = task
+            support_x, support_y, query_x, query_y = task #from generate_set 
             # Update fast weights several times
             for i in range(update_steps_test):
                 # Set up inner gradient tape, watch the copied_model.inner_weights
@@ -213,20 +217,20 @@ def maml_train(model, batch_generator):
                 copied_model = MetaLearner.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
             # Compute task loss & accuracy on the query set
             task_loss, task_pred = compute_loss(copied_model, query_x, query_y, loss_fn=loss_fn)
-            task_acc = accuracy_fn(query_y, task_pred)
+            # task_acc = accuracy_fn(query_y, task_pred)
             batch_loss[idx] += task_loss
-            batch_acc[idx] += task_acc
+            # batch_acc[idx] += task_acc
 
         # Delete copied_model for saving memory
         del copied_model
 
-        return batch_loss, batch_acc
+        return batch_loss #, batch_acc
     
     # Define the maml train step
     def _maml_train_step(batch_set):
         # Set up recorders for every batch
         batch_loss = [0 for _ in range(meta_batchsz)]
-        batch_acc = [0 for _ in range(meta_batchsz)]
+        # batch_acc = [0 for _ in range(meta_batchsz)]
         # Set up outer gradient tape, only watch model.trainable_variables
         # Because GradientTape only auto record tranable_variables of model
         # But the copied_model.inner_weights is tf.Tensor, so they won't be automatically watched
@@ -251,10 +255,10 @@ def maml_train(model, batch_generator):
                     inner_grads = inner_tape.gradient(inner_loss, copied_model.inner_weights)
                     copied_model = MetaLearner.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
                 # Compute task loss & accuracy on the query set
-                task_loss, task_pred = compute_loss(copied_model, query_x, query_y, loss_fn=loss_fn)
-                task_acc = accuracy_fn(query_y, task_pred)
+                task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
+                #task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
-                batch_acc[idx] += task_acc
+                #batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             mean_loss = tf.reduce_mean(batch_loss)
         # Compute second order gradients
@@ -264,14 +268,14 @@ def maml_train(model, batch_generator):
             # Write gradients histogram
             write_gradient(outer_grads, summary_writer, step)
         # Return reslut of one maml train step
-        return batch_loss, batch_acc
+        return batch_loss  #, batch_acc
             
     # Main loop
     start = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
     start = time.time()
-    for step in range(total_batches+1):
+    for step in range(total_batches+1): #metatrain iterations
         # Get a batch data
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
@@ -282,22 +286,22 @@ def maml_train(model, batch_generator):
             write_histogram(model, summary_writer, step)
         # Record Loss
         losses.append(tf.reduce_mean(batch_loss).numpy())
-        accs.append(tf.reduce_mean(batch_acc).numpy())
+        # accs.append(tf.reduce_mean(batch_acc).numpy())
         # Write to Tensorboard
         with summary_writer.as_default():
             tf.summary.scalar('query loss', tf.reduce_mean(batch_loss), step=step)
-            tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
+            # tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
         
         # Print train result
         if step % print_steps == 0 or step == 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
-            batch_acc = [acc.numpy() for acc in batch_acc]
+            # batch_acc = [acc.numpy() for acc in batch_acc]
             '''uncomment to display loss and acc for each task in meta batch'''
             #print ('[Iter. {}] Task loss: {:.3f}; Task accuracy: {:.3f};'.format(step, batch_loss, batch_acc))
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
-            mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}; avg tasks Accuracy: {:.3f};'.format(step, mean_batch_loss, mean_batch_acc))
+            # mean_batch_acc = np.array(batch_acc).mean()
+            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -310,22 +314,22 @@ def maml_train(model, batch_generator):
         if step % test_steps == 0 and step > 0:
             test_set = batch_generator.test_batch(test=False) #use validation folders
             # batch_generator.print_label_map()
-            test_loss, test_acc = _maml_finetune_step(test_set)
+            test_loss = _maml_finetune_step(test_set) #, test_acc 
             with summary_writer.as_default():
                 tf.summary.scalar('Validation loss', tf.reduce_mean(test_loss), step=step)
-                tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
+                # tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
             # Tensor to list            
             test_loss = [loss.numpy() for loss in test_loss]
-            test_acc = [acc.numpy() for acc in test_acc]
+            # test_acc = [acc.numpy() for acc in test_acc]
             # Record test history
             test_losses.append(test_loss)
-            test_accs.append(test_acc)
+            # test_accs.append(test_acc)
             # avg over meta batch of tasks
             mean_test_loss = np.array(test_loss).mean()
-            mean_test_acc = np.array(test_accs).mean()
+            # mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accuracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss)) #,mean_test_acc))
             print ('=====================================================================')
         # Meta train step            
     '''
@@ -380,24 +384,24 @@ def eval_model(model, batch_generator, num_steps=None):
     optimizer = tf.keras.optimizers.SGD(learning_rate=args.inner_lr)
     
     task_losses = [0, 0, 0, 0]
-    task_accs = [0, 0, 0, 0]
+    #task_accs = [0, 0, 0, 0]
 
     loss_res = [[] for _ in range(len(batch_set))]
-    acc_res = [[] for _ in range(len(batch_set))]
+    # acc_res = [[] for _ in range(len(batch_set))]
     
     # Record test result
     if 0 in num_steps:
         for idx, task in enumerate(batch_set):
             support_x, support_y, query_x, query_y = task
             loss, pred = compute_loss(model, query_x, query_y)
-            acc = accuracy_fn(query_y, pred)
+            # acc = accuracy_fn(query_y, pred)
             task_losses[idx] += loss.numpy()
-            task_accs[idx] += acc.numpy()
+            # task_accs[idx] += acc.numpy()
             loss_res[idx].append((0, loss.numpy()))
-            acc_res[idx].append((0, acc.numpy()))
+            # acc_res[idx].append((0, acc.numpy()))
         print ('Before any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
-        print ('Task accuracies: {}'.format(task_accs))
+        # print ('Task accuracies: {}'.format(task_accs))
     # Test for each task
     for idx, task in enumerate(batch_set):
         print ('========== Task {} =========='.format(idx+1))
@@ -410,14 +414,14 @@ def eval_model(model, batch_generator, num_steps=None):
             optimizer.apply_gradients(zip(grads, model.trainable_variables))
             # Test on query set
             qry_loss, qry_pred = compute_loss(model, query_x, query_y)
-            qry_acc = accuracy_fn(query_y, qry_pred)
+            # qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
             if step in num_steps:
                 loss_res[idx].append((step, qry_loss.numpy()))
-                acc_res[idx].append((step, qry_acc.numpy()))
+                #acc_res[idx].append((step, qry_acc.numpy()))
                 print ('After {} steps update'.format(step))
                 print ('Task losses: {}'.format(qry_loss.numpy()))
-                print ('Task accs: {}'.format(qry_acc.numpy()))
+                #print ('Task accs: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
     '''
     for idx in range(len(batch_set)):
@@ -452,37 +456,37 @@ if __name__ == '__main__':
     argparse.add_argument('--mode', type=str, help='train or test', default='train')
     # Dataset options
     argparse.add_argument('--dataset', type=str, help='Dataset used to train model', default='miniimagenet')
-    argparse.add_argument('--visual', type=bool, help='Set True to visualize the batch data', default=True)
+    argparse.add_argument('--visual', type=bool, help='Set True to visualize the batch data', default=False)
     # Task options
     argparse.add_argument('--n_way', type=int, help='Number of classes used in classification (e.g. 5-way classification)', default=5)
-    argparse.add_argument('--k_shot', type=int, help='Number of images in support set', default=1)
-    argparse.add_argument('--k_query', type=int, help='Number of images in query set(For Omniglot, equal to k_shot)', default=15)
+    argparse.add_argument('--k_shot', type=int, help='Number of images in support set', default= 5)
+    argparse.add_argument('--k_query', type=int, help='Number of images in query set(For Omniglot, equal to k_shot)', default= 5)
     # Model options
-    argparse.add_argument('--num_filters', type=int, help='Number of filters in the convolution layers (32 for MiniImagenet, 64 for Ominiglot)', default=32)
-    argparse.add_argument('--with_bn', type=bool, help='Turn True to add BatchNormalization layers in neural net', default=True)
+    # argparse.add_argument('--num_filters', type=int, help='Number of filters in the convolution layers (32 for MiniImagenet, 64 for Ominiglot)', default=32)
+    # argparse.add_argument('--with_bn', type=bool, help='Turn True to add BatchNormalization layers in neural net', default=True)
     # Training options
     argparse.add_argument('--meta_batchsz', type=int, help='Number of tasks in one batch', default=4)
     argparse.add_argument('--update_steps', type=int, help='Number of inner gradient updates for each task', default=5)
     argparse.add_argument('--update_steps_test', type=int, help='Number of inner gradient updates for each task while testing', default=10)
     argparse.add_argument('--inner_lr', type=float, help='Learning rate of inner update steps, the step size alpha in the algorithm', default=1e-2) # 0.1 for ominiglot
     argparse.add_argument('--meta_lr', type=float, help='Learning rate of meta update steps, the step size beta in the algorithm', default=1e-3)
-    argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=40000)
+    argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=10000) 
     # Log options
     argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5000)
     argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
-    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=50)
+    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
     argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../historys/')
     # Generate args
     args = argparse.parse_args()
     
-    print ('Initialize model with 4 Conv({} filters) Blocks and 1 Dense Layer'.format(args.num_filters))
-    model = MetaLearner(args=args)
+    print ('Initialize model')#with 4 Conv({} filters) Blocks and 1 Dense Layer'.format(args.num_filters))
+    ml = MetaLearner(args=args)
     print ('Build model')
-    model = MetaLearner.initialize(model)
+    model = ml.initialize_Unet(ml)
     # model.summary()
-    tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
+    # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     batch_generator = TaskGenerator(args)
 
