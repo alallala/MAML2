@@ -155,7 +155,8 @@ def build_unet(
 class MetaLeaner():
     def __init__(self,args=None):
     
-        self.classes = args.n_way #ADD TO MAIN 
+        self.classes = args.n_way #ADD TO MAIN  
+        '''it should be 1+1 (background + cloud)'''
         self.decoder_filters = args.dec_filters #ADD TO MAIN 
         self.backbone_name='vgg16',
         self.input_shape=(None, None, 3),
