@@ -168,20 +168,29 @@ def build_unet(
     return model
 
 class MetaLearner():
+
+    classes = None
+    n_way = None
+    decoder_filters = None 
+    backbone_name= None
+    input_shape =(None,None,3),
+    activation = None,
+    weights=None,
+    encoder_weights='imagenet',
+    encoder_freeze=False,
+    encoder_features='default',
+    decoder_block_type='upsampling',
+    decoder_use_batchnorm=True
+    
     def __init__(self,args=None):
     
-        self.classes = args.n_way #ADD TO MAIN  
+        self.classes = 2 
+        self.n_way = args.n_way
         '''it should be 1+1 (background + cloud)'''
         self.decoder_filters =(256, 128, 64, 32, 16) 
-        self.backbone_name='vgg16',
-        self.input_shape=(None, None, 3),
-        self.activation='sigmoid',
-        self.weights=None,
-        self.encoder_weights='imagenet',
-        self.encoder_freeze=False,
-        self.encoder_features='default',
-        self.decoder_block_type='upsampling',
-        self.decoder_use_batchnorm=True
+        self.backbone_name=args.backbone_name,
+        self.activation=args.activation
+        
         
     @classmethod
     def initialize_Unet(self): 

@@ -462,8 +462,10 @@ if __name__ == '__main__':
     argparse.add_argument('--k_shot', type=int, help='Number of images in support set', default= 5)
     argparse.add_argument('--k_query', type=int, help='Number of images in query set(For Omniglot, equal to k_shot)', default= 5)
     # Model options
-    # argparse.add_argument('--num_filters', type=int, help='Number of filters in the convolution layers (32 for MiniImagenet, 64 for Ominiglot)', default=32)
-    # argparse.add_argument('--with_bn', type=bool, help='Turn True to add BatchNormalization layers in neural net', default=True)
+    
+    argparse.add_argument('--backbone_name', type=str, help ='vgg16 or other', default='vgg16')
+    argparse.add_argument('--activation',type=str,help='sigmoid',default='sigmoid')
+    
     # Training options
     argparse.add_argument('--meta_batchsz', type=int, help='Number of tasks in one batch', default=4)
     argparse.add_argument('--update_steps', type=int, help='Number of inner gradient updates for each task', default=5)
