@@ -87,5 +87,5 @@ class ModelsFactory:
 
         model_fn, preprocess_input = self.models[name]
         model_fn = self.inject_submodules(model_fn)
-        #preprocess_input = self.inject_submodules(preprocess_input)
-        return model_fn #, preprocess_input
+        preprocess_input = self.inject_submodules(preprocess_input)
+        return model_fn, preprocess_input

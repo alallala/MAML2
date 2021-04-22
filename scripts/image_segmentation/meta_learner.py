@@ -19,11 +19,16 @@ from seg_backbonesfactory import Backbones
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-
+'''
 backend = keras.backend
 layers = keras.layers
 models = keras.models
 keras_utils = keras.utils
+'''
+backend = None
+layers= None
+models=  None
+keras_utils = None
 
 def get_submodules_from_kwargs(kwargs):
     backend = kwargs['backend']
@@ -186,6 +191,7 @@ class MetaLearner():
         
     
     def initialize_Unet(self): 
+    
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)

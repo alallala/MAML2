@@ -100,7 +100,7 @@ class BackbonesFactory(ModelsFactory):
         return all_models
 
     def get_backbone(self, name, *args, **kwargs):
-        model_fn = self.get(name)
+        model_fn, _ = self.get(name)
         model = model_fn(*args, **kwargs)
         return model
 
