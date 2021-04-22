@@ -4,7 +4,7 @@ import tensorflow
 
 from tensorflow.keras.applications import imagenet_utils
 
-from classification_models import get_submodules_from_kwargs
+from classification_models.weights import get_submodules_from_kwargs
 from _common_blocks import GroupConv2D, ChannelSE
 from weights import load_model_weights
 
