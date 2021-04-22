@@ -199,25 +199,25 @@ class MetaLearner():
         #                     'Got: {}'.format(self.decoder_block_type))
 
         backbone = Backbones.get_backbone(
-            name=self.backbone_name,
-            input_shape=self.input_shape,
-            weights=self.encoder_weights,
+            name='vgg16' self.backbone_name,
+            input_shape=(None,None,3) #self.input_shape,
+            weights='imagenet' #self.encoder_weights,
             include_top=False,
             **kwargs,
         )
 
-        if self.encoder_features == 'default':
-            self.encoder_features = Backbones.get_feature_layers(self.backbone_name, n=4)
-
+        #if self.encoder_features == 'default':
+        self.encoder_features = Backbones.get_feature_layers('vgg16', n=4) #self.backbone_name
+ 
         model = build_unet(
-            backbone=self.backbone,
-            decoder_block=self.decoder_block,
-            skip_connection_layers=self.encoder_features,
-            decoder_filters=self.decoder_filters,
-            classes=self.classes,
-            activation=self.activation,
-            n_upsample_blocks=len(self.decoder_filters),
-            use_batchnorm=self.decoder_use_batchnorm,
+            backbone=backbone,
+            decoder_block= decoder_block
+            skip_connection_layers= 'default' #self.encoder_features,
+            decoder_filters=(256, 128, 64, 32, 16) #self.decoder_filters,
+            classes= 2 #self.classes,
+            activation='sigmoid' #self.activation,
+            n_upsample_blocks=len(((256, 128, 64, 32, 16)) #self.decoder_filters
+            use_batchnorm=True #self.decoder_use_batchnorm,
         )
 
         # lock encoder weights for fine-tuning
