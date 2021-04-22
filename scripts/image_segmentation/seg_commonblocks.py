@@ -1,6 +1,8 @@
 #from keras_applications import get_submodules_from_kwargs
 
-import tensorflow.keras 
+import tensorflow
+from tensorflow import keras  
+
 def get_submodules_from_kwargs(kwargs):
     backend = kwargs.get('backend', backend)
     layers = kwargs.get('layers', layers)
