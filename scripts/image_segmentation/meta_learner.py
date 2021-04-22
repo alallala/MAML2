@@ -163,7 +163,7 @@ def build_unet(
     x = layers.Activation(activation, name=activation)(x)
 
     # create keras model instance
-    model = models.Model(input_, x)
+    model = keras.models.Model(input_, x)
 
     return model
 
@@ -190,7 +190,6 @@ class MetaLearner():
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
-        print("LOOK",self.decoder_block_type)
         if self.decoder_block_type == 'upsampling':
             decoder_block = DecoderUpsamplingX2Block
         elif self.decoder_block_type == 'transpose':
@@ -228,7 +227,7 @@ class MetaLearner():
         # loading model weights
         if self.weights is not None:
             model.load_weights(self.weights)
-
+        print("in initialize_Unet a model is:",type(model))
         return model
         
     def inner_weights(model):
