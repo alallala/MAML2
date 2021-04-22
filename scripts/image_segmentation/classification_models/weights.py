@@ -1,5 +1,13 @@
-from . import get_submodules_from_kwargs
-
+def get_submodules_from_kwargs(kwargs):
+    backend = kwargs.get('backend', backend)
+    layers = kwargs.get('layers', layers)
+    models = kwargs.get('models', models)
+    utils = kwargs.get('utils', keras_utils)
+    for key in kwargs.keys():
+        if key not in ['backend', 'layers', 'models', 'utils']:
+            raise TypeError('Invalid keyword argument: %s', key)
+    return backend, layers, models, utils
+    
 __all__ = ['load_model_weights']
 
 
