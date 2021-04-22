@@ -19,22 +19,18 @@ from seg_backbonesfactory import Backbones
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-'''
+
 backend = keras.backend
 layers = keras.layers
 models = keras.models
 keras_utils = keras.utils
-'''
-backend = None
-layers= None
-models=  None
-keras_utils = None
+
 
 def get_submodules_from_kwargs(kwargs):
-    backend = kwargs.get('backend', backend)
-    layers = kwargs.get('layers', layers)
-    models = kwargs.get('models', models)
-    utils = kwargs.get('utils', keras_utils)
+    backend = kwargs['backend']
+    layers = kwargs['layers']
+    models = kwargs['models']
+    utils = kwargs['utils']
     for key in kwargs.keys():
         if key not in ['backend', 'layers', 'models', 'utils']:
             raise TypeError('Invalid keyword argument: %s', key)
@@ -190,21 +186,9 @@ class MetaLearner():
         self.decoder_use_batchnorm=True
         
     
-    def initialize_Unet(
-        backbone_name='vgg16',
-        input_shape=(None, None, 3),
-        classes=1,
-        activation='sigmoid',
-        weights=None,
-        encoder_weights='imagenet',
-        encoder_freeze=False,
-        encoder_features='default',
-        decoder_block_type='upsampling',
-        decoder_filters=(256, 128, 64, 32, 16),
-        decoder_use_batchnorm=True,
-        **kwargs): 
+    def initialize_Unet(self): 
     
-        #kwargs = get_submodules()
+        kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
@@ -221,7 +205,7 @@ class MetaLearner():
             input_shape=(None,None,3), #self.input_shape,
             weights='imagenet', #self.encoder_weights,
             include_top=False,
-            **kwargs,
+            #**kwargs,
         )
 
         #if self.encoder_features == 'default':
