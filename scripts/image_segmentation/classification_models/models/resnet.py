@@ -2,10 +2,19 @@ import os
 import collections
 
 
-from ._common_blocks import ChannelSE
-from .. import get_submodules_from_kwargs
-from ..weights import load_model_weights
+from _common_blocks import ChannelSE
+from weights import load_model_weights
 
+def get_submodules_from_kwargs(kwargs):
+    backend = kwargs.get('backend', backend)
+    layers = kwargs.get('layers', layers)
+    models = kwargs.get('models', models)
+    utils = kwargs.get('utils', keras_utils)
+    for key in kwargs.keys():
+        if key not in ['backend', 'layers', 'models', 'utils']:
+            raise TypeError('Invalid keyword argument: %s', key)
+    return backend, layers, models, utils
+    
 backend = None
 layers = None
 models = None
