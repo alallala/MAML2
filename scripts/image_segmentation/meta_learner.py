@@ -11,7 +11,7 @@ import tensorflow.keras.backend as keras_backend
 import os
 import numpy as np 
 import cv2
-from keras.models.keras_applications import get_submodules_from_kwargs
+from keras.applications import get_submodules_from_kwargs
 
 from seg_commonblocks import Conv2dBn
 from seg_utils import freeze_model, filter_keras_submodules
