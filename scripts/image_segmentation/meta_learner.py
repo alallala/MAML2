@@ -192,13 +192,12 @@ class MetaLearner():
         self.activation=args.activation
         
         
-    @staticmethod
     def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
-        if self.decoder_block_type == 'upsampling':
+        if decoder_block_type == 'upsampling':
             decoder_block = DecoderUpsamplingX2Block
         elif self.decoder_block_type == 'transpose':
             decoder_block = DecoderTransposeX2Block
