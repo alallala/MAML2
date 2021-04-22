@@ -39,10 +39,10 @@ def get_submodules_from_kwargs(kwargs):
 
 def get_submodules():
     return {
-        'backend': backend,
-        'models': models,
-        'layers': layers,
-        'utils': keras_utils,
+        'backend': keras.backend,
+        'models': keras.models,
+        'layers': keras.layers,
+        'utils': keras.utils,
     }
 
 def Conv3x3BnReLU(filters, use_batchnorm, name=None):
