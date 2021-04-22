@@ -152,7 +152,7 @@ def build_unet(
 
     return model
 
-class MetaLeaner():
+class MetaLearner():
     def __init__(self,args=None):
     
         self.classes = args.n_way #ADD TO MAIN  
