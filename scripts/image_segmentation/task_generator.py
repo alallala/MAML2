@@ -62,7 +62,7 @@ class TaskGenerator:
         
         if self.dataset == 'clarity':
             
-            data = load_f('/content/drive/MyDrive/cloud_dataset.tiff')
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff')
             self.metatrain_data = data[:4000]
             self.metaval_data = data[4000:] #from 4000 to 7260 
   
