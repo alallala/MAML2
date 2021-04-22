@@ -167,24 +167,25 @@ def build_unet(
 
     return model
 
-class MetaLearner(args):
+class MetaLearner():
 
-    classes = args.classes   
-    '''it should be 1+1 (background + cloud)'''
-    decoder_filters =(256, 128, 64, 32, 16) 
-    backbone_name='vgg16',
-    input_shape=(None, None, 3),
-    activation='sigmoid',
-    weights=None,
-    encoder_weights='imagenet',
-    encoder_freeze=False,
-    encoder_features='default',
-    decoder_block_type='upsampling',
-    decoder_use_batchnorm=True
-
-    def __init__(self):
+    def __init__(self,args=None):
     
-    #def initialize_Unet(): 
+        self.classes = args.classes   
+        '''it should be 1+1 (background + cloud)'''
+        self.decoder_filters =(256, 128, 64, 32, 16) 
+        self.backbone_name='vgg16',
+        self.input_shape=(None, None, 3),
+        self.activation='sigmoid',
+        self.weights=None,
+        self.encoder_weights='imagenet',
+        self.encoder_freeze=False,
+        self.encoder_features='default',
+        self.decoder_block_type='upsampling',
+        self.decoder_use_batchnorm=True
+        
+    @property
+    def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
