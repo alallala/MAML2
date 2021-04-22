@@ -196,7 +196,7 @@ class MetaLearner():
         #   decoder_block = DecoderTransposeX2Block
         #else:
         #    raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
-                             'Got: {}'.format(self.decoder_block_type))
+        #                     'Got: {}'.format(self.decoder_block_type))
 
         backbone = Backbones.get_backbone(
             backbone_name=self.backbone_name,
