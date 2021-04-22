@@ -3,7 +3,7 @@ import collections
 
 from classification_models.weights import get_submodules_from_kwargs
 from classification_models.models._common_blocks import GroupConv2D
-from weights import load_model_weights
+from classification_models.weights import load_model_weights
 
 backend = None
 layers = None
