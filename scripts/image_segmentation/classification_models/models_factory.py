@@ -1,9 +1,9 @@
 import functools
 import keras_applications as ka
 
-from .models import resnet as rn
-from .models import resnext as rx
-from .models import senet as sn
+from models import resnet as rn
+from models import resnext as rx
+from models import senet as sn
 
 
 class ModelsFactory:
