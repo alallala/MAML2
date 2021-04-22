@@ -1,5 +1,5 @@
 import tensorflow.keras as tfkeras
-from .models_factory import ModelsFactory
+from models_factory import ModelsFactory
 
 
 class TFKerasModelsFactory(ModelsFactory):
