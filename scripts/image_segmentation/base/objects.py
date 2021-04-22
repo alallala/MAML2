@@ -1,8 +1,10 @@
+import tensorflow as tf
+
 class KerasObject:
-    _backend = None
-    _models = None
-    _layers = None
-    _utils = None
+    _backend = tf.keras.backend
+    _models = tf.keras.models
+    _layers = tf.keras.layers
+    _utils = tf.keras.utils
 
     def __init__(self, name=None):
         if (self.backend is None or
