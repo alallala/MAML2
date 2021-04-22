@@ -128,7 +128,7 @@ class TaskGenerator:
             '''
             spt_x.extend([ds[:,:,:,:3][idx] for idx in spt_elem])
             spt_y.extend([ds[:,:,:,3:][idx] for idx in spt_elem])
-            qry_x.extend([ds[:,:,:,:3][idx] for idx in qey_elem])
+            qry_x.extend([ds[:,:,:,:3][idx] for idx in qry_elem])
             qry_y.extend([ds[:,:,:,3:][idx] for idx in qry_elem])
 
             # Shuffle datasets
