@@ -1,5 +1,7 @@
 import functools
-import keras_applications as ka
+import tensorflow
+
+import tensorflow.keras.applications as ka
 
 from models import resnet as rn
 from models import resnext as rx
