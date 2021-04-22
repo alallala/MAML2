@@ -2,10 +2,7 @@ import functools
 import tensorflow
 
 import tensorflow.keras.applications as ka
-
-import sys
-sys.path.append("..")
-import models
+from classification_models import models
 
 from models import resnet as rn
 from models import resnext as rx
