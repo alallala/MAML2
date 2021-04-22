@@ -234,7 +234,7 @@ class MetaLearner():
             
         return model
         
-    def inner_weights(model):
+    def inner_weights(self,model):
         weights = [layer.trainable_weights for layer in model.layers]
         return weights
         
