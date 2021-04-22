@@ -22,6 +22,7 @@ from PIL import Image
 import tensorflow as tf
 import cv2
 import time
+import tifffile
 
 
 def load_file(f):
