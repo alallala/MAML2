@@ -216,17 +216,19 @@ class MetaLearner():
             decoder_filters=(256, 128, 64, 32, 16), #self.decoder_filters,
             classes= 2 ,#self.classes,
             activation='sigmoid', #self.activation,
-            n_upsample_blocks=len(((256, 128, 64, 32, 16)), #self.decoder_filters
+            n_upsample_blocks=len((256, 128, 64, 32, 16)), #self.decoder_filters
             use_batchnorm=True #self.decoder_use_batchnorm,
         )
 
         # lock encoder weights for fine-tuning
-        if self.encoder_freeze:
-            freeze_model(self.backbone, **kwargs)
+        '''encored feeze is False''' 
+        #if self.encoder_freeze:
+        #    freeze_model(self.backbone, **kwargs)
 
         # loading model weights
-        if self.weights is not None:
-            model.load_weights(self.weights)
+        '''weights are None'''
+        #if self.weights is not None:
+        #    model.load_weights(self.weights)
             
         return model
         
