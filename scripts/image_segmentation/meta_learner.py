@@ -184,18 +184,18 @@ class MetaLearner():
         self.decoder_block_type='upsampling',
         self.decoder_use_batchnorm=True
         
-    @property
+    
     def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
-        if self.decoder_block_type == 'upsampling':
-            decoder_block = DecoderUpsamplingX2Block
-        elif self.decoder_block_type == 'transpose':
-            decoder_block = DecoderTransposeX2Block
-        else:
-            raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
+        #if self.decoder_block_type == 'upsampling':
+        decoder_block = DecoderUpsamplingX2Block
+        #elif self.decoder_block_type == 'transpose':
+        #   decoder_block = DecoderTransposeX2Block
+        #else:
+        #    raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
                              'Got: {}'.format(self.decoder_block_type))
 
         backbone = Backbones.get_backbone(
