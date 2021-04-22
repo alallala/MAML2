@@ -199,7 +199,7 @@ class MetaLearner():
         #                     'Got: {}'.format(self.decoder_block_type))
 
         backbone = Backbones.get_backbone(
-            name='vgg16' self.backbone_name,
+            name='vgg16', #self.backbone_name
             input_shape=(None,None,3), #self.input_shape,
             weights='imagenet', #self.encoder_weights,
             include_top=False,
