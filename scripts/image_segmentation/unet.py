@@ -4,6 +4,8 @@ from .seg_commonblocks import Conv2dBn
 from .seg_utils import freeze_model, filter_keras_submodules
 from .seg_backbonesfactory.backbones_factory import Backbones
 
+import tensorflow.keras
+
 backend = None
 layers = None
 models = None
@@ -120,8 +122,9 @@ def build_unet(
     x = backbone.output
 
     # extract skip connections
-    skips = ([backbone.get_layer(name=i).output if isinstance(i, str)
-              else backbone.get_layer(index=i).output for i in skip_connection_layers])
+    #model = Model(input=base_model.input, output=base_model.get_layer('custom').output)
+    skips = ([backbone.layers(name=i).output if isinstance(i, str)
+              else backbone.layers(index=i).output for i in skip_connection_layers])
 
     # add center block if previous operation was maxpooling (for vgg models)
     if isinstance(backbone.layers[-1], layers.MaxPooling2D):
