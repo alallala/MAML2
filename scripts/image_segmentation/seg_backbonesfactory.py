@@ -3,8 +3,8 @@ import tensorflow
 import tensorflow.keras.applications.efficientnet as eff
 from classification_models.models_factory import ModelsFactory
 
-from . import inception_resnet_v2 as irv2
-from . import inception_v3 as iv3
+import inception_resnet_v2 as irv2
+import inception_v3 as iv3
 
 
 class BackbonesFactory(ModelsFactory):
