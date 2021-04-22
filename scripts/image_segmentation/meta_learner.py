@@ -134,8 +134,8 @@ def build_unet(
     x = backbone.output
 
     # extract skip connections
-    skips = ([backbone.get_layer(name=i).output if isinstance(i, str)
-              else backbone.get_layer(index=i).output for i in skip_connection_layers])
+    skips = ([backbone.layers(name=i).output if isinstance(i, str)
+              else backbone.layers(index=i).output for i in skip_connection_layers])
 
     # add center block if previous operation was maxpooling (for vgg models)
     if isinstance(backbone.layers[-1], layers.MaxPooling2D):
