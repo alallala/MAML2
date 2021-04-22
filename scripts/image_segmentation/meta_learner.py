@@ -183,8 +183,7 @@ class MetaLearner():
         self.decoder_block_type='upsampling',
         self.decoder_use_batchnorm=True
         
-
-     
+    @staticmethod 
     def initialize_Unet(): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
