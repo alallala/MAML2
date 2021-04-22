@@ -5,10 +5,11 @@ import tensorflow.keras.applications as ka
 
 import sys
 sys.path.append("..")
+import models
 
-from .. import resnet as rn
-from .. import resnext as rx
-from .. import senet as sn
+from models import resnet as rn
+from models import resnext as rx
+from models import senet as sn
 
 
 class ModelsFactory:
