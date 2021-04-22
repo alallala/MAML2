@@ -35,7 +35,7 @@ def Conv2dBn(
 
     conv_name, act_name, bn_name = None, None, None
     block_name = kwargs.pop('name', None)
-    backend, layers, models, keras_utils = keras.backend, keras.models, keras.layers, keras.utils
+    backend, layers, models, keras_utils = keras.backend, keras.layers, keras.models, keras.utils
 
     if block_name is not None:
         conv_name = block_name + '_conv'
