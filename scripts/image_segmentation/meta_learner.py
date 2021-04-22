@@ -11,7 +11,6 @@ import tensorflow.keras.backend as keras_backend
 import os
 import numpy as np 
 import cv2
-#from keras.applications import get_submodules_from_kwargs
 
 from seg_commonblocks import Conv2dBn
 from seg_utils import freeze_model, filter_keras_submodules
@@ -25,6 +24,17 @@ backend = None
 layers = None
 models = None
 keras_utils = None
+
+def get_submodules_from_kwargs(kwargs):
+    backend = kwargs.get('backend', backend)
+    layers = kwargs.get('layers', layers)
+    models = kwargs.get('models', models)
+    utils = kwargs.get('utils', keras_utils)
+    for key in kwargs.keys():
+        if key not in ['backend', 'layers', 'models', 'utils']:
+            raise TypeError('Invalid keyword argument: %s', key)
+    return backend, layers, models, utils
+    
 
 
 def get_submodules():
@@ -179,7 +189,7 @@ class MetaLearner():
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
-        backend, layers, models, keras_utils = submodule_args[beckend], submodule_args[layers], submodule_args[model],submodule_args[utils]
+        backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
 
         if decoder_block_type == 'upsampling':
             decoder_block = DecoderUpsamplingX2Block
