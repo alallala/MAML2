@@ -2,8 +2,8 @@ import os
 import collections
 
 
-from _common_blocks import ChannelSE
-from weights import load_model_weights
+from classification_models.models._common_blocks import ChannelSE
+from classification_models.weights import load_model_weights
 
 def get_submodules_from_kwargs(kwargs):
     backend = kwargs.get('backend', backend)
