@@ -1,5 +1,5 @@
-from .base import Loss
-from .base import functional as F
+from base import Loss
+from base import functional as F
 
 SMOOTH = 1e-5
 
