@@ -185,7 +185,7 @@ class MetaLeaner():
                              'Got: {}'.format(decoder_block_type))
 
         backbone = Backbones.get_backbone(
-            backbone_name=self.backbone_name
+            backbone_name=self.backbone_name,
             input_shape=self.input_shape,
             weights=self.encoder_weights,
             include_top=False,
