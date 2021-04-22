@@ -190,9 +190,21 @@ class MetaLearner():
         self.decoder_use_batchnorm=True
         
     
-    def initialize_Unet(self): 
+    def initialize_Unet(
+        backbone_name='vgg16',
+        input_shape=(None, None, 3),
+        classes=1,
+        activation='sigmoid',
+        weights=None,
+        encoder_weights='imagenet',
+        encoder_freeze=False,
+        encoder_features='default',
+        decoder_block_type='upsampling',
+        decoder_filters=(256, 128, 64, 32, 16),
+        decoder_use_batchnorm=True,
+        **kwargs): 
     
-        kwargs = get_submodules()
+        #kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
