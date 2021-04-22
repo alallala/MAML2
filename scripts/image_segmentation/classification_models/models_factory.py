@@ -3,12 +3,10 @@ import tensorflow
 
 import tensorflow.keras.applications as ka
 
-import sys
-sys.path.append("..")
 
-from ..models import resnet as rn
-from ..models import resnext as rx
-from ..models import senet as sn
+from classification_models/models import resnet as rn
+from models import resnext as rx
+from models import senet as sn
 
 
 class ModelsFactory:
