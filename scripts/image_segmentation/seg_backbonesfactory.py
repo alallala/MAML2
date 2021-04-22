@@ -1,6 +1,6 @@
 import copy
-import tensorflow as tf 
-import tf.keras.applications.efficientnet as eff
+import tensorflow  
+import tensorflow.keras.applications.efficientnet as eff
 from classification_models.models_factory import ModelsFactory
 
 from . import inception_resnet_v2 as irv2
