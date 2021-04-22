@@ -486,7 +486,7 @@ if __name__ == '__main__':
     print ('Initialize model\n')#with 4 Conv({} filters) Blocks and 1 Dense Layer'.format(args.num_filters))
     ml = MetaLearner(args=args)
     print ('Build model\n')
-    model = ml.initialize_Unet(ml)
+    model = ml.initialize_Unet()
     # model.summary()
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
