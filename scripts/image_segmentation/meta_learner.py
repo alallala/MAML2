@@ -185,7 +185,7 @@ class MetaLearner():
         
 
      
-    def initialize_Unet(): 
+    def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
@@ -227,7 +227,7 @@ class MetaLearner():
         # loading model weights
         if self.weights is not None:
             model.load_weights(self.weights)
-        print("in initialize_Unet a model is:",type(model))
+            
         return model
         
     def inner_weights(model):
