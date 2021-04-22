@@ -20,10 +20,10 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
-backend = None
-layers = None
-models = None
-keras_utils = None
+backend = keras.backend
+layers = keras.layers
+models = keras.models
+keras_utils = keras.utils
 
 def get_submodules_from_kwargs(kwargs):
     backend = kwargs.get('backend', backend)
