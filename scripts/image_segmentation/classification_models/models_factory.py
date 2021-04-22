@@ -2,12 +2,13 @@ import functools
 import tensorflow
 
 import tensorflow.keras.applications as ka
-from classification_models import models
+from classification_models import models.resnet as rn, models.resnext as rx, models.senet as sn
 
+'''
 from models import resnet as rn
 from models import resnext as rx
 from models import senet as sn
-
+'''
 
 class ModelsFactory:
     _models = {
