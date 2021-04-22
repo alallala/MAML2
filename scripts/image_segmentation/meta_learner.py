@@ -157,7 +157,7 @@ class MetaLearner():
     
         self.classes = args.n_way #ADD TO MAIN  
         '''it should be 1+1 (background + cloud)'''
-        self.decoder_filters = args.dec_filters #ADD TO MAIN 
+        self.decoder_filters =(256, 128, 64, 32, 16) 
         self.backbone_name='vgg16',
         self.input_shape=(None, None, 3),
         self.activation='sigmoid',
