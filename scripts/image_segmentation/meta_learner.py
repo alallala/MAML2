@@ -193,7 +193,7 @@ class MetaLearner():
         
         
     @classmethod
-    def initialize_Unet(): 
+    def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
