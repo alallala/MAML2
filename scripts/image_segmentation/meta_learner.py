@@ -47,7 +47,7 @@ def get_submodules():
     }
 
 def Conv3x3BnReLU(filters, use_batchnorm, name=None):
-    kwargs = get_submodules()
+    kwargs = {'backend': keras.backend,'models': keras.models,'layers': keras.layers,'utils': keras.utils}
 
     def wrapper(input_tensor):
         return Conv2dBn(
