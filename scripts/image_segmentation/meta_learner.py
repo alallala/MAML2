@@ -192,9 +192,9 @@ class MetaLearner():
         print("submodule_args",submodule_args)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
 
-        if decoder_block_type == 'upsampling':
+        if self.decoder_block_type == 'upsampling':
             decoder_block = DecoderUpsamplingX2Block
-        elif decoder_block_type == 'transpose':
+        elif self.decoder_block_type == 'transpose':
             decoder_block = DecoderTransposeX2Block
         else:
             raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
