@@ -166,8 +166,8 @@ class MetaLeaner():
         self.encoder_freeze=False,
         self.encoder_features='default',
         self.decoder_block_type='upsampling',
-        self.decoder_use_batchnorm=True,
-        **kwargs #?????????
+        self.decoder_use_batchnorm=True
+        
 
      
     def initialize_Unet(self): #it should be initialize()
