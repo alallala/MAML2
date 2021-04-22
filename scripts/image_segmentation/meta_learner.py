@@ -185,13 +185,12 @@ class MetaLearner():
         
 
      
-    def initialize_Unet(self): #it should be initialize()
+    def initialize_Unet(self): 
         kwargs = get_submodules()
         global backend, layers, models, keras_utils
         submodule_args = filter_keras_submodules(kwargs)
-        print("submodule_args",submodule_args)
         backend, layers, models, keras_utils = get_submodules_from_kwargs(submodule_args)
-
+        print("LOOK",self.decoder_block_type)
         if self.decoder_block_type == 'upsampling':
             decoder_block = DecoderUpsamplingX2Block
         elif self.decoder_block_type == 'transpose':
