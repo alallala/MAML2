@@ -60,7 +60,7 @@ class TaskGenerator:
             self.img_channel = 4
             self.dim_output = 2
         
-        if self.dataset = 'clarity':
+        if self.dataset == 'clarity':
             
             data = load_f('/content/drive/MyDrive/cloud_dataset.tiff')
             self.metatrain_data = data[:4000]
