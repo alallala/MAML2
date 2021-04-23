@@ -270,7 +270,10 @@ class MetaLearner():
                 g += 1
             else:
                 new_weights.append(copied_model.weights[i])
-        
+        print("len new_weights: ",len(new_weights))
+        for elem in new_weights:
+            print("type: ",type(elem))
+            print("shape: ",elem.shape))
         copied_model.set_weights(np.asarray(new_weights,dtype=object))
      
 
