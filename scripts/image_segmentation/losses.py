@@ -132,13 +132,14 @@ class CategoricalCELoss(Loss):
         self.class_indexes = class_indexes
 
     def __call__(self, gt, pr):
-        return F.categorical_crossentropy(
+        out = F.categorical_crossentropy(
             gt,
             pr,
             class_weights=self.class_weights,
             class_indexes=self.class_indexes,
             **self.submodules
         )
+        return out 
 
 
 class CategoricalFocalLoss(Loss):
