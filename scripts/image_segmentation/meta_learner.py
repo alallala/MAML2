@@ -271,7 +271,7 @@ class MetaLearner():
             else:
                 new_weights.append(copied_model.weights[i])
         
-        copied_model.set_weights(np.array(new_weights))
+        copied_model.set_weights(np.asarray(new_weights,dytpe=object))
      
 
         return copied_model
