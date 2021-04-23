@@ -255,7 +255,8 @@ def maml_train(model, batch_generator):
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
-                    copied_model = MetaLearner.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
+                    copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
+                    
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
                 #task_acc = accuracy_fn(query_y, task_pred)
