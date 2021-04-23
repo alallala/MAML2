@@ -276,6 +276,7 @@ def maml_train(model, batch_generator):
         return batch_loss  #, batch_acc
             
     # Main loop
+    print("start train loop\n")
     start = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
@@ -490,12 +491,13 @@ if __name__ == '__main__':
     # Generate args
     args = argparse.parse_args()
     
-    print ('Initialize model\n')#with 4 Conv({} filters) Blocks and 1 Dense Layer'.format(args.num_filters))
+    print ('Initialize model: Unet\n')#with 4 Conv({} filters) Blocks and 1 Dense Layer'.format(args.num_filters))
     ml = MetaLearner(args=args)
     print ('Build model\n')
     model = ml.initialize_Unet()
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
+    print("tasks generation\n")
     batch_generator = TaskGenerator(args)
 
     if args.mode == 'train':
