@@ -127,7 +127,8 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    loss = CategoricalCELoss(y, pred_y)
+    ccel = CategoricalCELoss()
+    loss = ccel(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
@@ -256,7 +257,6 @@ def maml_train(model, batch_generator):
                         inner_tape.watch(ml.inner_weights(copied_model))
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
-                        print("INNER LOSS\n",inner_loss)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
                     copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
                     
