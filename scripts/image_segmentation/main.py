@@ -255,7 +255,7 @@ def maml_train(model, batch_generator):
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
-                    print("NUMBER OF GRADS: ",len(inner_grads))
+                    #print("NUMBER OF GRADS: ",len(inner_grads))
                     copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads[1:])
                     
                 # Compute task loss & accuracy on the query set
@@ -493,12 +493,14 @@ if __name__ == '__main__':
     ml = MetaLearner(args=args)
     print ('Build model\n')
     model = ml.initialize_Unet()
+    '''
     sum = 0
     for layer in model.layers:
         print(layer.name)
         for w in layer.weights:
+            print(w.name)
             sum+=1
-    print("total number of weigts: ",sum)
+    '''
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     batch_generator = TaskGenerator(args)
