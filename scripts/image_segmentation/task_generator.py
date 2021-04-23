@@ -25,12 +25,21 @@ import time
 import tifffile
 
 
-def load_file(f):
+def sequence(start, end):
+    res = []
+    x = start
+    while x <= end:
+        res.append(x)
+        x += 1
+    return res
+    
+def load_file(f,num_images):
     if f[-4:] == 'tiff':
         print("loading {}".format(str(f.split("/")[-1])))
-        img = tifffile.imread(f)
+        seq = sequence(0,num_images)
+        img = tifffile.imread(f,key=seq)
     img = np.asarray(img, dtype=np.float32)
-    return img[:2000]
+    return img
         
 class TaskGenerator:
     def __init__(self, args=None):
@@ -63,9 +72,9 @@ class TaskGenerator:
         
         if self.dataset == 'clarity':
             
-            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff')
-            self.metatrain_data = data[:4000]
-            self.metaval_data = data[4000:] #from 4000 to 7260 
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000)
+            self.metatrain_data = data[:600]
+            self.metaval_data = data[600:] 
   
         
         # Record the relationship between image label and the folder name in each task
@@ -181,10 +190,10 @@ class TaskGenerator:
         
         '''
         if test:
-          data = self.metaval_data[5500:]
+          data = self.metaval_data[700:]
           p_str = 'test'
         else:
-          data = self.metatrain_folders[4000:5500] 
+          data = self.metaval_folders[600:700] 
           p_str = 'validation'
         print ('Sample '+p_str+' batch of tasks from {} images'.format(len(data)))
         # Shuffle root folder in order to prevent repeat
