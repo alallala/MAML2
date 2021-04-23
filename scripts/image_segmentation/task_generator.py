@@ -35,7 +35,7 @@ def sequence(start, end):
     
 def load_file(f,num_images):
     if f[-4:] == 'tiff':
-        print("loading {}".format(str(f.split("/")[-1])))
+        print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
         img = tifffile.imread(f,key=seq)
     img = np.asarray(img, dtype=np.float32)

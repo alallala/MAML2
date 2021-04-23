@@ -286,7 +286,7 @@ def maml_train(model, batch_generator):
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
         # Run maml train step
-        batch_loss, batch_acc = _maml_train_step(batch_set)
+        batch_loss = _maml_train_step(batch_set) #, batch_acc
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
