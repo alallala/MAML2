@@ -261,7 +261,7 @@ class MetaLearner():
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
-        
+        '''
         new_weights  = []
         g = 0
         for i in range(0,len(copied_model.weights)):
@@ -272,7 +272,10 @@ class MetaLearner():
                 new_weights.append(copied_model.weights[i])
          
         copied_model.set_weights(new_weights)
-        
+        '''
+        opt = tf.keras.optimizers.SGD(learning_rate=alpha)  
+        opt.apply_gradients(zip(grads, copied_model.trainable_variables))
+
         return copied_model
         
         
