@@ -269,9 +269,9 @@ class MetaLearner():
                 new_weights.append(np.array(copied_model.weights[i] - alpha*grads[g]))
                 g += 1
             else:
-                new_weights.append(copied_model.weights[i])
+                new_weights.append(np.array(copied_model.weights[i]))
 
-        copied_model.set_weights(np.asarray(new_weights,dtype=object))
+        copied_model.set_weights(new_weights)
      
 
         return copied_model
