@@ -266,7 +266,7 @@ class MetaLearner():
         g = 0
         for i in range(0,len(copied_model.weights)):
             if copied_model.weights[i].trainable:
-                new_weights.append(copied_model.weights[i] - alpha*grads[g])
+                new_weights.append(np.asarray(copied_model.weights[i]) - alpha*grads[g])
                 g += 1
             else:
                 new_weights.append(copied_model.weights[i])
