@@ -216,6 +216,7 @@ def maml_train(model, batch_generator):
                     # we only want inner tape watch the fast weights in each update steps
                     inner_tape.watch(copied_model.inner_weights)
                     inner_loss, _ = compute_loss(copied_model, support_x, support_y)
+                    print(inner_loss)
                 inner_grads = inner_tape.gradient(inner_loss, copied_model.inner_weights)
                 copied_model = MetaLearner.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
             # Compute task loss & accuracy on the query set
