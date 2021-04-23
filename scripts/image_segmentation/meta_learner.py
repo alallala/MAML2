@@ -176,7 +176,7 @@ class MetaLearner():
         '''it should be 1+1 (background + cloud)'''
         self.decoder_filters =(256, 128, 64, 32, 16) 
         self.backbone_name='vgg16',
-        self.input_shape=(256, 256, 3),
+        self.input_shape=(None, None, 3),
         self.activation='sigmoid',
         self.weights=None,
         self.encoder_weights='imagenet',
@@ -202,7 +202,7 @@ class MetaLearner():
 
         backbone = Backbones.get_backbone(
             name='vgg16', #self.backbone_name
-            input_shape=(245,256,3), #self.input_shape,
+            input_shape=(None,None,3), #self.input_shape,
             weights='imagenet', #self.encoder_weights,
             include_top=False,
             #**kwargs,
