@@ -96,12 +96,12 @@ def copy_model(model, x):
 
 '''
 def loss_fn(y, pred_y):
-    
+    '''
     :param pred_y: Prediction output of model
     :param y: Ground truth
 
     :return loss value:
-    
+    '''
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
 '''
     
