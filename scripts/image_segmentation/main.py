@@ -494,7 +494,8 @@ if __name__ == '__main__':
     model = ml.initialize_Unet()
     for layer in model.layers:
         print(layer.name)
-        print (layer.weights.shape)
+        for w in layer.weights:
+            print (layer.w.shape)
         print("\n")
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
