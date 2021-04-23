@@ -467,7 +467,7 @@ if __name__ == '__main__':
     
     argparse.add_argument('--backbone_name', type=str, help ='vgg16 or other', default='vgg16')
     argparse.add_argument('--activation',type=str,help='sigmoid',default='sigmoid')
-    argparse.add_argument('--classes',type=int,help='classes for segmentation',default=2)
+    argparse.add_argument('--classes',type=int,help='classes for segmentation',default=1)
 
     
     # Training options
