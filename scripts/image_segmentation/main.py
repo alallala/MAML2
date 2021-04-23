@@ -127,7 +127,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    loss = loss_fn(y, pred_y)
+    loss = CategoricalCELoss(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
