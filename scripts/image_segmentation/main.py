@@ -492,7 +492,7 @@ if __name__ == '__main__':
     ml = MetaLearner(args=args)
     print ('Build model\n')
     model = ml.initialize_Unet()
-    # model.summary()
+    print(model.summary())
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     batch_generator = TaskGenerator(args)
