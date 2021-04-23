@@ -94,6 +94,7 @@ def copy_model(model, x):
     copied_model.set_weights(model.get_weights())
     return copied_model
 
+'''
 def loss_fn(y, pred_y):
     
     :param pred_y: Prediction output of model
@@ -102,7 +103,7 @@ def loss_fn(y, pred_y):
     :return loss value:
     
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
-
+'''
     
 def accuracy_fn(y, pred_y):
     
@@ -126,7 +127,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    loss = CategoricalCELoss(y, pred_y)
+    loss = loss_fn(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
