@@ -266,14 +266,11 @@ class MetaLearner():
         g = 0
         for i in range(0,len(copied_model.weights)):
             if copied_model.weights[i].trainable:
-                new_weights.append(copied_model.weights[i] - alpha*grads[g])
+                new_weights.append(np.array(copied_model.weights[i] - alpha*grads[g]))
                 g += 1
             else:
                 new_weights.append(copied_model.weights[i])
-        print("len new_weights: ",len(new_weights))
-        for elem in new_weights:
-            print("type: ",type(elem))
-            print("shape: ",elem.shape)
+
         copied_model.set_weights(np.asarray(new_weights,dtype=object))
      
 
