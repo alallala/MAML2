@@ -495,7 +495,7 @@ if __name__ == '__main__':
     for layer in model.layers:
         print(layer.name)
         for w in layer.weights:
-            print (layer.w.shape)
+            print (w.shape)
         print("\n")
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
