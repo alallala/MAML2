@@ -30,7 +30,7 @@ def load_file(f):
         print("loading {}".format(str(f.split("/")[-1])))
         img = tifffile.imread(f)
     img = np.asarray(img, dtype=np.float32)
-    return img
+    return img[:2000]
         
 class TaskGenerator:
     def __init__(self, args=None):
