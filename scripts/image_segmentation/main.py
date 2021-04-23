@@ -135,13 +135,13 @@ def compute_gradients(model, x, y):
     :param model: Neural network
     :param x: Input tensor
     :param y: Ground truth of input tensor
-    :param loss_fn: loss function #NO
+    :param loss_fn: loss function 
 
     :return Gradient tensor
     '''
     with tf.GradientTape() as tape:
         pred = model(x) #only y_pred
-        loss = CategoricalCELoss(y, pred)
+        loss, _ = compute_loss(model,x,pred)
         grads = tape.gradient(loss, model.trainable_variables)
     return grads
 
@@ -268,6 +268,7 @@ def maml_train(model, batch_generator):
             mean_loss = tf.reduce_mean(batch_loss)
         # Compute second order gradients
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
+        print(outer_grads)
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
         if visual:
             # Write gradients histogram
