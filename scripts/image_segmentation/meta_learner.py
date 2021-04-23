@@ -254,8 +254,8 @@ class MetaLearner():
         
         :return model with fast weights
         '''
-        ml_instance = cls(args)
-        copied_model = ml_instance.initialize_Unet()
+
+        copied_model = cls.initialize_Unet()
         copied_model.set_weights(model.get_weights())
         
         #manually update weights, we just consider trainable weights
