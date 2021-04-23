@@ -72,9 +72,9 @@ class TaskGenerator:
         
         if self.dataset == 'clarity':
             
-            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000)
-            self.metatrain_data = data[:600]
-            self.metaval_data = data[600:] 
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',500)
+            self.metatrain_data = data[:300]
+            self.metaval_data = data[300:] 
   
         
         # Record the relationship between image label and the folder name in each task
@@ -190,10 +190,10 @@ class TaskGenerator:
         
         '''
         if test:
-          data = self.metaval_data[700:]
+          data = self.metaval_data[400:]
           p_str = 'test'
         else:
-          data = self.metaval_folders[600:700] 
+          data = self.metaval_folders[300:400] 
           p_str = 'validation'
         print ('Sample '+p_str+' batch of tasks from {} images'.format(len(data)))
         # Shuffle root folder in order to prevent repeat
