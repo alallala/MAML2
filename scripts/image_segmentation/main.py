@@ -501,10 +501,11 @@ if __name__ == '__main__':
     ml = MetaLearner(args=args)
     print ('Build model\n')
     model = ml.initialize_Unet()
-    model = ml.initialize(model)
+    model = ml.initialize(model) 
+    print(model.summary)
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
-    print("tasks generation\n")
+    print("\ntasks generation\n")
     batch_generator = TaskGenerator(args)
 
     if args.mode == 'train':
