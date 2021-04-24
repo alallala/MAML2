@@ -268,9 +268,6 @@ class MetaLearner():
         
         copied_model.block3_conv1.kernel = model.block3_conv1.kernel
         copied_model.block3_conv1.bias = model.block3_conv1.bias
-       
-        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
-        copied_model.block3_conv1.bias = model.block3_conv1.bias
         
         copied_model.block3_conv2.kernel = model.block3_conv2.kernel
         copied_model.block3_conv2.bias = model.block3_conv2.bias
@@ -371,66 +368,65 @@ class MetaLearner():
         
         copied_model.build((1,256,256,3)) 
         
-        copied_model.get_layer("block1_conv1").kernel = model.block1_conv1.kernel 
-        copied_model.block1_conv1.bias = model.block1_conv1.bias
+        copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
+        copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
         
-        copied_model.block1_conv2.kernel = model.block1_conv2.kernel
-        copied_model.block1_conv2.bias = model.block1_conv2.bias 
+        copied_model.get_layer("block1_conv2").kernel = model.get_layer("block1_conv2".kernel
+        copied_model.get_layer("block1_conv2").bias = model.get_layer("block1_conv2").bias 
         
         
-        copied_model.block2_conv1.kernel = model.block2_conv1.kernel
-        copied_model.block2_conv1.bias = model.block2_conv2.bias
+        copied_model.get_layer("block2_conv1").kernel = model.get_layer("block2_conv1").kernel
+        copied_model.get_layer("block2_conv1").bias = model.get_layer("block2_conv1").bias
          
-        copied_model.block2_conv2.kernel = model.block2_conv1.kernel
-        copied_model.block2_conv2.bias = model.block2_conv2.bias
+        copied_model.get_layer("block2_conv2").kernel = model.get_layer("block2_conv2").kernel
+        copied_model.get_layer("block2_conv2").bias = model.get_layer("block2_conv2").bias
         
         
-        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
-        copied_model.block3_conv1.bias = model.block3_conv1.bias
+        copied_model.get_layer("block3_conv1").kernel = model.get_layer("block3_conv1").kernel
+        copied_model.get_layer("block3_conv1").bias = model.get_layer("block3_conv1").bias
        
-        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
-        copied_model.block3_conv1.bias = model.block3_conv1.bias
+        copied_model.get_layer("block3_conv2").kernel = model.get_layer("block3_conv2").kernel
+        copied_model.get_layer("block3_conv2").bias = model.get_layer("block3_conv2").bias
         
-        copied_model.block3_conv2.kernel = model.block3_conv2.kernel
-        copied_model.block3_conv2.bias = model.block3_conv2.bias
-        
-        copied_model.block3_conv3.kernel = model.block3_conv3.kernel
-        copied_model.block3_conv3.bias = model.block3_conv3.bias
+        copied_model.get_layer("block3_conv3").kernel = model.get_layer("block3_conv3").kernel
+        copied_model.get_layer("block3_conv3").bias = model.get_layer("block3_conv3").bias
         
         
-        copied_model.block4_conv1.kernel = model.block4_conv1.kernel
-        copied_model.block4_conv1.bias = model.block4_conv1.bias
+        copied_model.get_layer("block4_conv1").kernel = model.get_layer("block4_conv1").kernel
+        copied_model.get_layer("block4_conv1").bias = model.get_layer("block4_conv1").bias
         
-        copied_model.block4_conv2.kernel = model.block4_conv2.kernel
-        copied_model.block4_conv2.bias = model.block4_conv2.bias
+        copied_model.get_layer("block4_conv2").kernel = model.get_layer("block4_conv2").kernel
+        copied_model.get_layer("block4_conv2").bias = model.get_layer("block4_conv2").bias
         
-        copied_model.block4_conv3.kernel = model.block4_conv3.kernel
-        copied_model.block4_conv3.bias = model.block4_conv3.bias
+        copied_model.get_layer("block4_conv3").kernel = model.get_layer("block4_conv3").kernel
+        copied_model.get_layer("block4_conv3").bias = model.get_layer("block4_conv3").bias
    
          
-        copied_model.block5_conv1.kernel = model.block5_conv1.kernel
-        copied_model.block5_conv1.bias = model.block5_conv1.bias
+        copied_model.get_layer("block5_conv1").kernel = model.get_layer("block5_conv1").kernel
+        copied_model.get_layer("block5_conv1").bias = model.get_layer("block5_conv1").bias
         
-        copied_model.block5_conv2.kernel = model.block5_conv2.kernel
-        copied_model.block5_conv2.bias = model.block5_conv2.bias
+        copied_model.get_layer("block5_conv2").kernel = model.get_layer("block5_conv2").kernel
+        copied_model.get_layer("block5_conv2").bias = model.get_layer("block5_conv2").bias
         
-        copied_model.block5_conv3.kernel = model.block5_conv3.kernel
-        copied_model.block5_conv3.bias = model.block5_conv3.bias
+        copied_model.get_layer("block5_conv3").kernel = model.get_layer("block5_conv3").kernel
+        copied_model.get_layer("block5_conv3").bias = model.get_layer("block5_conv3").bias
          
         
-        copied_model.center_block1_conv.kernel = model.center_block1_conv.kernel
-        copied_model.center_block1_bn.gamma = model.center_block1_bn.gamma
-        copied_model.center_block1_bn.beta = model.center_block1_bn.beta
+        copied_model.get_layer("center_block1_conv").kernel = model.get_layer("center_block1_conv").kernel
+        copied_model.get_layer("center_block1_conv").bias = model.get_layer("center_block1_conv").bias
+        copied_model.get_layer("center_block1_bn").gamma = model.get_layer("center_block1_bn").gamma
+        copied_model.get_layer("center_block1_bn").beta = model.get_layer("center_block1_bn").beta
         
         
-        copied_model.center_block2_conv.kernel = model.center_block2_conv.kernel
-        copied_model.center_block2_bn.gamma = model.center_block2_bn.gamma
-        copied_model.center_block2_bn.beta = model.center_block2_bn.beta
+        copied_model.get_layer("center_block2_conv").kernel = model.get_layer("center_block2_conv").kernel
+        copied_model.get_layer("center_block2_conv").bias = model.get_layer("center_block2_conv").bias
+        copied_model.get_layer("center_block2_bn").gamma = model.get_layer("center_block2_bn").gamma
+        copied_model.get_layer("center_block2_bn").beta = model.get_layer("center_block2_bn").beta
 
 
-        copied_model.stage0a_conv.kernel = model.stage0a_conv.kernel 
-        copied_model.stage0a_bn.gamma = model.stage0a_bn.gamma 
-        copied_model.stage0a_bn.beta = model.stage0a_bn.beta 
+        copied_model.get_layer("stage0a_conv").kernel = model.get_layer("stage0a_conv").kernel 
+        copied_model.get_layer("stage0a_bn").gamma = model.get_layer("stage0a_bn").gamma 
+        copied_model.get_layer("stage0a_bn").beta = model.get_layer("stage0a_bn").beta 
         
         copied_model.stage0b_conv.kernel = model.stage0b_conv.kernel 
         copied_model.stage0b_bn.gamma = model.stage0b_bn.gamma 
