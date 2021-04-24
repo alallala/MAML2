@@ -304,7 +304,7 @@ class MetaLearner():
                 new_weights.append(np.array(copied_model.weights[i]))
 
         copied_model.set_weights(new_weights)
-        '''
+        
 
         return copied_model
         
