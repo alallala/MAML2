@@ -260,7 +260,7 @@ def maml_train(model, batch_generator):
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
                     print("grads\n")
                     for i in range(0,len(inner_grads)):
-                        if inner_grads[i].shape != i_w[i]:
+                        if inner_grads[i].shape != i_w[i].shape:
                             print("SHAPE DIVERSA")
                            
                     copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
