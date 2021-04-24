@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
+from losses import CategoricalCELoss
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -127,7 +128,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    bcel = BinaryCELoss()
+    bcel = CategoricalCELoss()
     loss = bcel(y, pred_y)
     return loss, pred_y
 
