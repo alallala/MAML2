@@ -190,9 +190,9 @@ def maml_train(model, batch_generator):
     meta_optimizer = tf.keras.optimizers.Adam(learning_rate=args.meta_lr, name='meta_optimizer')
     
     # Initialize Checkpoint handle
-    '''
+    
     checkpoint = tf.train.Checkpoint(maml_model=model)
-    '''
+    
     losses = []
     #accs = []
     test_losses = []
@@ -270,10 +270,10 @@ def maml_train(model, batch_generator):
             # Compute mean loss of the whole batch
             mean_loss =tf.reduce_mean(batch_loss)
             
-            print("batch 0 loss: ",batch_loss[0])
+            print("MEAN LOSS TYPE",type(mean_loss))
         # Compute second order gradients
         i_w_ = ml.inner_weights(model)
-        outer_grads = outer_tape.gradient(batch_loss[0], i_w_)
+        outer_grads = outer_tape.gradient(mean_loss, i_w_)
         print("OUTER GRADS ",outer_grads)
         meta_optimizer.apply_gradients(zip(outer_grads,model.trainable_variables))
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
@@ -319,11 +319,11 @@ def maml_train(model, batch_generator):
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
-        '''
+        
         # Save checkpoint
         if step % ckpt_steps == 0 and step > 0:
             checkpoint.save(ckpt_dir+'maml_model.ckpt')
-        '''
+        
         # Evaluating model
         if step % test_steps == 0 and step > 0:
             test_set = batch_generator.test_batch(test=False) #use validation folders

@@ -262,6 +262,15 @@ class MetaLearner():
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
         
+        '''
+        for j in range(len(model_copy.layers)):
+                    model_copy.layers[j].kernel = tf.subtract(model.layers[j].kernel,
+                                tf.multiply(lr_inner, gradients[k]))
+                    model_copy.layers[j].bias = tf.subtract(model.layers[j].bias,
+                                tf.multiply(lr_inner, gradients[k+1]))
+                    k += 2
+        '''
+        
         new_weights  = []
         g = 0
         for i in range(0,len(copied_model.weights)):
