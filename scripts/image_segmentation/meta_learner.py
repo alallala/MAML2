@@ -173,7 +173,7 @@ class MetaLearner():
     def __init__(self,args=None):
     
         self.classes = args.classes   
-        '''it should be 1+1 (background + cloud)'''
+        '''it should be 1+1 (background + cloud) ???'''
         self.decoder_filters =(256, 128, 64, 32, 16) 
         self.backbone_name='vgg16',
         self.input_shape=(None, None, 3),
