@@ -231,7 +231,15 @@ class MetaLearner():
         '''weights are None'''
         #if self.weights is not None:
         #    model.load_weights(self.weights)
-            
+        
+        return model
+        
+
+    def initialize(cls,model):
+    
+        ip_size = (None,None,None,3)
+        model.build(ip_size)
+        
         return model
         
     def inner_weights(self,model):
@@ -242,6 +250,7 @@ class MetaLearner():
     def hard_copy(cls,model,args):
         ml_instance = cls(args)
         copied_model = ml_instance.initialize_Unet()
+        copied_model.build((None,None,None,3))
         copied_model.set_weights(model.get_weights())
         
     def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
@@ -256,6 +265,9 @@ class MetaLearner():
         '''
 
         copied_model = cls.initialize_Unet()
+        
+        copied_model.build((None,None,None,3))
+
         copied_model.set_weights(model.get_weights())
         
         #manually update weights, we just consider trainable weights

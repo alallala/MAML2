@@ -251,6 +251,8 @@ def maml_train(model, batch_generator):
                 batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             mean_loss = tf.reduce_mean(batch_loss)
+            print("MEAN LOSS TYPE :",type(mean_loss))
+            print("\n") 
         # Compute second order gradients
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
