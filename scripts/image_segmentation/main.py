@@ -263,7 +263,7 @@ def maml_train(model, batch_generator):
                     print("grads\n")
                     for el1 in inner_grads:
                     
-                        print(ell.shape)
+                        print(el1.shape)
                     copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
                     
                 # Compute task loss & accuracy on the query set
