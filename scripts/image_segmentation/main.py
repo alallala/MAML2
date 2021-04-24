@@ -258,7 +258,7 @@ def maml_train(model, batch_generator):
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
                         for el in i_w:
-                            print(i_w.shape)
+                            print(el.shape)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
                     print("grads\n")
                     for el1 in inner_grads:
