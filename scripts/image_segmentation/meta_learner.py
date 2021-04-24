@@ -268,8 +268,10 @@ class MetaLearner():
         
         copied_model.build((1,256,256,3))
         
-        #make hard copy
+        #make hard copy 
         for j in range(len(copied_model.layers)):
+                if copied_model.layers[j].trainable == False:
+                    j+=1
                     copied_model.layers[j].kernel = model.layers[j].kernel
                     copied_model.layers[j].bias = model.layers[j].bias
                                 
