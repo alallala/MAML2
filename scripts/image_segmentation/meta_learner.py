@@ -314,7 +314,7 @@ class MetaLearner():
         copied_model.get_layer("decoder_stage0b_bn").gamma = model.get_layer("decoder_stage0b_bn").gamma 
         copied_model.get_layer("decoder_stage0b_bn").beta = model.get_layer("decoder_stage0b_bn").beta 
 
-        copied_model.get_layer("decoder_stage1a_conv").kernel = model.stage1a_conv.kernel 
+        copied_model.get_layer("decoder_stage1a_conv").kernel = model.get_layer("decoder_stage1a_conv").kernel 
         copied_model.get_layer("decoder_stage1a_bn").gamma = model.get_layer("decoder_stage1a_bn").gamma 
         copied_model.get_layer("decoder_stage1a_bn").beta = model.get_layer("decoder_stage1a_bn").beta 
         
@@ -431,7 +431,7 @@ class MetaLearner():
         copied_model.get_layer("decoder_stage0b_bn").gamma = model.get_layer("decoder_stage0b_bn").gamma 
         copied_model.get_layer("decoder_stage0b_bn").beta = model.get_layer("decoder_stage0b_bn").beta 
 
-        copied_model.get_layer("decoder_stage1a_conv").kernel = model.stage1a_conv.kernel 
+        copied_model.get_layer("decoder_stage1a_conv").kernel = model.get_layer("decoder_stage1a_conv").kernel 
         copied_model.get_layer("decoder_stage1a_bn").gamma = model.get_layer("decoder_stage1a_bn").gamma 
         copied_model.get_layer("decoder_stage1a_bn").beta = model.get_layer("decoder_stage1a_bn").beta 
         
