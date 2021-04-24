@@ -271,6 +271,9 @@ def maml_train(model, batch_generator):
             
             print("MEAN LOSS TYPE",mean_loss)
         # Compute second order gradients
+        print("len trainable ", len(model.trainable_variables))
+        print("len trainable ", len(model.trainable_weights))
+
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
         print("OUTER GRADS ",outer_grads)
         meta_optimizer.apply_gradients(zip(outer_grads,model.trainable_variables))
