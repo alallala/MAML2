@@ -371,7 +371,7 @@ class MetaLearner():
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
         
-        copied_model.get_layer("block1_conv2").kernel = model.get_layer("block1_conv2".kernel
+        copied_model.get_layer("block1_conv2").kernel = model.get_layer("block1_conv2").kernel
         copied_model.get_layer("block1_conv2").bias = model.get_layer("block1_conv2").bias 
         
         
