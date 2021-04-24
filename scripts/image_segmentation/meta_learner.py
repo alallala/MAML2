@@ -269,7 +269,8 @@ class MetaLearner():
         copied_model.build((1,256,256,3))
         
         #make hard copy 
-        for j in range(len(copied_model.layers)):
+        
+        for j in range(0,len(copied_model.layers)):
                 if copied_model.layers[j].trainable == False:
                     j+=1
                 copied_model.layers[j].kernel = model.layers[j].kernel
@@ -281,6 +282,7 @@ class MetaLearner():
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
         
+        '''
         k=0
         for j in range(0,len(copeid_model.layers)):
                     if copied_model.layers[j].trainable == False:
