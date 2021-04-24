@@ -248,10 +248,113 @@ class MetaLearner():
         
         
     def hard_copy(cls,model,args):
-        ml_instance = cls(args)
-        copied_model = ml_instance.initialize_Unet()
-        copied_model.build((None,None,None,3))
-        copied_model.set_weights(model.get_weights())
+        
+        copied_model = cls.initialize_Unet()
+        copied_model.build((1,256,256,3))
+        
+        copied_model.block1_conv1.kernel = model.block1_conv1.kernel 
+        copied_model.block1_conv1.bias = model.block1_conv1.bias
+        
+        copied_model.block1_conv2.kernel = model.block1_conv2.kernel
+        copied_model.block1_conv2.bias = model.block1_conv2.bias 
+        
+        
+        copied_model.block2_conv1.kernel = model.block2_conv1.kernel
+        copied_model.block2_conv1.bias = model.block2_conv2.bias
+         
+        copied_model.block2_conv2.kernel = model.block2_conv1.kernel
+        copied_model.block2_conv2.bias = model.block2_conv2.bias
+        
+        
+        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
+        copied_model.block3_conv1.bias = model.block3_conv1.bias
+       
+        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
+        copied_model.block3_conv1.bias = model.block3_conv1.bias
+        
+        copied_model.block3_conv2.kernel = model.block3_conv2.kernel
+        copied_model.block3_conv2.bias = model.block3_conv2.bias
+        
+        copied_model.block3_conv3.kernel = model.block3_conv3.kernel
+        copied_model.block3_conv3.bias = model.block3_conv3.bias
+        
+        
+        copied_model.block4_conv1.kernel = model.block4_conv1.kernel
+        copied_model.block4_conv1.bias = model.block4_conv1.bias
+        
+        copied_model.block4_conv2.kernel = model.block4_conv2.kernel
+        copied_model.block4_conv2.bias = model.block4_conv2.bias
+        
+        copied_model.block4_conv3.kernel = model.block4_conv3.kernel
+        copied_model.block4_conv3.bias = model.block4_conv3.bias
+   
+         
+        copied_model.block5_conv1.kernel = model.block5_conv1.kernel
+        copied_model.block5_conv1.bias = model.block5_conv1.bias
+        
+        copied_model.block5_conv2.kernel = model.block5_conv2.kernel
+        copied_model.block5_conv2.bias = model.block5_conv2.bias
+        
+        copied_model.block5_conv3.kernel = model.block5_conv3.kernel
+        copied_model.block5_conv3.bias = model.block5_conv3.bias
+         
+        
+        copied_model.center_block1_conv.kernel = model.center_block1_conv.kernel
+        copied_model.center_block1_bn.gamma = model.center_block1_bn.gamma
+        copied_model.center_block1_bn.beta = model.center_block1_bn.beta
+        
+        
+        copied_model.center_block2_conv.kernel = model.center_block2_conv.kernel
+        copied_model.center_block2_bn.gamma = model.center_block2_bn.gamma
+        copied_model.center_block2_bn.beta = model.center_block2_bn.beta
+
+
+        copied_model.stage0a_conv.kernel = model.stage0a_conv.kernel 
+        copied_model.stage0a_bn.gamma = model.stage0a_bn.gamma 
+        copied_model.stage0a_bn.beta = model.stage0a_bn.beta 
+        
+        copied_model.stage0b_conv.kernel = model.stage0b_conv.kernel 
+        copied_model.stage0b_bn.gamma = model.stage0b_bn.gamma 
+        copied_model.stage0b_bn.beta = model.stage0b_bn.beta 
+
+        copied_model.stage1a_conv.kernel = model.stage1a_conv.kernel 
+        copied_model.stage1a_bn.gamma = model.stage1a_bn.gamma 
+        copied_model.stage1a_bn.beta = model.stage1a_bn.beta 
+        
+        copied_model.stage1b_conv.kernel = model.stage1b_conv.kernel 
+        copied_model.stage1b_bn.gamma = model.stage1b_bn.gamma 
+        copied_model.stage1b_bn.beta = model.stage1b_bn.beta
+        
+        
+        copied_model.stage2a_conv.kernel = model.stage2a_conv.kernel 
+        copied_model.stage2a_bn.gamma = model.stage2a_bn.gamma 
+        copied_model.stage2a_bn.beta = model.stage2a_bn.beta 
+        
+        copied_model.stage2b_conv.kernel = model.stage2b_conv.kernel 
+        copied_model.stage2b_bn.gamma = model.stage2b_bn.gamma 
+        copied_model.stage2b_bn.beta = model.stage2b_bn.beta
+        
+        copied_model.stage3a_conv.kernel = model.stage3a_conv.kernel 
+        copied_model.stage3a_bn.gamma = model.stage3a_bn.gamma 
+        copied_model.stage3a_bn.beta = model.stage3a_bn.beta 
+        
+        copied_model.stage3b_conv.kernel = model.stage3b_conv.kernel 
+        copied_model.stage3b_bn.gamma = model.stage3b_bn.gamma 
+        copied_model.stage3b_bn.beta = model.stage3b_bn.beta
+        
+     
+        copied_model.stage4a_conv.kernel = model.stage4a_conv.kernel 
+        copied_model.stage4a_bn.gamma = model.stage4a_bn.gamma 
+        copied_model.stage4a_bn.beta = model.stage4a_bn.beta 
+        
+        copied_model.stage4b_conv.kernel = model.stage4b_conv.kernel 
+        copied_model.stage4b_bn.gamma = model.stage4b_bn.gamma 
+        copied_model.stage4b_bn.beta = model.stage4b_bn.beta
+       
+        copied_model.final_conv.kernel = model.final_conv.kernel 
+        copied_model.final_conv.bias = model.final_conv.bias
+        
+        
         
     def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
         
@@ -266,26 +369,114 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model= keras.models.clone_model(model)
-        copied_model.build((1,256,256,3))                           
-        copied_model.set_weights(model.get_weights())
+        copied_model.build((1,256,256,3)) 
         
+        copied_model.block1_conv1.kernel = model.block1_conv1.kernel 
+        copied_model.block1_conv1.bias = model.block1_conv1.bias
+        
+        copied_model.block1_conv2.kernel = model.block1_conv2.kernel
+        copied_model.block1_conv2.bias = model.block1_conv2.bias 
+        
+        
+        copied_model.block2_conv1.kernel = model.block2_conv1.kernel
+        copied_model.block2_conv1.bias = model.block2_conv2.bias
+         
+        copied_model.block2_conv2.kernel = model.block2_conv1.kernel
+        copied_model.block2_conv2.bias = model.block2_conv2.bias
+        
+        
+        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
+        copied_model.block3_conv1.bias = model.block3_conv1.bias
+       
+        copied_model.block3_conv1.kernel = model.block3_conv1.kernel
+        copied_model.block3_conv1.bias = model.block3_conv1.bias
+        
+        copied_model.block3_conv2.kernel = model.block3_conv2.kernel
+        copied_model.block3_conv2.bias = model.block3_conv2.bias
+        
+        copied_model.block3_conv3.kernel = model.block3_conv3.kernel
+        copied_model.block3_conv3.bias = model.block3_conv3.bias
+        
+        
+        copied_model.block4_conv1.kernel = model.block4_conv1.kernel
+        copied_model.block4_conv1.bias = model.block4_conv1.bias
+        
+        copied_model.block4_conv2.kernel = model.block4_conv2.kernel
+        copied_model.block4_conv2.bias = model.block4_conv2.bias
+        
+        copied_model.block4_conv3.kernel = model.block4_conv3.kernel
+        copied_model.block4_conv3.bias = model.block4_conv3.bias
+   
+         
+        copied_model.block5_conv1.kernel = model.block5_conv1.kernel
+        copied_model.block5_conv1.bias = model.block5_conv1.bias
+        
+        copied_model.block5_conv2.kernel = model.block5_conv2.kernel
+        copied_model.block5_conv2.bias = model.block5_conv2.bias
+        
+        copied_model.block5_conv3.kernel = model.block5_conv3.kernel
+        copied_model.block5_conv3.bias = model.block5_conv3.bias
+         
+        
+        copied_model.center_block1_conv.kernel = model.center_block1_conv.kernel
+        copied_model.center_block1_bn.gamma = model.center_block1_bn.gamma
+        copied_model.center_block1_bn.beta = model.center_block1_bn.beta
+        
+        
+        copied_model.center_block2_conv.kernel = model.center_block2_conv.kernel
+        copied_model.center_block2_bn.gamma = model.center_block2_bn.gamma
+        copied_model.center_block2_bn.beta = model.center_block2_bn.beta
+
+
+        copied_model.stage0a_conv.kernel = model.stage0a_conv.kernel 
+        copied_model.stage0a_bn.gamma = model.stage0a_bn.gamma 
+        copied_model.stage0a_bn.beta = model.stage0a_bn.beta 
+        
+        copied_model.stage0b_conv.kernel = model.stage0b_conv.kernel 
+        copied_model.stage0b_bn.gamma = model.stage0b_bn.gamma 
+        copied_model.stage0b_bn.beta = model.stage0b_bn.beta 
+
+        copied_model.stage1a_conv.kernel = model.stage1a_conv.kernel 
+        copied_model.stage1a_bn.gamma = model.stage1a_bn.gamma 
+        copied_model.stage1a_bn.beta = model.stage1a_bn.beta 
+        
+        copied_model.stage1b_conv.kernel = model.stage1b_conv.kernel 
+        copied_model.stage1b_bn.gamma = model.stage1b_bn.gamma 
+        copied_model.stage1b_bn.beta = model.stage1b_bn.beta
+        
+        
+        copied_model.stage2a_conv.kernel = model.stage2a_conv.kernel 
+        copied_model.stage2a_bn.gamma = model.stage2a_bn.gamma 
+        copied_model.stage2a_bn.beta = model.stage2a_bn.beta 
+        
+        copied_model.stage2b_conv.kernel = model.stage2b_conv.kernel 
+        copied_model.stage2b_bn.gamma = model.stage2b_bn.gamma 
+        copied_model.stage2b_bn.beta = model.stage2b_bn.beta
+        
+        copied_model.stage3a_conv.kernel = model.stage3a_conv.kernel 
+        copied_model.stage3a_bn.gamma = model.stage3a_bn.gamma 
+        copied_model.stage3a_bn.beta = model.stage3a_bn.beta 
+        
+        copied_model.stage3b_conv.kernel = model.stage3b_conv.kernel 
+        copied_model.stage3b_bn.gamma = model.stage3b_bn.gamma 
+        copied_model.stage3b_bn.beta = model.stage3b_bn.beta
+        
+     
+        copied_model.stage4a_conv.kernel = model.stage4a_conv.kernel 
+        copied_model.stage4a_bn.gamma = model.stage4a_bn.gamma 
+        copied_model.stage4a_bn.beta = model.stage4a_bn.beta 
+        
+        copied_model.stage4b_conv.kernel = model.stage4b_conv.kernel 
+        copied_model.stage4b_bn.gamma = model.stage4b_bn.gamma 
+        copied_model.stage4b_bn.beta = model.stage4b_bn.beta
+       
+        copied_model.final_conv.kernel = model.final_conv.kernel 
+        copied_model.final_conv.bias = model.final_conv.bias
+      
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
-        
-        '''
-        k=0
-        for j in range(0,len(copeid_model.layers)):
-                    if copied_model.layers[j].trainable == False:
-                        j+=1
-                    copied_model.layers[j].kernel = tf.subtract(model.layers[j].kernel,
-                                tf.multiply(alpha, grads[k]))
-                    copied_model.layers[j].bias = tf.subtract(model.layers[j].bias,
-                                tf.multiply(alpha, grads[k+1]))
-                    k += 2
-        '''
-        
+              
         new_weights  = []
         g = 0
         for i in range(0,len(copied_model.weights)):
