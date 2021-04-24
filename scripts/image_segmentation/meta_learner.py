@@ -270,8 +270,8 @@ class MetaLearner():
         
         #make hard copy
         for j in range(len(copied_model.layers)):
-                    copied_model.layers[j].kernel = model.layers[j].kernel,
-                    copied_model.layers[j].bias = model.layers[j].bias,
+                    copied_model.layers[j].kernel = model.layers[j].kernel
+                    copied_model.layers[j].bias = model.layers[j].bias
                                 
         #copied_model.set_weights(model.get_weights())
         
