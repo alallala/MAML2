@@ -266,17 +266,9 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((1,256,256,3))
-        
-        #make hard copy 
-        
-        for j in range(0,len(copied_model.layers)):
-                if copied_model.layers[j].trainable == False:
-                    j+=1
-                copied_model.layers[j].kernel = model.layers[j].kernel
-                copied_model.layers[j].bias = model.layers[j].bias
-                                
-        #copied_model.set_weights(model.get_weights())
+        copied_model= keras.models.clone_model(model)
+        copied_model.build((1,256,256,3))                           
+        copied_model.set_weights(model.get_weights())
         
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
