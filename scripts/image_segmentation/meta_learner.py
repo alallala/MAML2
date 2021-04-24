@@ -253,7 +253,6 @@ class MetaLearner():
         copied_model.build((1,256,256,3))
         
         
-        
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
         
