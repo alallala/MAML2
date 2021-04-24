@@ -364,10 +364,14 @@ class MetaLearner():
         :return model with fast weights
         '''
 
+
         copied_model = cls.initialize_Unet()
         
         copied_model.build((1,256,256,3)) 
         
+        copied_model.get_weigths(model.set_weights)
+        
+        '''
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
         
@@ -424,12 +428,12 @@ class MetaLearner():
         copied_model.get_layer("center_block2_bn").beta = model.get_layer("center_block2_bn").beta
 
 
-        copied_model.get_layer("stage0a_conv").kernel = model.get_layer("stage0a_conv").kernel 
-        copied_model.get_layer("stage0a_bn").gamma = model.get_layer("stage0a_bn").gamma 
-        copied_model.get_layer("stage0a_bn").beta = model.get_layer("stage0a_bn").beta 
+        copied_model.get_layer("decoder_stage0a_conv").kernel = model.get_layer("decoder_stage0a_conv").kernel 
+        copied_model.get_layer("decoder_decoder_stage0a_bn").gamma = model.get_layer("decoder_stage0a_bn").gamma 
+        copied_model.get_layer("decoder_stage0a_bn").beta = model.get_layer("decoder_stage0a_bn").beta 
         
-        copied_model.stage0b_conv.kernel = model.stage0b_conv.kernel 
-        copied_model.stage0b_bn.gamma = model.stage0b_bn.gamma 
+        copied_model.get_layer("decoder_stage0b_conv").kernel = model.get_layer("decoder_stage0b_conv").kernel 
+        copied_model.get_layer("decoder_stage0b_bn").gamma = model.stage0b_bn.gamma 
         copied_model.stage0b_bn.beta = model.stage0b_bn.beta 
 
         copied_model.stage1a_conv.kernel = model.stage1a_conv.kernel 
@@ -468,7 +472,8 @@ class MetaLearner():
        
         copied_model.final_conv.kernel = model.final_conv.kernel 
         copied_model.final_conv.bias = model.final_conv.bias
-      
+        '''
+        
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
