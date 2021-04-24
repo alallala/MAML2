@@ -238,7 +238,7 @@ def maml_train(model, batch_generator):
         # Set up outer gradient tape, only watch model.trainable_variables
         # Because GradientTape only auto record tranable_variables of model
         # But the copied_model.inner_weights is tf.Tensor, so they won't be automatically watched
-        with tf.GradientTape() as outer_tape:
+        with tf.GradientTape(watch_accessed_variables=False) as outer_tape:
             # Use the average loss over all tasks in one batch to compute gradients
             for idx, task in enumerate(batch_set):
                 # Set up copied model
