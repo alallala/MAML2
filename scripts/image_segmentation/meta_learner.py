@@ -267,19 +267,24 @@ class MetaLearner():
         copied_model = cls.initialize_Unet()
         
         copied_model.build((1,256,256,3))
-
-        copied_model.set_weights(model.get_weights())
+        
+        #make hard copy
+        for j in range(len(copied_model.layers)):
+                    copied_model.layers[j].kernel = model.layers[j].kernel,
+                    copied_model.layers[j].bias = model.layers[j].bias,
+                                
+        #copied_model.set_weights(model.get_weights())
         
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
         
-        '''
-        for j in range(len(model_copy.layers)):
-                    model_copy.layers[j].kernel = tf.subtract(model.layers[j].kernel,
-                                tf.multiply(lr_inner, gradients[k]))
-                    model_copy.layers[j].bias = tf.subtract(model.layers[j].bias,
-                                tf.multiply(lr_inner, gradients[k+1]))
+        k=0
+        for j in range(0,len(copeid_model.layers)):
+                    copeid_model.layers[j].kernel = tf.subtract(model.layers[j].kernel,
+                                tf.multiply(alpha, grads[k]))
+                    copeid_model.layers[j].bias = tf.subtract(model.layers[j].bias,
+                                tf.multiply(alpha, grads[k+1]))
                     k += 2
         '''
         
@@ -293,7 +298,7 @@ class MetaLearner():
                 new_weights.append(np.array(copied_model.weights[i]))
 
         copied_model.set_weights(new_weights)
-     
+        '''
 
         return copied_model
         
