@@ -237,7 +237,7 @@ class MetaLearner():
 
     def initialize(cls,model):
     
-        ip_size = (1,None,None,3)
+        ip_size = (1,256,256,3)
         model.build(ip_size)
         
         return model
@@ -250,7 +250,7 @@ class MetaLearner():
     def hard_copy(cls,model,args):
         ml_instance = cls(args)
         copied_model = ml_instance.initialize_Unet()
-        copied_model.build((1,None,None,3))
+        copied_model.build((None,None,None,3))
         copied_model.set_weights(model.get_weights())
         
     def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
@@ -266,7 +266,7 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((1,None,None,3))
+        copied_model.build((1,256,256,3))
 
         copied_model.set_weights(model.get_weights())
         
