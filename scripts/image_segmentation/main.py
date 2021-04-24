@@ -503,7 +503,6 @@ if __name__ == '__main__':
     print ('Build model\n')
     model = ml.initialize_Unet()
     model = ml.initialize(model) 
-    print(model.summary())
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     print("\ntasks generation\n")
