@@ -262,14 +262,15 @@ def maml_train(model, batch_generator):
                     
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                print("task loss\n",task_loss)
-                print("task pre\n",task_pred)
+                #print("task loss\n",task_loss)
+                #print("task pre\n",task_pred)
                 
                 #task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 #batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             mean_loss = tf.reduce_mean(batch_loss)
+            print("MEAN LOSS ",mean_loss)
         # Compute second order gradients
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
