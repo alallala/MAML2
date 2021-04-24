@@ -478,10 +478,12 @@ class MetaLearner():
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
-              
+          
+        '''          
         new_weights  = []
         g = 0
         for i in range(0,len(copied_model.weights)):
+        
             if copied_model.weights[i].trainable:
                 new_weights.append(np.array(copied_model.weights[i] - alpha*grads[g]))
                 g += 1
@@ -490,7 +492,107 @@ class MetaLearner():
 
         copied_model.set_weights(new_weights)
         
+        '''
+        
+        copied_model.get_layer("block1_conv1").kernel = copied_model.get_layer("block1_conv1").kernel - alpha * grads[0]
+        copied_model.get_layer("block1_conv1").bias = copied_model.get_layer("block1_conv1").bias - alpha * grads[1]
+        
+        copied_model.get_layer("block1_conv2").kernel = copied_model.get_layer("block1_conv2").kernel- alpha * grads[2]
+        copied_model.get_layer("block1_conv2").bias = copied_model.get_layer("block1_conv2").bias - alpha * grads[3]
+        
+        
+        copied_model.get_layer("block2_conv1").kernel = copied_model.get_layer("block2_conv1").kernel - alpha * grads[4]
+        copied_model.get_layer("block2_conv1").bias = copied_model.get_layer("block2_conv1").bias - alpha * grads[5]
+         
+        copied_model.get_layer("block2_conv2").kernel = copied_model.get_layer("block2_conv2").kernel - alpha * grads[6]
+        copied_model.get_layer("block2_conv2").bias = copied_model.get_layer("block2_conv2").bias - alpha * grads[7]
+        
+        
+        copied_model.get_layer("block3_conv1").kernel = copied_model.get_layer("block3_conv1").kernel - alpha * grads[8]
+        copied_model.get_layer("block3_conv1").bias = copied_model.get_layer("block3_conv1").bias - alpha * grads[9]
+       
+        copied_model.get_layer("block3_conv2").kernel = copied_model.get_layer("block3_conv2").kernel - alpha * grads[10]
+        copied_model.get_layer("block3_conv2").bias = copied_model.get_layer("block3_conv2").bias - alpha * grads[11]
+        
+        copied_model.get_layer("block3_conv3").kernel = copied_model.get_layer("block3_conv3").kernel - alpha * grads[12]
+        copied_model.get_layer("block3_conv3").bias = copied_model.get_layer("block3_conv3").bias - alpha * grads[13]
+        
+        
+        copied_model.get_layer("block4_conv1").kernel = copied_model.get_layer("block4_conv1").kernel - alpha * grads[14]
+        copied_model.get_layer("block4_conv1").bias = copied_model.get_layer("block4_conv1").bias - alpha * grads[15]
+        
+        copied_model.get_layer("block4_conv2").kernel = copied_model.get_layer("block4_conv2").kernel - alpha * grads[16]
+        copied_model.get_layer("block4_conv2").bias = copied_model.get_layer("block4_conv2").bias - alpha * grads[17]
+        
+        copied_model.get_layer("block4_conv3").kernel = copied_model.get_layer("block4_conv3").kernel - alpha * grads[18]
+        copied_model.get_layer("block4_conv3").bias = copied_model.get_layer("block4_conv3").bias - alpha * grads[19]
+   
+         
+        copied_model.get_layer("block5_conv1").kernel = copied_model.get_layer("block5_conv1").kernel - alpha * grads[20]
+        copied_model.get_layer("block5_conv1").bias = copied_model.get_layer("block5_conv1").bias - alpha * grads[21]
+        
+        copied_model.get_layer("block5_conv2").kernel = copied_model.get_layer("block5_conv2").kernel - alpha * grads[22]
+        copied_model.get_layer("block5_conv2").bias = copied_model.get_layer("block5_conv2").bias - alpha * grads[23]
+        
+        copied_model.get_layer("block5_conv3").kernel = copied_model.get_layer("block5_conv3").kernel - alpha * grads[24]
+        copied_model.get_layer("block5_conv3").bias = copied_model.get_layer("block5_conv3").bias - alpha * grads[25]
+         
+        
+        copied_model.get_layer("center_block1_conv").kernel = copied_model.get_layer("center_block1_conv").kernel - alpha * grads[26]
+        copied_model.get_layer("center_block1_bn").gamma = copied_model.get_layer("center_block1_bn").gamma - alpha * grads[27]
+        copied_model.get_layer("center_block1_bn").beta = copied_model.get_layer("center_block1_bn").beta - alpha * grads[28]
+        
+        
+        copied_model.get_layer("center_block2_conv").kernel = copied_model.get_layer("center_block2_conv").kernel - alpha * grads[29]
+        copied_model.get_layer("center_block2_bn").gamma = copied_model.get_layer("center_block2_bn").gamma - alpha * grads[30]
+        copied_model.get_layer("center_block2_bn").beta = copied_model.get_layer("center_block2_bn").beta - alpha * grads[31]
 
+
+        copied_model.get_layer("decoder_stage0a_conv").kernel = copied_model.get_layer("decoder_stage0a_conv").kernel - alpha * grads[32]
+        copied_model.get_layer("decoder_stage0a_bn").gamma = copied_model.get_layer("decoder_stage0a_bn").gamma - alpha * grads[33]
+        copied_model.get_layer("decoder_stage0a_bn").beta = copied_model.get_layer("decoder_stage0a_bn").beta - alpha * grads[34]
+        
+        copied_model.get_layer("decoder_stage0b_conv").kernel = copied_model.get_layer("decoder_stage0b_conv").kernel - alpha * grads[35]
+        copied_model.get_layer("decoder_stage0b_bn").gamma = copied_model.get_layer("decoder_stage0b_bn").gamma - alpha * grads[36]
+        copied_model.get_layer("decoder_stage0b_bn").beta = copied_model.get_layer("decoder_stage0b_bn").beta - alpha * grads[37]
+
+        copied_model.get_layer("decoder_stage1a_conv").kernel = copied_model.get_layer("decoder_stage1a_conv").kernel - alpha * grads[38]
+        copied_model.get_layer("decoder_stage1a_bn").gamma = copied_model.get_layer("decoder_stage1a_bn").gamma - alpha * grads[39]
+        copied_model.get_layer("decoder_stage1a_bn").beta = copied_model.get_layer("decoder_stage1a_bn").beta - alpha * grads[40]
+        
+        copied_model.get_layer("decoder_stage1b_conv").kernel = copied_model.get_layer("decoder_stage1b_conv").kernel - alpha * grads[41]
+        copied_model.get_layer("decoder_stage1b_bn").gamma = copied_model.get_layer("decoder_stage1b_bn").gamma - alpha * grads[42]
+        copied_model.get_layer("decoder_stage1b_bn").beta = copied_model.get_layer("decoder_stage1b_bn").beta - alpha * grads[43]
+        
+        
+        copied_model.get_layer("decoder_stage2a_conv").kernel = copied_model.get_layer("decoder_stage2a_conv").kernel - alpha * grads[44]
+        copied_model.get_layer("decoder_stage2a_bn").gamma = copied_model.get_layer("decoder_stage2a_bn").gamma - alpha * grads[45]
+        copied_model.get_layer("decoder_stage2a_bn").beta = copied_model.get_layer("decoder_stage1a_bn").beta - alpha * grads[46]
+        
+        copied_model.get_layer("decoder_stage2b_conv").kernel = copied_model.get_layer("decoder_stage2b_conv").kernel - alpha * grads[47]
+        copied_model.get_layer("decoder_stage2b_bn").gamma = copied_model.get_layer("decoder_stage2b_bn").gamma - alpha * grads[48]
+        copied_model.get_layer("decoder_stage2b_bn").beta = copied_model.get_layer("decoder_stage2b_bn").beta - alpha * grads[49]
+        
+        copied_model.get_layer("decoder_stage3a_conv").kernel = copied_model.get_layer("decoder_stage3a_conv").kernel - alpha * grads[50]
+        copied_model.get_layer("decoder_stage3a_bn").gamma = copied_model.get_layer("decoder_stage3a_bn").gamma - alpha * grads[51]
+        copied_model.get_layer("decoder_stage3a_bn").beta = copied_model.get_layer("decoder_stage3a_bn").beta - alpha * grads[52]
+        
+        copied_model.get_layer("decoder_stage3b_conv").kernel = copied_model.get_layer("decoder_stage3b_conv").kernel - alpha * grads[53]
+        copied_model.get_layer("decoder_stage3b_bn").gamma = copied_model.get_layer("decoder_stage3b_bn").gamma - alpha * grads[54]
+        copied_model.get_layer("decoder_stage3b_bn").beta = copied_model.get_layer("decoder_stage3b_bn").beta - alpha * grads[55]
+        
+     
+        copied_model.get_layer("decoder_stage4a_conv").kernel = copied_model.get_layer("decoder_stage4a_conv").kernel - alpha * grads[56]
+        copied_model.get_layer("decoder_stage4a_bn").gamma = copied_model.get_layer("decoder_stage4a_bn").gamma - alpha * grads[57]
+        copied_model.get_layer("decoder_stage4a_bn").beta = copied_model.get_layer("decoder_stage4a_bn").beta - alpha * grads[58]
+        
+        copied_model.get_layer("decoder_stage4b_conv").kernel = copied_model.get_layer("decoder_stage4b_conv").kernel - alpha * grads[59]
+        copied_model.get_layer("decoder_stage4b_bn").gamma = copied_model.get_layer("decoder_stage4b_bn").gamma - alpha * grads[60]
+        copied_model.get_layer("decoder_stage4b_bn").beta = copied_model.get_layer("decoder_stage4b_bn").beta - alpha * grads[61]
+       
+        copied_model.get_layer("final_conv").kernel = copied_model.get_layer("final_conv").kernel - alpha * grads[62]
+        copied_model.get_layer("final_conv").bias = copied_model.get_layer("final_conv").bias - alpha * grads[63]
+        
         return copied_model
         
         
