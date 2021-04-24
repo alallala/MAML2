@@ -257,8 +257,13 @@ def maml_train(model, batch_generator):
                         inner_tape.watch(ml.inner_weights(copied_model))
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
-                        print("len inner weights: ",len(i_w))
+                        for el in i_w:
+                            print(i_w.shape)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
+                    print("grads\n")
+                    for el1 in inner_grads:
+                    
+                        print(ell.shape)
                     copied_model = ml.meta_update(model=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
                     
                 # Compute task loss & accuracy on the query set
