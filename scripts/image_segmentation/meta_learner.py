@@ -326,7 +326,7 @@ class MetaLearner():
         
         copied_model.get_layer("decoder_stage2a_conv").kernel = model.get_layer("decoder_stage2a_conv").kernel 
         copied_model.get_layer("decoder_stage2a_bn").gamma = model.get_layer("decoder_stage2a_bn").gamma 
-        copied_model.get_layer("decoder_stage2a_bn").beta = model.get_layer("decoder_stage1a_bn").beta 
+        copied_model.get_layer("decoder_stage2a_bn").beta = model.get_layer("decoder_stage2a_bn").beta 
         
         copied_model.get_layer("decoder_stage2b_conv").kernel = model.get_layer("decoder_stage2b_conv").kernel 
         copied_model.get_layer("decoder_stage2b_bn").gamma = model.get_layer("decoder_stage2b_bn").gamma 
@@ -447,7 +447,7 @@ class MetaLearner():
         
         copied_model.get_layer("decoder_stage2a_conv").kernel = model.get_layer("decoder_stage2a_conv").kernel 
         copied_model.get_layer("decoder_stage2a_bn").gamma = model.get_layer("decoder_stage2a_bn").gamma 
-        copied_model.get_layer("decoder_stage2a_bn").beta = model.get_layer("decoder_stage1a_bn").beta 
+        copied_model.get_layer("decoder_stage2a_bn").beta = model.get_layer("decoder_stage2a_bn").beta 
         
         copied_model.get_layer("decoder_stage2b_conv").kernel = model.get_layer("decoder_stage2b_conv").kernel 
         copied_model.get_layer("decoder_stage2b_bn").gamma = model.get_layer("decoder_stage2b_bn").gamma 
@@ -566,7 +566,7 @@ class MetaLearner():
         
         copied_model.get_layer("decoder_stage2a_conv").kernel = copied_model.get_layer("decoder_stage2a_conv").kernel - alpha * grads[44]
         copied_model.get_layer("decoder_stage2a_bn").gamma = copied_model.get_layer("decoder_stage2a_bn").gamma - alpha * grads[45]
-        copied_model.get_layer("decoder_stage2a_bn").beta = copied_model.get_layer("decoder_stage1a_bn").beta - alpha * grads[46]
+        copied_model.get_layer("decoder_stage2a_bn").beta = copied_model.get_layer("decoder_stage2a_bn").beta - alpha * grads[46]
         
         copied_model.get_layer("decoder_stage2b_conv").kernel = copied_model.get_layer("decoder_stage2b_conv").kernel - alpha * grads[47]
         copied_model.get_layer("decoder_stage2b_bn").gamma = copied_model.get_layer("decoder_stage2b_bn").gamma - alpha * grads[48]
