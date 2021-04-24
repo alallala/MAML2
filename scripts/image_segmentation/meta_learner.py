@@ -467,7 +467,7 @@ class MetaLearner():
        
         copied_model.get_layer("final_conv").kernel = model.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model.get_layer("final_conv").bias
-        '''
+        
         
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
