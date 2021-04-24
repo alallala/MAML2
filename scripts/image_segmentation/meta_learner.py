@@ -367,9 +367,9 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((1,256,256,3)) 
-        
-        copied_model.get_weigths(model.set_weights)
+        copied_model= keras.models.clone_model(model)
+        copied_model.build((1,256,256,3))                           
+        copied_model.set_weights(model.get_weights())
         
         '''
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
