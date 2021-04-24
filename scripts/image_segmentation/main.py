@@ -16,7 +16,7 @@ import time
 import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
-from losses import CategoricalCELoss
+from losses import BinaryCELoss
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -127,8 +127,8 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    ccel = CategoricalCELoss()
-    loss = ccel(y, pred_y)
+    bcel = BinaryCELoss()
+    loss = bcel(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
