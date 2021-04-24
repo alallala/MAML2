@@ -272,8 +272,8 @@ class MetaLearner():
         for j in range(len(copied_model.layers)):
                 if copied_model.layers[j].trainable == False:
                     j+=1
-                    copied_model.layers[j].kernel = model.layers[j].kernel
-                    copied_model.layers[j].bias = model.layers[j].bias
+                copied_model.layers[j].kernel = model.layers[j].kernel
+                copied_model.layers[j].bias = model.layers[j].bias
                                 
         #copied_model.set_weights(model.get_weights())
         
@@ -283,9 +283,11 @@ class MetaLearner():
         
         k=0
         for j in range(0,len(copeid_model.layers)):
-                    copeid_model.layers[j].kernel = tf.subtract(model.layers[j].kernel,
+                    if copied_model.layers[j].trainable == False:
+                        j+=1
+                    copied_model.layers[j].kernel = tf.subtract(model.layers[j].kernel,
                                 tf.multiply(alpha, grads[k]))
-                    copeid_model.layers[j].bias = tf.subtract(model.layers[j].bias,
+                    copied_model.layers[j].bias = tf.subtract(model.layers[j].bias,
                                 tf.multiply(alpha, grads[k+1]))
                     k += 2
         '''
