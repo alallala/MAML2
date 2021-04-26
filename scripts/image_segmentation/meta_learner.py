@@ -205,7 +205,7 @@ class MetaLearner():
         backbone = Backbones.get_backbone(
             name='vgg16', #self.backbone_name
             input_shape=(None,None,3), #self.input_shape,
-            weights=None, #self.encoder_weights, or None or imagenet
+            weights='imagenet', #self.encoder_weights, or None or imagenet
             include_top=False,
             #**kwargs,
         )
@@ -388,7 +388,6 @@ class MetaLearner():
         #copied_model = keras.models.clone_model(model_to_copy)
         
         
-     
         copied_model.get_layer("block1_conv1").kernel = model_to_copy.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model_to_copy.get_layer("block1_conv1").bias
         

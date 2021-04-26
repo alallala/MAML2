@@ -244,6 +244,8 @@ def maml_train(model, batch_generator):
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                     inner_grads = inner_tape.gradient(inner_loss, copied_model.inner_weights)
                     copied_model = MetaLearner.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
+                    print("in update steps\n")
+                    print(copied_model.summary())
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y, loss_fn=loss_fn)
                 task_acc = accuracy_fn(query_y, task_pred)
@@ -251,8 +253,7 @@ def maml_train(model, batch_generator):
                 batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             mean_loss = tf.reduce_mean(batch_loss)
-            print("MEAN LOSS TYPE :",type(mean_loss))
-            print("\n") 
+             
         # Compute second order gradients
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
@@ -477,6 +478,7 @@ if __name__ == '__main__':
     model = MetaLearner(args=args)
     print ('Build model')
     model = MetaLearner.initialize(model)
+    print(model.summary())
     # model.summary()
     tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
