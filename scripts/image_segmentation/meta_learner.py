@@ -379,8 +379,7 @@ class MetaLearner():
         :return model with fast weights
         '''
 
-        copied_model = cls.hard_copy(model)
-        '''
+
         copied_model = cls.initialize_Unet()
         
         copied_model.build((5,256,256,3)) 
@@ -498,7 +497,7 @@ class MetaLearner():
                 copied_model.layer = model.layer
                 
         '''
-        '''
+        
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
@@ -608,7 +607,9 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = copied_model.get_layer("final_conv").kernel - alpha * grads[62]
         copied_model.get_layer("final_conv").bias = copied_model.get_layer("final_conv").bias - alpha * grads[63]
         
-        
+        for layer in model.layers:
+            if layer.trainable == False:
+                copied_model.layer = model.layer
         
         return copied_model
         
