@@ -40,7 +40,7 @@ def load_file(f,num_images):
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
         img = tifffile.imread(f,key=seq).astype(np.float32)/255.
-        img = resize(img,(128,128,3)) 
+        #img = resize(img,(128,128,3)) 
     img = np.asarray(img, dtype=np.float32)
     return img
         
