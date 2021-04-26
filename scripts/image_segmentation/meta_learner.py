@@ -492,7 +492,7 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = model_to_copy.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model_to_copy.get_layer("final_conv").bias
         
-        for layer in model_to_copy..layers:
+        for layer in model_to_copy.layers:
             if layer.trainable == False:
                 copied_model.layer = model_to_copy.layer
                 
