@@ -246,6 +246,8 @@ def maml_train(model, batch_generator):
             for idx, task in enumerate(batch_set):
                 # Set up copied model
                 copied_model = model
+                print("pre meta update\n")
+                print(copied_model.get_layer("block1_conv1").kernel)
                 # Slice task to support set and query set
                 support_x, support_y, query_x, query_y = task
                 if visual:
@@ -262,7 +264,8 @@ def maml_train(model, batch_generator):
                         i_w = ml.inner_weights(copied_model)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
                     copied_model = ml.meta_update(model_to_copy=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
-                    
+                    print("post meta update\n")
+                    print(copied_model.get_layer("block1_conv1").kernel)
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
                 

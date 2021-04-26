@@ -386,7 +386,7 @@ class MetaLearner():
 
         #copied_model = keras.models.clone_model(model_to_copy)
         
-        '''
+        
      
         copied_model.get_layer("block1_conv1").kernel = model_to_copy.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model_to_copy.get_layer("block1_conv1").bias
@@ -492,16 +492,9 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = model_to_copy.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model_to_copy.get_layer("final_conv").bias
         
-        for layer in model_to_copy.layers:
-            if layer.trainable == False:
-                copied_model.layer = model_to_copy.layer
-                
-        '''
         
-        #manually update weights, we just consider trainable weights
-        #because gradients passed in input are computed from inner weights function
-        #by watching inner trainable weights
-        '''
+        #manually update weights
+        
      
         copied_model.get_layer("block1_conv1").kernel = copied_model.get_layer("block1_conv1").kernel - alpha * grads[0]
         copied_model.get_layer("block1_conv1").bias = copied_model.get_layer("block1_conv1").bias - alpha * grads[1]
@@ -608,7 +601,7 @@ class MetaLearner():
         copied_model.get_layer("final_conv").bias = copied_model.get_layer("final_conv").bias - alpha * grads[63]
         
         
-        '''
+        
         return copied_model
         
         
