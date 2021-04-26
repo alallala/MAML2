@@ -130,8 +130,8 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    bce_logits = CategoricalCELoss() # tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    loss = loss_fn(y, pred_y)
+    my_loss = BinaryCELoss() # tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    loss = my_loss(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
@@ -261,17 +261,14 @@ def maml_train(model, batch_generator):
                     
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                if idx==0:
-                    print("TASK N.0 LOSS AND PRED\n")
-                    print(task_loss)
-                    print(task_pred)
+                
                 #task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 #batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             
             mean_loss =tf.reduce_mean(batch_loss)
-            
+            print("MEAN LOSS OVER THE BATCH\n",mean_loss)
         # Compute second order gradients
      
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
