@@ -205,7 +205,7 @@ class MetaLearner():
         backbone = Backbones.get_backbone(
             name='vgg16', #self.backbone_name
             input_shape=(None,None,3), #self.input_shape,
-            weights='imagenet', #self.encoder_weights,
+            weights=None, #self.encoder_weights, or None or imagenet
             include_top=False,
             #**kwargs,
         )
@@ -491,22 +491,6 @@ class MetaLearner():
         #manually update weights, we just consider trainable weights
         #because gradients passed in input are computed from inner weights function
         #by watching inner trainable weights
-        '''
-
-        '''        
-                 
-        new_weights  = []
-        g = 0
-        for i in range(0,len(copied_model.weights)):
-        
-            if copied_model.weights[i].trainable:
-                new_weights.append(np.array(copied_model.weights[i] - alpha*grads[g]))
-                g += 1
-            else:
-                new_weights.append(np.array(copied_model.weights[i]))
-
-        copied_model.set_weights(new_weights)
-        
         '''
         
         copied_model.get_layer("block1_conv1").kernel = copied_model.get_layer("block1_conv1").kernel - alpha * grads[0]

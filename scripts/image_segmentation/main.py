@@ -158,8 +158,6 @@ def apply_gradients(optimizer, gradients, variables):
     :return None
     '''
     optimizer.apply_gradients(zip(gradients, variables))
-
-
   
 
 def maml_train(model, batch_generator):
@@ -268,7 +266,6 @@ def maml_train(model, batch_generator):
             # Compute mean loss of the whole batch
             
             mean_loss =tf.reduce_mean(batch_loss)
-            print("MEAN LOSS OVER THE BATCH\n",mean_loss)
         # Compute second order gradients
      
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
@@ -490,7 +487,7 @@ if __name__ == '__main__':
     argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=10000) 
     # Log options
     argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5000)
-    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
+    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=2)
     argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
