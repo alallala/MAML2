@@ -23,6 +23,8 @@ import tensorflow as tf
 import cv2
 import time
 import tifffile
+from skimage.transform import resize
+
 
 
 def sequence(start, end):
@@ -38,6 +40,7 @@ def load_file(f,num_images):
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
         img = tifffile.imread(f,key=seq).astype(np.float32)/255.
+        img = resize(img,(128,128,3)) 
     img = np.asarray(img, dtype=np.float32)
     return img
         
@@ -74,7 +77,8 @@ class TaskGenerator:
             
             data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',500)
             self.metatrain_data = data[:300]
-            self.metaval_data = data[300:] 
+            self.metaval_data = data[300:400]
+            self.metatest_data = data[400:]
   
         
         # Record the relationship between image label and the folder name in each task
@@ -190,10 +194,10 @@ class TaskGenerator:
         
         '''
         if test:
-          data = self.metaval_data[400:]
+          data = self.metatest_data
           p_str = 'test'
         else:
-          data = self.metaval_data[300:400] 
+          data = self.metaval_data
           p_str = 'validation'
         print ('Sample '+p_str+' batch of tasks from {} images'.format(len(data)))
         # Shuffle root folder in order to prevent repeat
@@ -202,7 +206,7 @@ class TaskGenerator:
         # Generate batch dataset
         # batch_spt_set: [meta_batchsz, n_way * k_shot, image_size] & [meta_batchsz, n_way * k_shot, n_way]
         # batch_qry_set: [meta_batchsz, n_way * k_query, image_size] & [meta_batchsz, n_way * k_query, n_way]
-        for i in range(self.meta_batchsz):
+        for _ in range(self.meta_batchsz):
             '''
             sampled_folders_idx = np.array(np.random.choice(len(folders), self.n_way, False))
             np.random.shuffle(sampled_folders_idx)
