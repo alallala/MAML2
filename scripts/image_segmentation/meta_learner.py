@@ -386,7 +386,7 @@ class MetaLearner():
 
         #copied_model = keras.models.clone_model(model_to_copy)
         
-        
+        '''
      
         copied_model.get_layer("block1_conv1").kernel = model_to_copy.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model_to_copy.get_layer("block1_conv1").bias
@@ -608,7 +608,7 @@ class MetaLearner():
         copied_model.get_layer("final_conv").bias = copied_model.get_layer("final_conv").bias - alpha * grads[63]
         
         
-        
+        '''
         return copied_model
         
         
