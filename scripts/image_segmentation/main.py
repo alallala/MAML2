@@ -129,7 +129,7 @@ def compute_loss(model, x, y):
     '''
     pred_y = model(x) 
     bce_logits = tf.keras.losses.BinaryCELoss(from_logits=True)
-    loss = bce_logits.(y, pred_y)
+    loss = bce_logits(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
