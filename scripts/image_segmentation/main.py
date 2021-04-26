@@ -210,7 +210,7 @@ def maml_train(model, batch_generator):
             # Slice task to support set and query set
             support_x, support_y, query_x, query_y = task #from generate_set 
             # Update fast weights several times
-            for _ in range(0): #update_steps_test):
+            for _ in range(1): #update_steps_test):
                 # Set up inner gradient tape, watch the copied_model.inner_weights
                 with tf.GradientTape(watch_accessed_variables=False) as inner_tape:
                     # we only want inner tape watch the fast weights in each update steps
