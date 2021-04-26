@@ -248,7 +248,7 @@ class MetaLearner():
         weights = model.trainable_weights
         return weights
         
-    @classmethod    
+        
     def hard_copy(cls,model):
         
         copied_model = cls.initialize_Unet()
@@ -367,7 +367,7 @@ class MetaLearner():
         return copied_model
         
         
-    @classmethod    
+        
     def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
         
         '''
