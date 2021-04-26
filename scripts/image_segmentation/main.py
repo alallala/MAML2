@@ -263,7 +263,7 @@ def maml_train(model, batch_generator):
                     
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                print("task loss and pred\n"):
+                print("task loss and pred\n")
                 print(task_loss)
                 print(task_pred)
                 #task_acc = accuracy_fn(query_y, task_pred)
