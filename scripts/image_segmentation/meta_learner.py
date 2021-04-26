@@ -609,7 +609,7 @@ class MetaLearner():
         
         for layer in model.layers:
             if layer.trainable == False:
-                copied_model.layer = model.layer
+                copied_model.layer = copied_model.layer
         
         return copied_model
         
