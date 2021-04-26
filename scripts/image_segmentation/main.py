@@ -129,7 +129,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    bce_logits = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    bce_logits = BinaryCELoss() #tf.keras.losses.BinaryCrossentropy(from_logits=True)
     loss = bce_logits(y, pred_y)
     return loss, pred_y
 
@@ -158,24 +158,7 @@ def apply_gradients(optimizer, gradients, variables):
     '''
     optimizer.apply_gradients(zip(gradients, variables))
 
-def display_img_and_mask(images,idx):
 
-  #to visualize with scale RGB 
-  #to_display = array_to_img((images[idx][:,:,:3])[...,::-1])
-
-  #image in BGR
-  to_display = array_to_img(images[idx][:,:,:3])
-
-  if np.all(images[idx][:,:,3:])==1:
-  #mask
-    to_display_mask = np.ones((256, 256), dtype=np.float)
-  else:
-    to_display_mask =array_to_img(images[idx][:,:,3:])
-
-  f, axarr = plt.subplots(1,2,figsize=(10,10))
-
-  axarr[0].imshow(to_display)
-  axarr[1].imshow(to_display_mask,cmap='gray',vmin=0,vmax=1)
   
 
 def maml_train(model, batch_generator):
