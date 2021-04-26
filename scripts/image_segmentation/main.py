@@ -130,7 +130,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    bce_logits = CategoricalCELoss # tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    bce_logits = CategoricalCELoss() # tf.keras.losses.BinaryCrossentropy(from_logits=True)
     loss = bce_logits(y, pred_y)
     return loss, pred_y
 

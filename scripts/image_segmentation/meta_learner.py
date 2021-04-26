@@ -128,7 +128,7 @@ def build_unet(
         decoder_filters=(256, 128, 64, 32, 16),
         n_upsample_blocks=5,
         classes=1,
-        activation='sigmoid',
+        activation='softmax',
         use_batchnorm=True,
 ):
     input_ = backbone.input
