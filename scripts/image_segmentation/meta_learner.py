@@ -218,8 +218,8 @@ class MetaLearner():
             decoder_block= decoder_block,
             skip_connection_layers= 'default', #self.encoder_features,
             decoder_filters=(256, 128, 64, 32, 16), #self.decoder_filters,
-            classes= 1 ,#self.classes,
-            activation='sigmoid', #self.activation,
+            classes= 2 ,#self.classes,
+            activation='softmax', #self.activation,
             n_upsample_blocks=len((256, 128, 64, 32, 16)), #self.decoder_filters
             use_batchnorm=True #self.decoder_use_batchnorm,
         )

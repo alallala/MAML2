@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
+from losses import CategoricalCELoss
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -129,7 +130,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    bce_logits = BinaryCELoss() #tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    bce_logits = CategoricalCELoss # tf.keras.losses.BinaryCrossentropy(from_logits=True)
     loss = bce_logits(y, pred_y)
     return loss, pred_y
 
