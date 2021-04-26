@@ -158,12 +158,25 @@ def apply_gradients(optimizer, gradients, variables):
     '''
     optimizer.apply_gradients(zip(gradients, variables))
 
-'''
-def regular_train_step(model, x, y, optimizer): #NEVER USED 
-    gradients = compute_gradients(model, x, y, loss_fn=loss_fn)
-    apply_gradients(optimizer, gradients, model.trainable_variables)
-    return model
-'''
+def display_img_and_mask(images,idx):
+
+  #to visualize with scale RGB 
+  #to_display = array_to_img((images[idx][:,:,:3])[...,::-1])
+
+  #image in BGR
+  to_display = array_to_img(images[idx][:,:,:3])
+
+  if np.all(images[idx][:,:,3:])==1:
+  #mask
+    to_display_mask = np.ones((256, 256), dtype=np.float)
+  else:
+    to_display_mask =array_to_img(images[idx][:,:,3:])
+
+  f, axarr = plt.subplots(1,2,figsize=(10,10))
+
+  axarr[0].imshow(to_display)
+  axarr[1].imshow(to_display_mask,cmap='gray',vmin=0,vmax=1)
+  
 
 def maml_train(model, batch_generator):
     # Set parameters
@@ -264,7 +277,10 @@ def maml_train(model, batch_generator):
                     
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                
+                if idx==0:
+                    print("TASK N.0 LOSS AND PRED\n")
+                    print(task_loss)
+                    print(task_pred)
                 #task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 #batch_acc[idx] += task_acc
@@ -289,7 +305,7 @@ def maml_train(model, batch_generator):
     # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
     start = time.time()
-    for step in range(total_batches+1): #metatrain iterations
+    for step in range(total_batches): #metatrain iterations
         # Get a batch data
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()

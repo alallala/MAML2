@@ -180,10 +180,10 @@ class MetaLearner():
         self.input_shape=(None, None, 3),
         self.activation='sigmoid',
         self.weights=None,
-        self.encoder_weights='imagenet',
+        self.encoder_weights=None 
         self.encoder_freeze=False,
         self.encoder_features='default',
-        self.decoder_block_type='upsampling',
+        self.decoder_block_type='transpose',
         self.decoder_use_batchnorm=True
         
     
