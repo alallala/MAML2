@@ -104,7 +104,7 @@ class BinaryCELoss(Loss):
     """
 
     def __init__(self):
-        super().__init__(name='binary_crossentropy',from_logits=True)
+        super().__init__(name='binary_crossentropy')
 
     def __call__(self, gt, pr):
         return F.binary_crossentropy(gt, pr, **self.submodules)
