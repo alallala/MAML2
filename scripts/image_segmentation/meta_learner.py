@@ -251,7 +251,7 @@ class MetaLearner():
     @classmethod    
     def hard_copy(cls,model):
         
-        copied_model = cls.initialize_Unet(cls)
+        copied_model = cls.initialize_Unet()
         copied_model.build((5,256,256,3))
         
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
@@ -380,11 +380,11 @@ class MetaLearner():
         '''
 
 
-        copied_model = cls.initialize_Unet(cls)
+        copied_model_ = cls.initialize_Unet()
         
-        copied_model.build((5,256,256,3)) 
+        copied_model_.build((5,256,256,3)) 
 
-        #copied_model = keras.models.clone_model(model)
+        copied_model = keras.models.clone_model(model)
         #copied_model.set_weights(model.get_weights())
         
      
