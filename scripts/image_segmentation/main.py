@@ -218,6 +218,7 @@ def maml_train(model, batch_generator):
                     inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                     i_w = ml.inner_weights(copied_model)
                 inner_grads = inner_tape.gradient(inner_loss, i_w)
+                print("len inner_grad ",len(inner_grads))
                 copied_model = ml.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
                 print("AFTER META UPDATE:")
                 print(copied_model.summary())
