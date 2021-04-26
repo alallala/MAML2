@@ -360,6 +360,8 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = model.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model.get_layer("final_conv").bias
         
+        return copied_model
+        
         
         
     def meta_update(cls,model,args,alpha=0.01,grads=None): #grads are computed over trainable weights
