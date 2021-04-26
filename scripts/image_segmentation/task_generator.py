@@ -216,7 +216,7 @@ class TaskGenerator:
             labels = labels.tolist()
             folder_with_label = list(zip(sampled_folders, labels))
             '''
-            support_x, support_y, query_x, query_y = self.generate_set(folder_with_label)
+            support_x, support_y, query_x, query_y = self.generate_set(data)
             batch_set.append((support_x, support_y, query_x, query_y))
         # return [meta_batchsz * (support_x, support_y, query_x, query_y)]
         return batch_set
