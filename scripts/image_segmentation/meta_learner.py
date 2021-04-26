@@ -196,7 +196,8 @@ class MetaLearner():
         #if self.decoder_block_type == 'upsampling':
         #decoder_block = DecoderUpsamplingX2Block
         #elif self.decoder_block_type == 'transpose':
-        decoder_block = DecoderTransposeX2Block  '''DON'T USE 'upsampling' IT GIVES PROBLEMS WITH SECOND ORDER DERIVATIVE DURING GRADIENTS CALCULATION'''
+        decoder_block = DecoderTransposeX2Block  
+        '''DON'T USE 'upsampling' IT GIVES PROBLEMS WITH SECOND ORDER DERIVATIVE DURING GRADIENTS CALCULATION'''
         #else:
         #    raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
         #                     'Got: {}'.format(self.decoder_block_type))
