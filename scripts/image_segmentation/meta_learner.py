@@ -360,6 +360,10 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = model.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model.get_layer("final_conv").bias
         
+        for layer in model.layers:
+            if layer.trainable == False:
+                copied_model.layer = model.layer
+        
         return copied_model
         
         
@@ -487,6 +491,11 @@ class MetaLearner():
        
         copied_model.get_layer("final_conv").kernel = model.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model.get_layer("final_conv").bias
+        
+        for layer in model.layers:
+            if layer.trainable == False:
+                copied_model.layer = model.layer
+                
         '''
         
         #manually update weights, we just consider trainable weights
@@ -597,6 +606,10 @@ class MetaLearner():
        
         copied_model.get_layer("final_conv").kernel = copied_model.get_layer("final_conv").kernel - alpha * grads[62]
         copied_model.get_layer("final_conv").bias = copied_model.get_layer("final_conv").bias - alpha * grads[63]
+        
+        for layer in model.layers:
+            if layer.trainable == False:
+                copied_model.layer = model.layer
         
         return copied_model
         
