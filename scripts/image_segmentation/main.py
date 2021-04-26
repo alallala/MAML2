@@ -29,8 +29,6 @@ from tensorflow.python.ops import math_ops
  
 
 
-#@ops.RegisterGradient("ResizeBilinear")
-'''
 @tf.RegisterGradient("ResizeBilinear")
 def _ResizeBilinearGrad(op, grad):
   """The derivatives for bilinear resizing.
@@ -47,7 +45,7 @@ def _ResizeBilinearGrad(op, grad):
       align_corners=op.get_attr("align_corners"),
       half_pixel_centers=op.get_attr("half_pixel_centers"))
   return [grad0, None]
-'''
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
