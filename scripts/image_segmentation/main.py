@@ -28,7 +28,9 @@ from tensorflow.python.ops import gen_image_ops
 from tensorflow.python.ops import math_ops
  
 
-@ops.RegisterGradient("ResizeBilinear")
+
+#@ops.RegisterGradient("ResizeBilinear")
+@tf.RegisterGradient("ResizeBilinear")
 def _ResizeBilinearGrad(op, grad):
   """The derivatives for bilinear resizing.
 
