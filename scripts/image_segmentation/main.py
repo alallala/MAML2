@@ -131,7 +131,7 @@ def compute_loss(model, x, y):
     '''
     pred_y = model(x) 
     bce_logits = CategoricalCELoss() # tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    loss = bce_logits(y, pred_y)
+    loss = loss_fn(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
