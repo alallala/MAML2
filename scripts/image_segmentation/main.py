@@ -203,7 +203,7 @@ def maml_train(model, batch_generator):
         batch_loss = [0 for _ in range(meta_batchsz)]
         batch_acc = [0 for _ in range(meta_batchsz)]
         # Set up copied models
-        copied_model = MetaLearner.hard_copy(model, args)
+        copied_model = ml.hard_copy(model)
         for idx, task in enumerate(test_set):
             # Slice task to support set and query set
             support_x, support_y, query_x, query_y = task #from generate_set 

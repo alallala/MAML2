@@ -249,7 +249,7 @@ class MetaLearner():
         return weights
         
         
-    def hard_copy(cls,model,args):
+    def hard_copy(cls,model):
         
         copied_model = cls.initialize_Unet()
         copied_model.build((5,256,256,3))
