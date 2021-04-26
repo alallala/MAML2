@@ -27,7 +27,7 @@ from tensorflow.python.ops import array_ops
 from tensorflow.python.ops import gen_image_ops
 from tensorflow.python.ops import math_ops
  
-
+'''
 @ops.RegisterGradient("ResizeNearestNeighbor")
 def _ResizeNearestNeighborGrad(op, grad):
       """The derivatives for nearest neighbor resizing.
@@ -51,7 +51,7 @@ def _ResizeNearestNeighborGrad(op, grad):
           align_corners=op.get_attr("align_corners"),
           half_pixel_centers=op.get_attr("half_pixel_centers"))
       return [grads, None]
-
+'''
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
