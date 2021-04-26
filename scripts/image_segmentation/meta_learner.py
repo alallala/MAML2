@@ -196,7 +196,7 @@ class MetaLearner():
         #if self.decoder_block_type == 'upsampling':
         #decoder_block = DecoderUpsamplingX2Block
         #elif self.decoder_block_type == 'transpose':
-        decoder_block = DecoderTransposeX2Block
+        decoder_block = DecoderTransposeX2Block  '''DON'T USE 'upsampling' IT GIVES PROBLEMS WITH SECOND ORDER DERIVATIVE DURING GRADIENTS CALCULATION'''
         #else:
         #    raise ValueError('Decoder block type should be in ("upsampling", "transpose"). '
         #                     'Got: {}'.format(self.decoder_block_type))
@@ -308,6 +308,7 @@ class MetaLearner():
         copied_model.get_layer("center_block2_bn").beta = model.get_layer("center_block2_bn").beta
 
         '''if decoder is upsampling uncomment the first row and comment the second one'''
+        '''BUT DON'T DO IT, upsampling method for decoder block gives many problems with outer gradients computation''' 
 
         #copied_model.get_layer("decoder_stage0a_conv").kernel = model.get_layer("decoder_stage0a_conv").kernel 
         copied_model.get_layer("decoder_stage0a_transpose").kernel = model.get_layer("decoder_stage0a_transpose").kernel 

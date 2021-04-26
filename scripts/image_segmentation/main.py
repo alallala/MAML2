@@ -4,9 +4,7 @@
     Abstract: Training process and functions
 """
 # -*- coding: UTF-8 -*-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
 import os
 import cv2
 import sys
@@ -20,38 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-
-from tensorflow.python.framework import dtypes
-from tensorflow.python.framework import ops
-from tensorflow.python.ops import array_ops
-from tensorflow.python.ops import gen_image_ops
-from tensorflow.python.ops import math_ops
  
-'''
-@ops.RegisterGradient("ResizeNearestNeighbor")
-def _ResizeNearestNeighborGrad(op, grad):
-      """The derivatives for nearest neighbor resizing.
-   
-      Args:
-        op: The ResizeNearestNeighbor op.
-        grad: The tensor representing the gradient w.r.t. the output.
-    
-      Returns:
-        The gradients w.r.t. the input and the output.
-      """
-      image = op.inputs[0]
-      if image.get_shape()[1:3].is_fully_defined():
-        image_shape = image.get_shape()[1:3]
-      else:
-        image_shape = array_ops.shape(image)[1:3]
-    
-      grads = gen_image_ops.resize_nearest_neighbor_grad(
-          grad,
-          image_shape,
-          align_corners=op.get_attr("align_corners"),
-          half_pixel_centers=op.get_attr("half_pixel_centers"))
-      return [grads, None]
-'''
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -285,7 +252,7 @@ def maml_train(model, batch_generator):
                         tf.summary.image('Support Images', support_x, max_outputs=5, step=step)
                         tf.summary.image('Query Images', query_x, max_outputs=5, step=step)
                 # Update fast weights several times
-                for i in range(1): #update_steps
+                for i in range(update_steps): 
                     # Set up inner gradient tape, watch the copied_model.inner_weights
                     with tf.GradientTape(watch_accessed_variables=False) as inner_tape:
                         # we only want inner tape watch the fast weights in each update steps
@@ -305,11 +272,9 @@ def maml_train(model, batch_generator):
             
             mean_loss =tf.reduce_mean(batch_loss)
             
-            print("MEAN LOSS TYPE",mean_loss)
         # Compute second order gradients
      
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
-        print("OUTER GRADS ",outer_grads)
         meta_optimizer.apply_gradients(zip(outer_grads,model.trainable_variables))
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
         if visual:
@@ -380,7 +345,9 @@ def maml_train(model, batch_generator):
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
             print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss)) #,mean_test_acc))
             print ('=====================================================================')
-        # Meta train step            
+        # Meta train step    
+
+        
     '''
     # Record training history
     os.chdir(args.his_dir)
