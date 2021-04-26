@@ -4,6 +4,9 @@
     Abstract: Training process and functions
 """
 # -*- coding: UTF-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 import os
 import cv2
 import sys
@@ -17,9 +20,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
 from tensorflow.python.framework import dtypes
 from tensorflow.python.framework import ops
 from tensorflow.python.ops import array_ops
