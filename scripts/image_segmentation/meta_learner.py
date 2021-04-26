@@ -380,7 +380,7 @@ class MetaLearner():
         '''
 
 
-        copied_model_ = cls.initialize_Unet()
+        copied_model = cls.initialize_Unet()
         
         copied_model.build((5,256,256,3)) 
 
