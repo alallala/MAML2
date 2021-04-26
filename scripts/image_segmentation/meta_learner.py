@@ -384,7 +384,6 @@ class MetaLearner():
         
         copied_model.build((5,256,256,3)) 
         
-        copied_model = cls.hard_copy(model_to_copy)
 
         #copied_model = keras.models.clone_model(model_to_copy)
         
