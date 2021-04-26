@@ -208,7 +208,7 @@ def maml_train(model, batch_generator):
             # Slice task to support set and query set
             support_x, support_y, query_x, query_y = task #from generate_set 
             # Update fast weights several times
-            for _ in range(update_steps_test):
+            for _ in range(1) #update_steps_test):
                 # Set up inner gradient tape, watch the copied_model.inner_weights
                 with tf.GradientTape(watch_accessed_variables=False) as inner_tape:
                     # we only want inner tape watch the fast weights in each update steps
@@ -216,10 +216,7 @@ def maml_train(model, batch_generator):
                     inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                     i_w = ml.inner_weights(copied_model)
                 inner_grads = inner_tape.gradient(inner_loss, i_w)
-                print("inner_grads: ",len(inner_grads))
-                print("inner_weights: ",len(i_w))
                 copied_model = ml.meta_update(copied_model, args, alpha=inner_lr, grads=inner_grads)
-                print("IN FINE TUNE STEP AFTER FIRST ITERATION OF UPDATE_STEPS_TEST\n",copied_model.summary())
             # Compute task loss & accuracy on the query set
             task_loss, _ = compute_loss(copied_model, query_x, query_y)
             # task_acc = accuracy_fn(query_y, task_pred)
