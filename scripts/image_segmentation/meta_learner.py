@@ -128,7 +128,7 @@ def build_unet(
         decoder_filters=(256, 128, 64, 32, 16),
         n_upsample_blocks=5,
         classes=1,
-        activation='softmax',
+        activation='sigmoid',
         use_batchnorm=True,
 ):
     input_ = backbone.input
@@ -218,8 +218,8 @@ class MetaLearner():
             decoder_block= decoder_block,
             skip_connection_layers= 'default', #self.encoder_features,
             decoder_filters=(256, 128, 64, 32, 16), #self.decoder_filters,
-            classes= 2 ,#self.classes,
-            activation='softmax', #self.activation,
+            classes= 1 ,#self.classes,
+            activation='sigmoid', #self.activation,
             n_upsample_blocks=len((256, 128, 64, 32, 16)), #self.decoder_filters
             use_batchnorm=True #self.decoder_use_batchnorm,
         )
@@ -239,7 +239,7 @@ class MetaLearner():
 
     def initialize(cls,model):
     
-        ip_size = (1,256,256,3)
+        ip_size = (5,256,256,3)
         model.build(ip_size)
         
         return model
@@ -252,7 +252,7 @@ class MetaLearner():
     def hard_copy(cls,model,args):
         
         copied_model = cls.initialize_Unet()
-        copied_model.build((1,256,256,3))
+        copied_model.build((5,256,256,3))
         
         
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
@@ -377,7 +377,7 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((1,256,256,3)) 
+        copied_model.build((5,256,256,3)) 
 
         #copied_model = keras.models.clone_model(model)
         #copied_model.set_weights(model.get_weights())
