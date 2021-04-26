@@ -193,7 +193,7 @@ class TaskGenerator:
           data = self.metaval_data[400:]
           p_str = 'test'
         else:
-          data = self.metaval_folders[300:400] 
+          data = self.metaval_data[300:400] 
           p_str = 'validation'
         print ('Sample '+p_str+' batch of tasks from {} images'.format(len(data)))
         # Shuffle root folder in order to prevent repeat
