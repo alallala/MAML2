@@ -1,9 +1,17 @@
 SMOOTH = 1e-5
-
+from tensorflow import keras
 
 # ----------------------------------------------------------------
 #   Helpers
 # ----------------------------------------------------------------
+
+kwargs = {
+        'backend': keras.backend,
+        'models': keras.models,
+        'layers': keras.layers,
+        'utils': keras.utils,
+        }
+
 
 def _gather_channels(x, indexes, **kwargs):
     """Slice tensor along channels axis by given indexes"""
