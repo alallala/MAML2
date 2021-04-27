@@ -303,7 +303,7 @@ def maml_train(model, batch_generator):
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -331,7 +331,7 @@ def maml_train(model, batch_generator):
             mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
             print ('=====================================================================')
         # Meta train step    
 
