@@ -303,7 +303,7 @@ def maml_train(model, batch_generator):
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {.3f}'.format(step, mean_batch_loss, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
