@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from base import functional as F
+from losses import f_score
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -84,8 +84,9 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    acc = F.f_score(y,pred_y)
-    return acc
+    accuracy = tf.keras.metrics.Accuracy()
+    _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
+    return accuracy.result()
 
 
 def compute_loss(model, x, y):
@@ -99,7 +100,7 @@ def compute_loss(model, x, y):
     '''
     pred_y = model(x) 
     my_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    loss = my_loss(y, pred_y)
+    loss = tf.reduce_mean(my_loss(y, pred_y))
     return loss, pred_y
 
 def compute_gradients(model, x, y):
@@ -228,7 +229,9 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                
+                if idx==0:
+                    print("pred\n")
+                    print(task_pred[0])
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
