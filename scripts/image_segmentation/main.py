@@ -91,14 +91,13 @@ def copy_model(model, x):
 
 '''
 def loss_fn(y, pred_y):
-    '''
-    '''
+    
     :param pred_y: Prediction output of model
     :param y: Ground truth
 
     :return loss value:
-    '''
-    '''
+    
+    
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
 '''
     
@@ -124,7 +123,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    my_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    my_loss = tf.reduce_mean(tf.keras.losses.BinaryCrossentropy(from_logits=True))
     loss = my_loss(y, pred_y)
     return loss, pred_y
 
