@@ -130,6 +130,7 @@ class TaskGenerator:
             qry_x = list()
             qry_y = list()
             all_idxs = [i for i in range(0,len(ds))]
+            random.seed(99)
             spt_elem = random.sample(all_idxs, self.spt_num) #here a scenario should be chosen
             for e in spt_elem:
                 all_idxs.remove(e)
