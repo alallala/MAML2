@@ -228,9 +228,7 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                if idx==0:
-                    print("pred\n")
-                    print(task_pred[0])
+                
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
@@ -280,7 +278,8 @@ def maml_train(model, batch_generator):
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            # print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -308,7 +307,9 @@ def maml_train(model, batch_generator):
             mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            #print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss))
+
             print ('=====================================================================')
         # Meta train step    
 
