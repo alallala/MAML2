@@ -40,8 +40,8 @@ def load_file(f,num_images):
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
-        #img = resize(img,(128,128,3)) 
-    img = np.asarray(img, dtype=np.float32).reshape((len(img), 128,128,4))
+        img = resize(img,(128,128,4)) 
+    img = np.asarray(img, dtype=np.float32)
     return img
         
 class TaskGenerator:
@@ -69,7 +69,7 @@ class TaskGenerator:
             self.n_way = 5
             self.spt_num = 5
             self.qry_num = 5
-            self.img_size = 256
+            self.img_size = 128
             self.img_channel = 4
             self.dim_output = 2
         
