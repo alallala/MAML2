@@ -162,7 +162,8 @@ def build_unet(
         kernel_initializer='glorot_uniform',
         name='final_conv',
     )(x)
-    x = layers.Activation(activation, name=activation)(x)
+    '''Here we don't return logits but probabilities''' 
+    # x = layers.Activation(activation, name=activation)(x)
 
     # create keras model instance
     model = keras.models.Model(input_, x)
