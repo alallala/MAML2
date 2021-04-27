@@ -184,12 +184,12 @@ def maml_train(model, batch_generator):
     checkpoint = tf.train.Checkpoint(maml_model=model)
     
     losses = []
-    #accs = []
+    accs = []
     test_losses = []
-    #test_accs = []
+    test_accs = []
 
     test_min_losses = []
-    #test_max_accs = []
+    test_max_accs = []
 
     def _maml_finetune_step(test_set):
         # Set up recorders for test batch
