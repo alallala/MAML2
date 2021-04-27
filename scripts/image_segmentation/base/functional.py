@@ -15,7 +15,7 @@ kwargs = {
 
 def _gather_channels(x, indexes, **kwargs):
     """Slice tensor along channels axis by given indexes"""
-    backend = kwargs['backend']
+    backend = keras.backend
     if backend.image_data_format() == 'channels_last':
         x = backend.permute_dimensions(x, (3, 0, 1, 2))
         x = backend.gather(x, indexes)
@@ -28,7 +28,7 @@ def _gather_channels(x, indexes, **kwargs):
 
 
 def get_reduce_axes(per_image, **kwargs):
-    backend = kwargs['backend']
+    backend = keras.backend
     axes = [1, 2] if backend.image_data_format() == 'channels_last' else [2, 3]
     if not per_image:
         axes.insert(0, 0)
@@ -46,7 +46,7 @@ def gather_channels(*xs, indexes=None, **kwargs):
 
 
 def round_if_needed(x, threshold, **kwargs):
-    backend = kwargs['backend']
+    backend = keras.backend
     if threshold is not None:
         x = backend.greater(x, threshold)
         x = backend.cast(x, backend.floatx())
@@ -54,7 +54,7 @@ def round_if_needed(x, threshold, **kwargs):
 
 
 def average(x, per_image=False, class_weights=None, **kwargs):
-    backend = kwargs['backend']
+    backend = keras.backend
     if per_image:
         x = backend.mean(x, axis=0)
     if class_weights is not None:
@@ -86,7 +86,7 @@ def iou_score(gt, pr, class_weights=1., class_indexes=None, smooth=SMOOTH, per_i
     .. _`Jaccard index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
 
-    backend = kwargs['backend']
+    backend = keras.backend
 
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
     pr = round_if_needed(pr, threshold, **kwargs)
@@ -167,7 +167,7 @@ def precision(gt, pr, class_weights=1, class_indexes=None, smooth=SMOOTH, per_im
     Returns:
         float: precision score
     """
-    backend = kwargs['backend']
+    backend = keras.backend
 
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
     pr = round_if_needed(pr, threshold, **kwargs)
@@ -202,7 +202,7 @@ def recall(gt, pr, class_weights=1, class_indexes=None, smooth=SMOOTH, per_image
     Returns:
         float: recall score
     """
-    backend = kwargs['backend']
+    backend = keras.backend
 
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
     pr = round_if_needed(pr, threshold, **kwargs)
@@ -222,7 +222,7 @@ def recall(gt, pr, class_weights=1, class_indexes=None, smooth=SMOOTH, per_image
 # ----------------------------------------------------------------
 
 def categorical_crossentropy(gt, pr, class_weights=1., class_indexes=None, **kwargs):
-    backend = kwargs['backend']
+    backend = keras.backend
 
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
 
@@ -239,7 +239,7 @@ def categorical_crossentropy(gt, pr, class_weights=1., class_indexes=None, **kwa
 
 
 def binary_crossentropy(gt, pr, **kwargs):
-    backend = kwargs['backend']
+    backend = keras.backend
     return backend.mean(backend.binary_crossentropy(gt, pr))
 
 
@@ -255,7 +255,7 @@ def categorical_focal_loss(gt, pr, gamma=2.0, alpha=0.25, class_indexes=None, **
         class_indexes: Optional integer or list of integers, classes to consider, if ``None`` all classes are used.
     """
 
-    backend = kwargs['backend']
+    backend = keras.backend
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
 
     # clip to prevent NaN's and Inf's
@@ -278,7 +278,7 @@ def binary_focal_loss(gt, pr, gamma=2.0, alpha=0.25, **kwargs):
         alpha: the same as weighting factor in balanced cross entropy, default 0.25
         gamma: focusing parameter for modulating factor (1-p), default 2.0
     """
-    backend = kwargs['backend']
+    backend = keras.backend
 
     # clip to prevent NaN's and Inf's
     pr = backend.clip(pr, backend.epsilon(), 1.0 - backend.epsilon())
