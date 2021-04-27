@@ -98,7 +98,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    my_loss = tf.keras.losses.BinaryCrossentropy()
+    my_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
     loss = tf.reduce_mean(my_loss(y, pred_y))
     return loss, pred_y
 
