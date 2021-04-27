@@ -84,7 +84,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    acc = f_score(y,y_pred)
+    acc = f_score(y,pred_y)
     return acc
 
 
