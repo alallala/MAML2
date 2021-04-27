@@ -78,12 +78,12 @@ def restore_model(model, weights_dir):
 #NEVER USED copy_model func
 
 def copy_model(model, x): 
-    
+    '''
     :param model: model to be copied
     :param x: a set of data, used to build the copied model
 
     :return copied model
-    
+    '''
     copied_model = MetaLearner().initialize_Unet()
     copied_model(x)
     copied_model.set_weights(model.get_weights())
