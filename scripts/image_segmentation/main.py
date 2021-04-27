@@ -23,7 +23,7 @@ from losses import CategoricalCELoss
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-'''
+
 def write_histogram(model, writer, step):
     
     :param model: A model
@@ -39,8 +39,7 @@ def write_histogram(model, writer, step):
                 tf.summary.histogram(layer.name+':gamma', layer.gamma, step=step)
                 tf.summary.histogram(layer.name+':beta', layer.beta, step=step)
 
-'''
-'''
+
 def write_gradient(grads, writer, step, with_bn=True):
     
     :param grads: Gradients on query set
@@ -67,7 +66,7 @@ def write_gradient(grads, writer, step, with_bn=True):
         with writer.as_default():
             for idx, grad in enumerate(grads):
                 tf.summary.histogram(name[idx], grad, step=step)
-'''
+
 
 
 def restore_model(model, weights_dir):
@@ -84,7 +83,7 @@ def restore_model(model, weights_dir):
     return model
  
 #NEVER USED copy_model func
-''' 
+
 def copy_model(model, x): 
     
     :param model: model to be copied
@@ -100,10 +99,12 @@ def copy_model(model, x):
 '''
 def loss_fn(y, pred_y):
     '''
+    '''
     :param pred_y: Prediction output of model
     :param y: Ground truth
 
     :return loss value:
+    '''
     '''
     return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
 '''
@@ -118,7 +119,7 @@ def accuracy_fn(y, pred_y):
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
-'''
+
 
 def compute_loss(model, x, y):
     '''
@@ -218,10 +219,10 @@ def maml_train(model, batch_generator):
                 inner_grads = inner_tape.gradient(inner_loss, i_w)
                 copied_model = ml.meta_update(model_to_copy=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
             # Compute task loss & accuracy on the query set
-            task_loss, _ = compute_loss(copied_model, query_x, query_y)
-            # task_acc = accuracy_fn(query_y, task_pred)
+            task_loss, task_pred = compute_loss(copied_model, query_x, query_y)
+            task_acc = accuracy_fn(query_y, task_pred)
             batch_loss[idx] += task_loss
-            # batch_acc[idx] += task_acc
+            batch_acc[idx] += task_acc
 
         # Delete copied_model for saving memory
         del copied_model
@@ -261,9 +262,9 @@ def maml_train(model, batch_generator):
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
                 
-                #task_acc = accuracy_fn(query_y, task_pred)
+                task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
-                #batch_acc[idx] += task_acc
+                batch_acc[idx] += task_acc
             # Compute mean loss of the whole batch
             
             mean_loss =tf.reduce_mean(batch_loss)
@@ -295,11 +296,11 @@ def maml_train(model, batch_generator):
             write_histogram(model, summary_writer, step)
         # Record Loss
         losses.append(tf.reduce_mean(batch_loss).numpy())
-        # accs.append(tf.reduce_mean(batch_acc).numpy())
+        accs.append(tf.reduce_mean(batch_acc).numpy())
         # Write to Tensorboard
         with summary_writer.as_default():
             tf.summary.scalar('query loss', tf.reduce_mean(batch_loss), step=step)
-            # tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
+            tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
         
         # Print train result
         if step % print_steps == 0 or step == 0:
@@ -309,8 +310,8 @@ def maml_train(model, batch_generator):
             #print ('[Iter. {}] Task loss: {:.3f}; Task accuracy: {:.3f};'.format(step, batch_loss, batch_acc))
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
-            # mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
+            mean_batch_acc = np.array(batch_acc).mean()
+            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -326,24 +327,24 @@ def maml_train(model, batch_generator):
             test_loss = _maml_finetune_step(test_set) #, test_acc 
             with summary_writer.as_default():
                 tf.summary.scalar('Validation loss', tf.reduce_mean(test_loss), step=step)
-                # tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
+                tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
             # Tensor to list            
             test_loss = [loss.numpy() for loss in test_loss]
-            # test_acc = [acc.numpy() for acc in test_acc]
+            test_acc = [acc.numpy() for acc in test_acc]
             # Record test history
             test_losses.append(test_loss)
-            # test_accs.append(test_acc)
+            test_accs.append(test_acc)
             # avg over meta batch of tasks
             mean_test_loss = np.array(test_loss).mean()
-            # mean_test_acc = np.array(test_accs).mean()
+            mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss)) #,mean_test_acc))
+            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss,mean_test_acc))
             print ('=====================================================================')
         # Meta train step    
 
         
-    '''
+    
     # Record training history
     os.chdir(args.his_dir)
     losses_plot, = plt.plot(losses, label = "Train Acccuracy", color='coral')
@@ -378,7 +379,7 @@ def maml_train(model, batch_generator):
     for i in range(len(test_losses)):
         f.write(str(test_losses[i]) + '\n')
     f.close()
-    '''
+    
     return model
 
 #TESTING MODEL ON TEST SET
@@ -394,25 +395,25 @@ def eval_model(model, batch_generator, num_steps=None):
     # Initialize optimizer
     optimizer = tf.keras.optimizers.SGD(learning_rate=args.inner_lr)
     
-    task_losses = [0, 0, 0, 0]
-    #task_accs = [0, 0, 0, 0]
+    task_losses = [0 for _ in len(batch_set)]
+    task_accs = [0 for _ in len(batch_set]
 
     loss_res = [[] for _ in range(len(batch_set))]
-    # acc_res = [[] for _ in range(len(batch_set))]
+    acc_res = [[] for _ in range(len(batch_set))]
     
     # Record test result
     if 0 in num_steps:
         for idx, task in enumerate(batch_set):
             support_x, support_y, query_x, query_y = task
             loss, pred = compute_loss(model, query_x, query_y)
-            # acc = accuracy_fn(query_y, pred)
+            acc = accuracy_fn(query_y, pred)
             task_losses[idx] += loss.numpy()
-            # task_accs[idx] += acc.numpy()
+            task_accs[idx] += acc.numpy()
             loss_res[idx].append((0, loss.numpy()))
-            # acc_res[idx].append((0, acc.numpy()))
+            acc_res[idx].append((0, acc.numpy()))
         print ('Before any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
-        # print ('Task accuracies: {}'.format(task_accs))
+        print ('Task accuracies: {}'.format(task_accs))
     # Test for each task
     for idx, task in enumerate(batch_set):
         print ('========== Task {} =========='.format(idx+1))
@@ -425,16 +426,16 @@ def eval_model(model, batch_generator, num_steps=None):
             optimizer.apply_gradients(zip(grads, model.trainable_variables))
             # Test on query set
             qry_loss, qry_pred = compute_loss(model, query_x, query_y)
-            # qry_acc = accuracy_fn(query_y, qry_pred)
+            qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
             if step in num_steps:
                 loss_res[idx].append((step, qry_loss.numpy()))
-                #acc_res[idx].append((step, qry_acc.numpy()))
+                acc_res[idx].append((step, qry_acc.numpy()))
                 print ('After {} steps update'.format(step))
                 print ('Task losses: {}'.format(qry_loss.numpy()))
-                #print ('Task accs: {}'.format(qry_acc.numpy()))
+                print ('Task accs: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
-    '''
+    
     for idx in range(len(batch_set)):
         l_x=[]
         l_y=[]
@@ -459,7 +460,7 @@ def eval_model(model, batch_generator, num_steps=None):
         plt.legend(legend)
         plt.title('Task {} Fine Tuning Process'.format(idx+1))
         plt.show()
-    '''
+    
 
 
 if __name__ == '__main__':
@@ -487,7 +488,7 @@ if __name__ == '__main__':
     argparse.add_argument('--meta_lr', type=float, help='Learning rate of meta update steps, the step size beta in the algorithm', default=1e-3)
     argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=10000) 
     # Log options
-    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5000)
+    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5)
     argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=1)
     argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
