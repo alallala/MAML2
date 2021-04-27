@@ -130,7 +130,7 @@ def f_score(gt, pr, beta=1, class_weights=1, class_indexes=None, smooth=SMOOTH, 
         F-score in range [0, 1]
     """
 
-    backend = kwargs['backend']
+    backend =  keras.backend #kwargs['backend']
 
     gt, pr = gather_channels(gt, pr, indexes=class_indexes, **kwargs)
     pr = round_if_needed(pr, threshold, **kwargs)
