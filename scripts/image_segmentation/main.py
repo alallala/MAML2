@@ -75,31 +75,7 @@ def restore_model(model, weights_dir):
     ckpt.restore(latest_weights)
     return model
  
-#NEVER USED copy_model func
 
-def copy_model(model, x): 
-    '''
-    :param model: model to be copied
-    :param x: a set of data, used to build the copied model
-
-    :return copied model
-    '''
-    copied_model = MetaLearner().initialize_Unet()
-    copied_model(x)
-    copied_model.set_weights(model.get_weights())
-    return copied_model
-
-'''
-def loss_fn(y, pred_y):
-    
-    :param pred_y: Prediction output of model
-    :param y: Ground truth
-
-    :return loss value:
-    
-    
-    return tf.reduce_mean(tf.losses.categorical_crossentropy(y, pred_y))
-'''
     
 def accuracy_fn(y, pred_y):
     '''
