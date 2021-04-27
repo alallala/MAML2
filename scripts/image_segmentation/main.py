@@ -225,7 +225,7 @@ def maml_train(model, batch_generator):
     def _maml_train_step(batch_set):
         # Set up recorders for every batch
         batch_loss = [0 for _ in range(meta_batchsz)]
-        # batch_acc = [0 for _ in range(meta_batchsz)]
+        batch_acc = [0 for _ in range(meta_batchsz)]
         # Set up outer gradient tape, only watch model.trainable_variables
         # Because GradientTape only auto record tranable_variables of model
         # But the copied_model.inner_weights is tf.Tensor, so they won't be automatically watched
