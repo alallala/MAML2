@@ -98,7 +98,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     pred_y = model(x) 
-    my_loss = tf.keras.losses.BinaryCrossentropy()
+    my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
     loss = my_loss(y, pred_y)
     return loss, pred_y
 
@@ -252,7 +252,7 @@ def maml_train(model, batch_generator):
     # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
     start = time.time()
-    for step in range(total_batches): #metatrain iterations
+    for step in range(total_batches+1): #metatrain iterations
         # Get a batch data
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
@@ -458,9 +458,9 @@ if __name__ == '__main__':
     argparse.add_argument('--meta_lr', type=float, help='Learning rate of meta update steps, the step size beta in the algorithm', default=1e-3)
     argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=10000) 
     # Log options
-    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=5)
-    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=1)
-    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
+    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=2000)
+    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
+    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=100)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
     argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../history/')
