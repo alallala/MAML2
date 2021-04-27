@@ -39,9 +39,9 @@ def load_file(f,num_images):
     if f[-4:] == 'tiff':
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
-        img = tifffile.imread(f,key=seq).astype(np.float32)/255.
+        img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
         #img = resize(img,(128,128,3)) 
-    img = np.asarray(img, dtype=np.float32)
+    img = np.asarray(img, dtype=np.float32).reshape((len(img), 128,128,4))
     return img
         
 class TaskGenerator:

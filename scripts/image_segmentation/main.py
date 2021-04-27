@@ -279,7 +279,7 @@ def maml_train(model, batch_generator):
         return batch_loss  #, batch_acc
             
     # Main loop
-    print("start train loop\n")
+    print("\nstart training loop\n")
     start = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     # print ('Start at {}'.format(start))
     # For each epoch update model total_batches times
@@ -501,7 +501,6 @@ if __name__ == '__main__':
     print ('Build model\n')
     model = ml.initialize_Unet()
     model = ml.initialize(model) 
-    print(model.summary())
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     print("\ntasks generation\n")
