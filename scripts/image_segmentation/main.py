@@ -387,8 +387,8 @@ def eval_model(model, batch_generator, num_steps=None):
     # Initialize optimizer
     optimizer = tf.keras.optimizers.SGD(learning_rate=args.inner_lr)
     
-    task_losses = [0 for _ in len(batch_set)]
-    task_accs = [0 for _ in len(batch_set)]
+    task_losses = [0 for _ in range(len(batch_set))]
+    task_accs = [0 for _ in range(len(batch_set))]
 
     loss_res = [[] for _ in range(len(batch_set))]
     acc_res = [[] for _ in range(len(batch_set))]
@@ -485,7 +485,7 @@ if __name__ == '__main__':
     argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=1)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
-    argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../historys/')
+    argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../history/')
     # Generate args
     args = argparse.parse_args()
     
@@ -504,7 +504,5 @@ if __name__ == '__main__':
         model = maml_train(model, batch_generator)
     elif args.mode == 'test':
         model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-        if args.dataset == 'miniimagenet':
-            eval_model(model, batch_generator, num_steps=(0, 1, 10, 100, 200, 300, 400, 500, 600))
-        elif args.dataset == 'omniglot':
-            eval_model(model, batch_generator, num_steps=(0, 1, 5, 100, 200, 300, 400, 500, 600))
+        eval_model(model, batch_generator, num_steps=(0, 1, 5, 10))
+        
