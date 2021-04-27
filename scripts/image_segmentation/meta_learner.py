@@ -245,7 +245,42 @@ class MetaLearner():
         return model
         
     def inner_weights(self,model):
-        weights = model.trainable_weights
+        weights = [ 
+        
+            model.get_layer("block1_conv1").kernel, model.get_layer("block1_conv1").bias, 
+            model.get_layer("block1_conv2").kernel, model.get_layer("block1_conv2").bias,
+            model.get_layer("block2_conv1").kernel, model.get_layer("block2_conv1").bias,
+            model.get_layer("block2_conv2").kernel, model.get_layer("block2_conv2").bias,
+            model.get_layer("block3_conv1").kernel, model.get_layer("block3_conv1").bias,
+            model.get_layer("block3_conv2").kernel, model.get_layer("block3_conv2").bias,
+            model.get_layer("block3_conv3").kernel, model.get_layer("block3_conv3").bias,
+            model.get_layer("block4_conv1").kernel, model.get_layer("block4_conv1").bias,
+            model.get_layer("block4_conv2").kernel, model.get_layer("block4_conv2").bias,
+            model.get_layer("block4_conv3").kernel, model.get_layer("block4_conv3").bias,
+            model.get_layer("block5_conv1").kernel, model.get_layer("block5_conv1").bias,
+            model.get_layer("block5_conv2").kernel, model.get_layer("block5_conv2").bias,
+            model.get_layer("block5_conv3").kernel, model.get_layer("block5_conv3").bias,
+            model.get_layer("center_block1_conv").kernel, model.get_layer("center_block1_bn").gamma,
+            model.get_layer("center_block1_bn").beta, model.get_layer("center_block2_conv").kernel, 
+            model.get_layer("center_block2_bn").gamma, model.get_layer("center_block2_bn").beta,
+            model.get_layer("decoder_stage0a_transpose").kernel, model.get_layer("decoder_stage0a_bn").gamma,
+            model.get_layer("decoder_stage0a_bn").beta, model.get_layer("decoder_stage0b_conv").kernel, 
+            model.get_layer("decoder_stage0b_bn").gamma, model.get_layer("decoder_stage0b_bn").beta,
+            model.get_layer("decoder_stage1a_transpose").kernel, model.get_layer("decoder_stage1a_bn").gamma,
+            model.get_layer("decoder_stage1a_bn").beta,  model.get_layer("decoder_stage1b_conv").kernel, 
+            model.get_layer("decoder_stage1b_bn").gamma, model.get_layer("decoder_stage1b_bn").beta,
+            model.get_layer("decoder_stage2a_transpose").kernel, model.get_layer("decoder_stage2a_bn").gamma,
+            model.get_layer("decoder_stage2a_bn").beta, model.get_layer("decoder_stage2b_conv").kernel, 
+            model.get_layer("decoder_stage2b_bn").gamma, model.get_layer("decoder_stage2b_bn").beta,
+            model.get_layer("decoder_stage3a_transpose").kernel, model.get_layer("decoder_stage3a_bn").gamma,
+            model.get_layer("decoder_stage3a_bn").beta,  model.get_layer("decoder_stage3b_conv").kernel, 
+            model.get_layer("decoder_stage3b_bn").gamma, model.get_layer("decoder_stage3b_bn").beta,
+            model.get_layer("decoder_stage4a_transpose").kernel, model.get_layer("decoder_stage4a_bn").gamma, 
+            model.get_layer("decoder_stage4a_bn").beta,  model.get_layer("decoder_stage4b_conv").kernel, 
+            model.get_layer("decoder_stage4b_bn").gamma, model.get_layer("decoder_stage4b_bn").beta,
+            model.get_layer("final_conv").kernel, model.get_layer("final_conv").bias 
+        ]
+
         return weights
         
         

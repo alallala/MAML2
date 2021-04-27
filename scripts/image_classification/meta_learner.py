@@ -147,6 +147,7 @@ class MetaLearner(tf.keras.models.Model):
         
         copied_model = cls(args)
         copied_model.build(model.ip_size)
+        
 
         if copied_model.with_bn is True:
             copied_model.conv_1.kernel = model.conv_1.kernel
