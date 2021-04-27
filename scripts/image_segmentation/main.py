@@ -25,11 +25,11 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def write_histogram(model, writer, step):
-    
+    '''
     :param model: A model
     :param writer: tf.summary writer
     :param step: Current training step
-   
+    '''
     with writer.as_default():
         for idx, layer in enumerate(model.layers):
             if 'conv' in layer.name or 'dense' in layer.name:
@@ -41,31 +41,24 @@ def write_histogram(model, writer, step):
 
 
 def write_gradient(grads, writer, step, with_bn=True):
-    
+    '''
     :param grads: Gradients on query set
     :param writer: tf.summary writer
     :param step: Current training step
     
-    if with_bn:
-        name = [
-            'conv_0:kernel_grad', 'conv_0:bias_grad', 'batch_normalization_1:gamma_grad', 'batch_normalization_1:beta_grad',
-            'conv_1:kernel_grad', 'conv_1:bias_grad', 'batch_normalization_2:gamma_grad', 'batch_normalization_2:beta_grad',
-            'conv_2:kernel_grad', 'conv_2:bias_grad', 'batch_normalization_3:gamma_grad', 'batch_normalization_3:beta_grad',
-            'conv_3:kernel_grad', 'conv_3:bias_grad', 'batch_normalization_4:gamma_grad', 'batch_normalization_4:beta_grad',
-            'dense:kernel_grad', 'dense:bias_grad'
-        ]
-        with writer.as_default():
-            for idx, grad in enumerate(grads):
-                tf.summary.histogram(name[idx], grad, step=step)
-    elif with_bn is False:
-        name = [
-            'conv_0:kernel_grad', 'conv_0:bias_grad', 'conv_1:kernel_grad', 'conv_1:bias_grad',
-            'conv_2:kernel_grad', 'conv_2:bias_grad', 'conv_3:kernel_grad', 'conv_3:bias_grad',
-            'dense:kernel_grad', 'dense:bias_grad'
-        ]
-        with writer.as_default():
-            for idx, grad in enumerate(grads):
-                tf.summary.histogram(name[idx], grad, step=step)
+    
+    name = [
+        'conv_0:kernel_grad', 'conv_0:bias_grad', 'batch_normalization_1:gamma_grad', 'batch_normalization_1:beta_grad',
+        'conv_1:kernel_grad', 'conv_1:bias_grad', 'batch_normalization_2:gamma_grad', 'batch_normalization_2:beta_grad',
+        'conv_2:kernel_grad', 'conv_2:bias_grad', 'batch_normalization_3:gamma_grad', 'batch_normalization_3:beta_grad',
+        'conv_3:kernel_grad', 'conv_3:bias_grad', 'batch_normalization_4:gamma_grad', 'batch_normalization_4:beta_grad',
+        'dense:kernel_grad', 'dense:bias_grad'
+    ]
+    '''
+    with writer.as_default():
+        for idx, grad in enumerate(grads):
+            tf.summary.histogram('name', grad, step=step)
+    
 
 
 
@@ -110,12 +103,12 @@ def loss_fn(y, pred_y):
 '''
     
 def accuracy_fn(y, pred_y):
-    
+    '''
     :param pred_y: Prediction output of model
     :param y: Ground truth
-
-    :return accuracy value:
     
+    :return accuracy value:
+    '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
