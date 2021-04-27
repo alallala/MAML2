@@ -388,7 +388,7 @@ def eval_model(model, batch_generator, num_steps=None):
     optimizer = tf.keras.optimizers.SGD(learning_rate=args.inner_lr)
     
     task_losses = [0 for _ in len(batch_set)]
-    task_accs = [0 for _ in len(batch_set]
+    task_accs = [0 for _ in len(batch_set)]
 
     loss_res = [[] for _ in range(len(batch_set))]
     acc_res = [[] for _ in range(len(batch_set))]
