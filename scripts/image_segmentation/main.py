@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from .functional import f_score
+from base import functional as F
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -84,7 +84,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    acc = f_score(y,pred_y)
+    acc = F.f_score(y,pred_y)
     return acc
 
 
