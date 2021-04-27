@@ -290,7 +290,7 @@ def maml_train(model, batch_generator):
         
         # Evaluating model
         if step % test_steps == 0 and step > 0:
-            test_set = batch_generator.test_batch(test=False) #use validation folders
+            test_set = batch_generator.test_batch(test=False) #use validation data
             # batch_generator.print_label_map()
             test_loss, test_acc = _maml_finetune_step(test_set)  
             with summary_writer.as_default():
