@@ -219,7 +219,7 @@ def maml_train(model, batch_generator):
         # Delete copied_model for saving memory
         del copied_model
 
-        return batch_loss #, batch_acc
+        return batch_loss, batch_acc
     
     # Define the maml train step
     def _maml_train_step(batch_set):
@@ -269,7 +269,7 @@ def maml_train(model, batch_generator):
             # Write gradients histogram
             write_gradient(outer_grads, summary_writer, step)
         # Return reslut of one maml train step
-        return batch_loss  #, batch_acc
+        return batch_loss, batch_acc
             
     # Main loop
     print("\nstart training loop\n")
@@ -282,7 +282,7 @@ def maml_train(model, batch_generator):
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
         # Run maml train step
-        batch_loss = _maml_train_step(batch_set) #, batch_acc
+        batch_loss, batch_acc = _maml_train_step(batch_set) 
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
@@ -297,7 +297,7 @@ def maml_train(model, batch_generator):
         # Print train result
         if step % print_steps == 0 or step == 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
-            # batch_acc = [acc.numpy() for acc in batch_acc]
+            batch_acc = [acc.numpy() for acc in batch_acc]
             '''uncomment to display loss and acc for each task in meta batch'''
             #print ('[Iter. {}] Task loss: {:.3f}; Task accuracy: {:.3f};'.format(step, batch_loss, batch_acc))
             '''to visualize average over tasks in meta batch'''
@@ -316,7 +316,7 @@ def maml_train(model, batch_generator):
         if step % test_steps == 0 and step > 0:
             test_set = batch_generator.test_batch(test=False) #use validation folders
             # batch_generator.print_label_map()
-            test_loss = _maml_finetune_step(test_set) #, test_acc 
+            test_loss, test_acc = _maml_finetune_step(test_set)  
             with summary_writer.as_default():
                 tf.summary.scalar('Validation loss', tf.reduce_mean(test_loss), step=step)
                 tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
