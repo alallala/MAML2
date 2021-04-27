@@ -22,7 +22,7 @@ from losses import CategoricalCELoss
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
+os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 
 def write_histogram(model, writer, step):
     '''
