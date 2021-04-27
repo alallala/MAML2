@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from losses import f_score
+from functional import f_score
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
