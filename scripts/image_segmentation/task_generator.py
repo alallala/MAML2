@@ -1,7 +1,7 @@
 '''
     Date: 14th Feb 2020
     Author: HilbertXu
-    Abstract: Code for generating meta-train tasks using miniimagenet and ominiglot dataset
+    Abstract: Code for generating meta-train tasks using clarity dataset
               Meta learning is different from general supervised learning
               The basic training element in training process is TASK(N-way K-shot)
               A batch contains several tasks
@@ -26,7 +26,6 @@ import tifffile
 from skimage.transform import resize
 
 
-
 def sequence(start, end):
     res = []
     x = start
@@ -40,7 +39,6 @@ def load_file(f,num_images):
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(0,num_images)
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
-        #img = resize(img,(128,128,3)) 
     img = np.asarray(img, dtype=np.float32)
     return img
         
@@ -61,28 +59,20 @@ class TaskGenerator:
             self.n_way = args.n_way
             self.spt_num = args.k_shot
             self.qry_num = args.k_query
-            self.dim_output = self.n_way 
-        else:
-            self.dataset = 'clarity'
-            self.mode = args.mode
-            self.meta_batchsz = args.meta_batchsz
-            self.n_way = 5
-            self.spt_num = 5
-            self.qry_num = 5
-            self.img_size = 256
-            self.img_channel = 4
-            self.dim_output = 2
+            #self.dim_output = self.n_way 
         
         if self.dataset == 'clarity':
             
             data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',500)
-            self.metatrain_data = data[:300]
-            self.metaval_data = data[300:400]
-            self.metatest_data = data[400:]
+            for_train = int(len(data)*0.8)
+            for_val = int(for_train*0.2)
+            self.metatrain_data = data[:for_train-for_val]
+            self.metaval_data = data[for_train-for_val:for_train]
+            self.metatest_data = data[for_train:]
   
         
         # Record the relationship between image label and the folder name in each task
-        self.label_map = []
+        # self.label_map = []
     
     '''               
     def shuffle_set(self, set_x, set_y):
@@ -94,33 +84,12 @@ class TaskGenerator:
         random.shuffle(set_y)
         return set_x, set_y
     
-    
-    def read_images(self, image_file):
-        if self.dataset == 'omniglot':
-            # For Omniglot dataset image size:[28, 28, 1]
-            return np.reshape(cv2.cvtColor(cv2.imread(image_file), cv2.COLOR_BGR2GRAY).astype(np.float32)/255, (self.img_size, self.img_size, self.img_channel))
-        if self.dataset == 'miniimagenet':
-            # For Omniglot dataset image size:[84, 84, 3]
-            return np.reshape(cv2.imread(image_file).astype(np.float32)/255, (self.img_size, self.img_size, self.img_channel))
     '''
     
     def convert_to_tensor(self, np_objects):
         return [tf.convert_to_tensor(obj) for obj in np_objects]
     
     def generate_set(self, data, shuffle=False):
-        
-        '''
-        k_shot = self.spt_num
-        k_query = self.qry_num
-        set_sampler = lambda x: np.random.choice(x, k_shot+k_query, False)
-        
-        # sample images for support set and query set
-        for d in (data_list):
-            image = d[:,:,:3] #shape (256,256,3)
-            mask = d[:,:,3:] #shape(256,256,1)
-        if shuffle == True:
-            for i, elem in enumerate(images_with_labels):
-                random.shuffle(elem)'''
              
         # Function for slicing the dataset
         # support set & query set
@@ -162,7 +131,7 @@ class TaskGenerator:
         :return: a batch of support set tensor and query set tensor
         
         '''
-        data = self.metatrain_data #descard 200 for validation
+        data = self.metatrain_data 
         # Shuffle root folder in order to prevent repeat
         batch_set = []
         # self.label_map = []
