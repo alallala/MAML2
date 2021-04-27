@@ -99,7 +99,7 @@ def compute_loss(model, x, y):
     '''
     pred_y = model(x) 
     my_loss = tf.keras.losses.BinaryCrossentropy()
-    loss = tf.reduce_mean(my_loss(y, pred_y))
+    loss = my_loss(y, pred_y)
     return loss, pred_y
 
 def compute_gradients(model, x, y):
