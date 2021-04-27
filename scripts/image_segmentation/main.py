@@ -383,7 +383,7 @@ def eval_model(model, batch_generator, num_steps=None):
             acc_res[idx].append((0, acc.numpy()))
         print ('Before any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
-        print ('Task accuracies: {}'.format(task_accs))
+        # print ('Task accuracies: {}'.format(task_accs))
     # Test for each task
     for idx, task in enumerate(batch_set):
         print ('========== Task {} =========='.format(idx+1))
@@ -403,7 +403,7 @@ def eval_model(model, batch_generator, num_steps=None):
                 acc_res[idx].append((step, qry_acc.numpy()))
                 print ('After {} steps update'.format(step))
                 print ('Task losses: {}'.format(qry_loss.numpy()))
-                print ('Task accs: {}'.format(qry_acc.numpy()))
+                #print ('Task accs: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
     
     for idx in range(len(batch_set)):
