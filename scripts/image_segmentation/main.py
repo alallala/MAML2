@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from losses import CategoricalCELoss
+from losses import f_score
  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -84,9 +84,8 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    accuracy = tf.keras.metrics.Accuracy()
-    _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
-    return accuracy.result()
+    acc = f_score(y,y_pred)
+    return acc
 
 
 def compute_loss(model, x, y):
