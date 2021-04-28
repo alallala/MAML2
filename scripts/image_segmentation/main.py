@@ -21,6 +21,8 @@ from losses import BinaryCELoss
 from base import functional as F  
 
 from IPython.display import Image, display
+import PIL
+from PIL import ImageOps
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
