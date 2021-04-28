@@ -196,6 +196,18 @@ def maml_train(model, batch_generator):
                 copied_model = ml.meta_update(model_to_copy=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
             # Compute task loss & accuracy on the query set
             task_loss, task_pred = compute_loss(copied_model, query_x, query_y)
+            if idx==0:
+                    print("visualize one prediction and its true mask in the first task\n") 
+                    pred_mask = tf.round(task_pred[0]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                    true_mask = query_y[0]
+                 
+                    to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
+                    to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
+                    print("true mask")
+                    display(to_display_true_mask)
+                    print("pred mask")
+                    display(to_display_pred_mask)
+                    
             task_acc = accuracy_fn(query_y, task_pred)
             batch_loss[idx] += task_loss
             batch_acc[idx] += task_acc
@@ -241,6 +253,7 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
+                '''
                 if idx==0:
                     print("visualize one prediction and its true mask in the first task\n") 
                     pred_mask = tf.round(task_pred[0]) #round to convert sigmoid outputs from probalities to 0 or 1 values
@@ -252,7 +265,7 @@ def maml_train(model, batch_generator):
                     display(to_display_true_mask)
                     print("pred mask")
                     display(to_display_pred_mask)
-                    
+                '''   
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
@@ -420,6 +433,8 @@ def eval_model(model, batch_generator, num_steps=None):
                 #regular_train_step(model, support_x, support_y, optimizer)
                 loss, pred = compute_loss(model, support_x, support_y)
             grads = tape.gradient(loss, model.trainable_variables)
+            grads = [(tf.clip_by_value(grad, -5.0, 5.0))
+                                  for grad in grads]
             optimizer.apply_gradients(zip(grads, model.trainable_variables))
             # Test on query set
             qry_loss, qry_pred = compute_loss(model, query_x, query_y)
