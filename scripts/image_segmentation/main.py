@@ -189,6 +189,8 @@ def maml_train(model, batch_generator):
                     inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                     i_w = ml.inner_weights(copied_model)
                 inner_grads = inner_tape.gradient(inner_loss, i_w)
+                inner_grads = [(tf.clip_by_value(grad, -10.0, 10.0))
+                                  for grad in inner_grads]
                 copied_model = ml.meta_update(model_to_copy=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
             # Compute task loss & accuracy on the query set
             task_loss, task_pred = compute_loss(copied_model, query_x, query_y)
@@ -229,6 +231,8 @@ def maml_train(model, batch_generator):
                         inner_loss, _ = compute_loss(copied_model, support_x, support_y)
                         i_w = ml.inner_weights(copied_model)
                     inner_grads = inner_tape.gradient(inner_loss, i_w)
+                    inner_grads = [(tf.clip_by_value(grad, -10.0, 10.0))
+                                  for grad in inner_grads]
                     copied_model = ml.meta_update(model_to_copy=copied_model, args=args, alpha=inner_lr, grads=inner_grads)
                   
                 # Compute task loss & accuracy on the query set
@@ -247,6 +251,8 @@ def maml_train(model, batch_generator):
         # Compute second order gradients
      
         outer_grads = outer_tape.gradient(mean_loss, model.trainable_variables)
+        outer_grads = [(tf.clip_by_value(grad, -10.0, 10.0))
+                                  for grad in outer_grads]
         meta_optimizer.apply_gradients(zip(outer_grads,model.trainable_variables))
         apply_gradients(meta_optimizer, outer_grads, model.trainable_variables)
         if visual:
