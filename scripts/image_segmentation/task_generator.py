@@ -34,10 +34,10 @@ def sequence(start, end):
         x += 1
     return res
     
-def load_file(f,num_images):
+def load_file(f,start,end):
     if f[-4:] == 'tiff':
         print("\nloading {}\n".format(str(f.split("/")[-1])))
-        seq = sequence(0,num_images)
+        seq = sequence(start,end)
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
     img = np.asarray(img, dtype=np.float32)
     return img
@@ -63,7 +63,7 @@ class TaskGenerator:
         
         if self.dataset == 'clarity':
             
-            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',500)
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
             for_train = int(len(data)*0.8)
             for_val = int(for_train*0.2)
             self.metatrain_data = data[:for_train-for_val]
