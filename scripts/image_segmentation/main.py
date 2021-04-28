@@ -224,6 +224,7 @@ def maml_train(model, batch_generator):
                 support_x, support_y, query_x, query_y = task
                 for z in range(0,len(query_y)):
                     display(PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(query_y[z])))
+                    print("\n")
                 if visual:
                     with summary_writer.as_default():
                         tf.summary.image('Support Images', support_x, max_outputs=5, step=step)
