@@ -85,8 +85,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    #(test_preds >= 0.5).astype(np.uint8)
-    return F.iou_score(y,pred_y)
+    return F.iou_score(y,pred_y,threshold=0.5)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
