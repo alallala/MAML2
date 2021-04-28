@@ -222,9 +222,6 @@ def maml_train(model, batch_generator):
                 copied_model = model
                 # Slice task to support set and query set
                 support_x, support_y, query_x, query_y = task
-                for z in range(0,len(query_y)):
-                    display(PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(query_y[z])))
-                    print("\n")
                 if visual:
                     with summary_writer.as_default():
                         tf.summary.image('Support Images', support_x, max_outputs=5, step=step)
@@ -245,7 +242,17 @@ def maml_train(model, batch_generator):
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
                 if idx==0:
-                    pred_masks_task0 = [task_pred,query_y]
+                    print("visualize one prediction and its true mask in the first task\n") 
+                    pred_mask = tf.round(task_pred[0]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                    true_mask = query_y[0]
+                 
+                    to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
+                    to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
+                    print("true mask")
+                    display(to_display_true_mask)
+                    print("pred mask")
+                    display(to_display_pred_mask)
+                    
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
@@ -263,7 +270,7 @@ def maml_train(model, batch_generator):
             # Write gradients histogram
             write_gradient(outer_grads, summary_writer, step)
         # Return reslut of one maml train step
-        return batch_loss, batch_acc, pred_masks_task0
+        return batch_loss, batch_acc
             
     # Main loop
     print("\nstart training loop\n")
@@ -276,34 +283,7 @@ def maml_train(model, batch_generator):
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
         # Run maml train step
-        batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
-        
-        
-        pred_mask = tf.round(pred_masks_task0[0][0]) #round to convert sigmoid outputs from probalities to 0 or 1 values
-        true_mask = pred_masks_task0[0][1]
-        
-        '''
-        if np.all(pred_mask==1):
-            to_display_pred_mask = np.ones((256, 256), dtype=np.float)
-        else: 
-            to_display_pred_mask = tf.keras.preprocessing.image.array_to_img(pred_mask)
-
-        if np.all(true_mask==1):
-            to_display_true_mask = np.ones((256, 256), dtype=np.float)
-        else:
-            to_display_true_mask = tf.keras.preprocessing.image.array_to_img(true_mask)
-            
-        f, axarr = plt.subplots(1,2,figsize=(10,10))
-        axarr[0].imshow(to_display_true_mask, cmap='gray')
-        axarr[1].imshow(to_display_pred_mask,cmap='gray') 
-        '''
-        
-        to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
-        to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) #here we take query_y[0]
-        print("true mask")
-        display(to_display_true_mask)
-        print("pred mask")
-        display(to_display_pred_mask)
+        batch_loss, batch_acc = _maml_train_step(batch_set)
         
         if visual:
             # Write histogram
