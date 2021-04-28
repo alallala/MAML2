@@ -102,7 +102,7 @@ def compute_loss(model, x, y):
     :return Loss value
     '''
     logits = model(x) 
-    pred_y = keras.layers.Activation('sigmoid')
+    pred_y = tf.keras.layers.Activation('sigmoid')
     my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
     loss = my_loss(y, pred_y)
     return loss, logits
