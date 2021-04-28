@@ -241,7 +241,8 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                pred_masks_task0.append(task_pred)
+                if idx==0:
+                    pred_masks_task0 = [task_pred,query_y]
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
@@ -274,10 +275,12 @@ def maml_train(model, batch_generator):
         # Run maml train step
         batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
         
-        mask = tf.round(pred_masks_task0[0][0])
+        mask = tf.round(pred_masks_task0[0][0]) #here we take pred_y[0] 
         #mask = np.expand_dims(mask, axis=-1)
         img = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(mask))
+        img_true = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_masks_task0[0][1])) #here we take query_y[0]
         display(img)
+        display(img_true)
 
         if visual:
             # Write histogram
