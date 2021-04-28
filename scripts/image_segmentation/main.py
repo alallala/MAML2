@@ -84,12 +84,12 @@ def accuracy_fn(y, pred_y):
     :return accuracy value:
     '''
     
-    #return F.iou_score(y,pred_y)
-    
+    return F.f_score(y,pred_y,per_image=True)
+    '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
-    
+    '''
 
 def compute_loss(model, x, y):
     '''
