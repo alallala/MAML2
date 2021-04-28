@@ -222,6 +222,7 @@ def maml_train(model, batch_generator):
                 copied_model = model
                 # Slice task to support set and query set
                 support_x, support_y, query_x, query_y = task
+                display(PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(query_y[0])))
                 if visual:
                     with summary_writer.as_default():
                         tf.summary.image('Support Images', support_x, max_outputs=5, step=step)
@@ -295,13 +296,12 @@ def maml_train(model, batch_generator):
         axarr[1].imshow(to_display_pred_mask,cmap='gray') 
         '''
         
-        to_display_pred_mask = tf.keras.preprocessing.image.array_to_img(pred_mask)
-        to_display_true_mask = tf.keras.preprocessing.image.array_to_img(true_mask)
+        to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
+        to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) #here we take query_y[0]
         print("true mask")
         display(to_display_true_mask)
         print("pred mask")
         display(to_display_pred_mask)
-        
         
         if visual:
             # Write histogram
