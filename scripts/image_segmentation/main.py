@@ -20,6 +20,8 @@ from meta_learner import MetaLearner
 from losses import BinaryCELoss
 from base import functional as F  
 
+from IPython.display import Image, display
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
 
@@ -271,11 +273,11 @@ def maml_train(model, batch_generator):
         # Run maml train step
         batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
         
-        m = (pred_masks_task0[0] >= 0.5).astype(np.uint8)
-        to_display_mask =array_to_img(m)
-        plt.imshow(to_display_mask,cmap='gray',vmin=0,vmax=1)
+        mask = tf.round(pred_masks_task0[0])
+        mask = np.expand_dims(mask, axis=-1)
+        img = PIL.ImageOps.autocontrast(keras.preprocessing.image.array_to_img(mask))
+        display(img)
 
-        
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
