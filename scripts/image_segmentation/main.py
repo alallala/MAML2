@@ -288,12 +288,15 @@ def maml_train(model, batch_generator):
             to_display_true_mask = np.ones((256, 256), dtype=np.float)
         else:
             to_display_true_mask = tf.keras.preprocessing.image.array_to_img(true_mask)
+            
+        display(to_display_true_mask)
+        display(to_display_pred_mask)
 
-        
+        '''
         f, axarr = plt.subplots(1,2,figsize=(10,10))
         axarr[0].imshow(to_display_true_mask, cmap='gray')
         axarr[1].imshow(to_display_pred_mask,cmap='gray') 
-        
+        '''
         '''
         mask = tf.round(pred_masks_task0[0][0]) #here we take pred_y[0] 
         #mask = np.expand_dims(mask, axis=-1)
