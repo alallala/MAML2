@@ -274,7 +274,7 @@ def maml_train(model, batch_generator):
         # Run maml train step
         batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
         
-        mask = tf.round(pred_masks_task0[0])
+        mask = tf.round(pred_masks_task0[0][0])
         #mask = np.expand_dims(mask, axis=-1)
         img = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(mask))
         display(img)
