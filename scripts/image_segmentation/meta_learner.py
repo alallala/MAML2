@@ -127,7 +127,7 @@ def build_unet(
         skip_connection_layers,
         decoder_filters=(256, 128, 64, 32, 16),
         n_upsample_blocks=5,
-        classes=1,
+        classes=2,
         activation='sigmoid',
         use_batchnorm=True,
 ):
@@ -219,7 +219,7 @@ class MetaLearner():
             decoder_block= decoder_block,
             skip_connection_layers= 'default', #self.encoder_features,
             decoder_filters=(256, 128, 64, 32, 16), #self.decoder_filters,
-            classes= 1 ,#self.classes,
+            classes= 2 ,#self.classes,
             activation='sigmoid', #self.activation,
             n_upsample_blocks=len((256, 128, 64, 32, 16)), #self.decoder_filters
             use_batchnorm=True #self.decoder_use_batchnorm,

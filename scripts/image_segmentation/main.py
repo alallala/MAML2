@@ -83,8 +83,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    
-    return F.f_score(y,pred_y,per_image=True)
+    return F.iou_score(y,pred_y)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -104,7 +103,7 @@ def compute_loss(model, x, y):
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
     #my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
-    loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
+    loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, logits,from_logits=True))
     return loss, logits
 
 def compute_gradients(model, x, y):
