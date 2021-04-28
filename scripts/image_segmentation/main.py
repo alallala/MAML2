@@ -103,8 +103,8 @@ def compute_loss(model, x, y):
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
-    my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
-    loss = my_loss(y, pred_y)
+    #my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
+    loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
     return loss, logits
 
 def compute_gradients(model, x, y):
@@ -237,10 +237,6 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                if idx==0:
-                    print("task pred\nthey should be logits, so values in range -inf + inf")
-                    print(task_pred.shape)
-                    print(task_pred)
                 
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
