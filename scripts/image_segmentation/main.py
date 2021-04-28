@@ -276,9 +276,10 @@ def maml_train(model, batch_generator):
         batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
         
         
-        pred_mask = tf.round(pred_masks_task0[0][0]) #round to convert sigmoided outputs from prob to 0 or 1 values
+        pred_mask = tf.round(pred_masks_task0[0][0]) #round to convert sigmoid outputs from probalities to 0 or 1 values
         true_mask = pred_masks_task0[0][1]
         
+        '''
         if np.all(pred_mask==1):
             to_display_pred_mask = np.ones((256, 256), dtype=np.float)
         else: 
@@ -289,22 +290,18 @@ def maml_train(model, batch_generator):
         else:
             to_display_true_mask = tf.keras.preprocessing.image.array_to_img(true_mask)
             
-        display(to_display_true_mask)
-        display(to_display_pred_mask)
-
-        '''
         f, axarr = plt.subplots(1,2,figsize=(10,10))
         axarr[0].imshow(to_display_true_mask, cmap='gray')
         axarr[1].imshow(to_display_pred_mask,cmap='gray') 
         '''
-        '''
-        mask = tf.round(pred_masks_task0[0][0]) #here we take pred_y[0] 
-        #mask = np.expand_dims(mask, axis=-1)
-        img = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(mask))
-        img_true = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_masks_task0[0][1])) #here we take query_y[0]
-        display(img)
-        display(img_true)
-        '''
+        
+        to_display_pred_mask = tf.keras.preprocessing.image.array_to_img(pred_mask)
+        to_display_true_mask = tf.keras.preprocessing.image.array_to_img(true_mask)
+        print("true mask")
+        display(to_display_true_mask)
+        print("pred mask")
+        display(to_display_pred_mask)
+        
         
         if visual:
             # Write histogram
