@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
- 
+from base import functional as F  
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 os.environ['CUDA_VISIBLE_DEVICES'] = '/device:GPU:0'
@@ -83,10 +83,14 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
+    
+    return F.iou_score(y,pred_y)
+    
+    '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
     return accuracy.result()
-
+    '''
 
 def compute_loss(model, x, y):
     '''
@@ -97,10 +101,11 @@ def compute_loss(model, x, y):
 
     :return Loss value
     '''
-    pred_y = model(x) 
+    logits = model(x) 
+    pred_y = keras.layers.Activation('sigmoid')
     my_loss = tf.keras.losses.BinaryCrossentropy() #keras loss classes perform reduction (avg over batch) by default
     loss = my_loss(y, pred_y)
-    return loss, pred_y
+    return loss, logits
 
 def compute_gradients(model, x, y):
     '''
@@ -278,8 +283,8 @@ def maml_train(model, batch_generator):
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            # print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
-            print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            # print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -307,8 +312,8 @@ def maml_train(model, batch_generator):
             mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
             #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            #print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
-            print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss))
+            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            #print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss))
 
             print ('=====================================================================')
         # Meta train step    
@@ -383,7 +388,7 @@ def eval_model(model, batch_generator, num_steps=None):
             acc_res[idx].append((0, acc.numpy()))
         print ('Before any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
-        # print ('Task accuracies: {}'.format(task_accs))
+        print ('Task accuracies: {}'.format(task_accs))
     # Test for each task
     for idx, task in enumerate(batch_set):
         print ('========== Task {} =========='.format(idx+1))
@@ -403,7 +408,7 @@ def eval_model(model, batch_generator, num_steps=None):
                 acc_res[idx].append((step, qry_acc.numpy()))
                 print ('After {} steps update'.format(step))
                 print ('Task losses: {}'.format(qry_loss.numpy()))
-                #print ('Task accs: {}'.format(qry_acc.numpy()))
+                print ('Task accs: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
     
     for idx in range(len(batch_set)):

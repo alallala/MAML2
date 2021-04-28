@@ -153,7 +153,7 @@ def build_unet(
 
         x = decoder_block(decoder_filters[i], stage=i, use_batchnorm=use_batchnorm)(x, skip)
 
-    # model head (define number of output classes)
+    # model head (define number of output classes), here we use a single channel in output (classes=1) 
     x = layers.Conv2D(
         filters=classes,
         kernel_size=(3, 3),
@@ -163,7 +163,7 @@ def build_unet(
         name='final_conv',
     )(x)
     
-    x = layers.Activation(activation, name=activation)(x)
+    #x = layers.Activation(activation, name=activation)(x)
 
     # create keras model instance
     model = keras.models.Model(input_, x)
