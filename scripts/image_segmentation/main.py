@@ -83,6 +83,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
+    #(test_preds >= 0.5).astype(np.uint8)
     return F.iou_score(y,pred_y)
     '''
     accuracy = tf.keras.metrics.Accuracy()
@@ -103,7 +104,7 @@ def compute_loss(model, x, y):
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
     loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
-    return loss, logits
+    return loss, pred_y
 
 def compute_gradients(model, x, y):
     '''
@@ -203,6 +204,8 @@ def maml_train(model, batch_generator):
     
     # Define the maml train step
     def _maml_train_step(batch_set):
+    
+        pred_masks_task0 = []
         # Set up recorders for every batch
         batch_loss = [0 for _ in range(meta_batchsz)]
         batch_acc = [0 for _ in range(meta_batchsz)]
@@ -235,7 +238,7 @@ def maml_train(model, batch_generator):
                   
                 # Compute task loss & accuracy on the query set
                 task_loss, task_pred = compute_loss(copied_model, query_x, query_y) #, loss_fn=loss_fn)
-                
+                pred_masks_task0.append(task_pred)
                 task_acc = accuracy_fn(query_y, task_pred)
                 batch_loss[idx] += task_loss
                 batch_acc[idx] += task_acc
@@ -253,7 +256,7 @@ def maml_train(model, batch_generator):
             # Write gradients histogram
             write_gradient(outer_grads, summary_writer, step)
         # Return reslut of one maml train step
-        return batch_loss, batch_acc
+        return batch_loss, batch_acc, pred_masks_task0
             
     # Main loop
     print("\nstart training loop\n")
@@ -266,7 +269,13 @@ def maml_train(model, batch_generator):
         batch_set = batch_generator.train_batch()
         # batch_generator.print_label_map()
         # Run maml train step
-        batch_loss, batch_acc = _maml_train_step(batch_set) 
+        batch_loss, batch_acc, pred_masks_task0 = _maml_train_step(batch_set)
+        
+        m = (pred_masks_task0[0] >= 0.5).astype(np.uint8)
+        to_display_mask =array_to_img(m)
+        plt.imshow(to_display_mask,cmap='gray',vmin=0,vmax=1)
+
+        
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
