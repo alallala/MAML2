@@ -102,7 +102,7 @@ def compute_loss(model, x, y):
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
-    loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y,from_logits=True))
+    loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
     return loss, logits
 
 def compute_gradients(model, x, y):
