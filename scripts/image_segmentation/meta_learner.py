@@ -140,8 +140,8 @@ def build_unet(
 
     # add center block if previous operation was maxpooling (for vgg models)
     if isinstance(backbone.layers[-1], layers.MaxPooling2D):
-        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block1')(x)
-        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block2')(x)
+        x = Conv3x3BnReLU(256, use_batchnorm, name='center_block1')(x)
+        x = Conv3x3BnReLU(256, use_batchnorm, name='center_block2')(x)
 
     # building decoder blocks
     for i in range(n_upsample_blocks):
