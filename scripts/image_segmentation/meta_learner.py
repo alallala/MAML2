@@ -140,8 +140,8 @@ def build_unet(
 
     # add center block if previous operation was maxpooling (for vgg models)
     if isinstance(backbone.layers[-1], layers.MaxPooling2D):
-        x = Conv3x3BnReLU(256, use_batchnorm, name='center_block1')(x)
-        x = Conv3x3BnReLU(256, use_batchnorm, name='center_block2')(x)
+        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block1')(x)
+        x = Conv3x3BnReLU(512, use_batchnorm, name='center_block2')(x)
 
     # building decoder blocks
     for i in range(n_upsample_blocks):
@@ -240,7 +240,7 @@ class MetaLearner():
 
     def initialize(cls,model):
     
-        ip_size = (3,96,96,3)
+        ip_size = (5,256,256,3)
         model.build(ip_size)
         
         return model
@@ -289,7 +289,7 @@ class MetaLearner():
     def hard_copy(cls,model):
         
         copied_model = cls.initialize_Unet()
-        copied_model.build((3,96,96,3))
+        copied_model.build((5,256,256,3))
         
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
@@ -419,7 +419,7 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((3,96,96,3)) 
+        copied_model.build((5,256,256,3)) 
         
 
         #copied_model = keras.models.clone_model(model_to_copy)

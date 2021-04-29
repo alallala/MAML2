@@ -87,7 +87,7 @@ class TaskGenerator:
     '''
     
     def convert_to_tensor(self, np_objects):
-        return [tf.convert_to_tensor(obj).image.resize(obj,[96,96]) for obj in np_objects]
+        return [tf.convert_to_tensor(obj) for obj in np_objects] #.image.resize(obj,[96,96])
     
     def generate_set(self, data, shuffle=False):
              
