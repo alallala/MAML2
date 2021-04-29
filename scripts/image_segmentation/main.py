@@ -87,7 +87,8 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    return F.iou_score(y,pred_y,threshold=0.5)
+    pred_y = tf.round(pred_y)
+    return F.iou_score(y,pred_y) #,threshold=0.5)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -421,7 +422,7 @@ def eval_model(model, batch_generator, num_steps=None):
             task_accs[idx] += acc.numpy()
             loss_res[idx].append((0, loss.numpy()))
             acc_res[idx].append((0, acc.numpy()))
-        print ('Before any update steps, test result:')
+        print ('\nBefore any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
         print ('Task accuracies: {}'.format(task_accs))
     # Test for each task
