@@ -38,8 +38,7 @@ def load_file(f,start,end):
     if f[-4:] == 'tiff':
         print("\nloading {}\n".format(str(f.split("/")[-1])))
         seq = sequence(start,end)
-        img = np.reshape(tifffile.imread(f,key=seq).astype(np.float32), (128, 128, 4))
-        #img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
+        img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
          
     img = np.asarray(img, dtype=np.float32)
     return img
@@ -122,9 +121,15 @@ class TaskGenerator:
             '''
             # convert to tensor
             spt_x, spt_y = self.convert_to_tensor((np.array(spt_x), np.array(spt_y)))
-            qry_x, qry_y = self.convert_to_tensor((np.array(qry_x), np.array(qry_y)))
-            # resize images
+            #resize 
+            spt_x = tf.image.resize(spt_x,[128,128])
+            spt_y = tf.image.resize(spt_y,[128,128])
             
+            qry_x, qry_y = self.convert_to_tensor((np.array(qry_x), np.array(qry_y)))
+            #resize
+            qry_x = tf.image.resize(qry_x,[128,128])
+            qry_y = tf.image.resize(qry_y,[128,128])
+                       
             return spt_x, spt_y, qry_x, qry_y
             
         return _slice_set(data)
