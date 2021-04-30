@@ -121,8 +121,13 @@ class TaskGenerator:
             # convert to tensor
             spt_x, spt_y = self.convert_to_tensor((np.array(spt_x), np.array(spt_y)))
             qry_x, qry_y = self.convert_to_tensor((np.array(qry_x), np.array(qry_y)))
-            # resize images
             
+            # resize images
+            spt_x = tf.image.resize(spt_x,[128,128])
+            spt_y = tf.image.resize(spt_y,[128,128])
+            qry_x = tf.image.resize(qry_x,[128,128])
+            qry_y = tf.image.resize(qry_y,[128,128])
+
             return spt_x, spt_y, qry_x, qry_y
             
         return _slice_set(data)
