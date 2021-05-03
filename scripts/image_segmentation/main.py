@@ -546,5 +546,5 @@ if __name__ == '__main__':
         model = maml_train(model, batch_generator)
     elif args.mode == 'test':
         model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-        eval_model(model, batch_generator, num_steps=(0, 1, 5, 10))
+        eval_model(model, batch_generator, num_steps=(0, 10, 50, 100))
         
