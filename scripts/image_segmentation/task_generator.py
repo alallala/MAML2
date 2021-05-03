@@ -85,7 +85,7 @@ def clustering_dataset(loaded_images):
     feat = feat.reshape(-1,4096)
 
     # reduce the amount of dimensions in the feature vector
-    pca = PCA(n_components=100, random_state=22)
+    pca = PCA(n_components=200, random_state=22)
     pca.fit(feat)
     x = pca.transform(feat)
 
@@ -310,7 +310,8 @@ if __name__ == '__main__':
             to_display = array_to_img(my_array[idx][:,:,:3])
             plt.imshow(to_display)
             plt.axis('off')
-        plt.show()
+        
+    plt.show()
     
     '''
     tasks = TaskGenerator()
