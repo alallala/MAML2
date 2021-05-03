@@ -163,7 +163,7 @@ def build_unet(
         name='final_conv',
     )(x)
     
-    x = layers.Activation(activation, name=activation)(x)
+    #x = layers.Activation(activation, name=activation)(x)
 
     # create keras model instance
     model = keras.models.Model(input_, x)
