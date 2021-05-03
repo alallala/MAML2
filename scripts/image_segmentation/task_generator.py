@@ -98,7 +98,8 @@ def clustering_dataset(loaded_images):
 
     # holds the cluster id and the images { id: [images] }
     groups = {}
-    for img_idx, cluster in zip(images_indexes,kmeans.labels_):
+    total_clusters = kmeans.labels_
+    for img_idx, cluster in zip(images_indexes,total_clusters):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
@@ -110,7 +111,7 @@ def clustering_dataset(loaded_images):
     return groups
 
 # function that lets you view a cluster (based on identifier)        
-def view_cluster(cluster):
+def view_cluster(groups,cluster,loaded_images):
     plt.figure(figsize = (25,25));
     # gets the list of images indexes for a cluster
     indexes = groups[cluster]
@@ -121,7 +122,6 @@ def view_cluster(cluster):
     # plot each image in the cluster
     for idx in range(indexes):
         plt.subplot(10,10,idx+1);
-        img = load_img(file)
         img = loaded_images[:,:,:,:3][idx]
         plt.imshow(img)
         plt.axis('off')
@@ -305,8 +305,9 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
-    clusters  = clustering_dataset(my_array)
-    view_cluster(clusters)
+    clusters = clustering_dataset(my_array)
+    cluster_id = 3
+    view_cluster(clusters,cluster_id,my_array)
     '''
     tasks = TaskGenerator()
     tasks.mode = 'train'
