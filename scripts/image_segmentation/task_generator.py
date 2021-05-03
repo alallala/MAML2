@@ -303,7 +303,7 @@ if __name__ == '__main__':
             print(f"Clipping cluster size from {len(indexes)} to 30")
             indexes = indexes[:29]
         # plot each image in the cluster
-        for i,idx in indexes:
+        for i,idx in enumerate(indexes):
             plt.subplot(10,10,i+1);
             to_display = array_to_img(my_array[idx][:,:,:3])
             plt.imshow(to_display)
