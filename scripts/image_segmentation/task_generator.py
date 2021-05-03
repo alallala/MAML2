@@ -303,6 +303,7 @@ if __name__ == '__main__':
         to_display = array_to_img(my_array[idx][:,:,3:])
         plt.imshow(to_display)
         plt.axis('off')
+        plt.show()
     
     '''
     tasks = TaskGenerator()
