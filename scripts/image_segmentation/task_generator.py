@@ -300,7 +300,7 @@ if __name__ == '__main__':
     # gets the list of images indexes for a cluster
     for key in groups.keys():
         indexes = groups[key]
-        print("\ncluster {} images:".format(key))
+        print("\ncluster {} contains the following images\n{}:".format(key,groups[key]))
         # only allow up to 30 images to be shown at a time
         if len(indexes) > 30:
             print(f"Clipping cluster size from {len(indexes)} to 30")
