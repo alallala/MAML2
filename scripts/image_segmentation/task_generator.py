@@ -307,7 +307,7 @@ if __name__ == '__main__':
     '''
     # plot each image in the cluster
     i = 0
-    for idx in range(len(indexes)):
+    for idx in all_indexes:
         if i<size_clusters[i]:
             title = "cluster "+str(i)
         plt.subplot(10,10,idx+1,title=title);
