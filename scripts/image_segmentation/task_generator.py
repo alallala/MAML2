@@ -295,6 +295,7 @@ if __name__ == '__main__':
       
     cluster_id = np.random.choice(big_clusters,1)[0]
     # print("\ncluster {} images:\n".format(cluster_id))
+    plt.ion()
     plt.figure(figsize = (25,25));
     # gets the list of images indexes for a cluster
     for key in groups.keys():
@@ -311,7 +312,8 @@ if __name__ == '__main__':
             plt.imshow(to_display)
             plt.axis('off')
         
-    plt.show()
+        plt.show()
+        plt.close()
     
     '''
     tasks = TaskGenerator()
