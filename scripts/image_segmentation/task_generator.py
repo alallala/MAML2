@@ -55,7 +55,7 @@ def clustering_dataset(loaded_images):
 
     def extract_features(img, model_cls):
         
-        reshaped_img = img.reshape(1,224,224,3) 
+        reshaped_img = np.arange(img.shape).reshape(1,224,224,3)
         # prepare image for model
         imgx = preprocess_input(reshaped_img)
         # get the feature vector
@@ -68,9 +68,8 @@ def clustering_dataset(loaded_images):
     for idx in range(0,len(loaded_images)):
         # try to extract the features and update the dictionary
         try:
-            feat = extract_features(loaded_images[[idx],:,:,:3],model_cls)
+            feat = extract_features(loaded_images[:,:,:,:3][idx],model_cls)
             data[idx] = feat
-        # if something fails, save the extracted features as a pickle file (optional)
         except IOError as exc:
             raise RuntimeError('Failed to extract features') from exc
               
