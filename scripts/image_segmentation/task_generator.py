@@ -104,23 +104,25 @@ def clustering_dataset(loaded_images):
             groups[cluster].append(img_idx)
         else:
             groups[cluster].append(img_idx)
+            
+    return groups
 
-    # function that lets you view a cluster (based on identifier)        
-    def view_cluster(cluster):
-        plt.figure(figsize = (25,25));
-        # gets the list of images indexes for a cluster
-        indexes = groups[cluster]
-        # only allow up to 30 images to be shown at a time
-        if len(indexes) > 30:
-            print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:29]
-        # plot each image in the cluster
-        for idx in range(indexes):
-            plt.subplot(10,10,idx+1);
-            img = load_img(file)
-            img = loaded_images[:,:,:,:3][idx]
-            plt.imshow(img)
-            plt.axis('off')
+# function that lets you view a cluster (based on identifier)        
+def view_cluster(cluster):
+    plt.figure(figsize = (25,25));
+    # gets the list of images indexes for a cluster
+    indexes = groups[cluster]
+    # only allow up to 30 images to be shown at a time
+    if len(indexes) > 30:
+        print(f"Clipping cluster size from {len(indexes)} to 30")
+        indexes = indexes[:29]
+    # plot each image in the cluster
+    for idx in range(indexes):
+        plt.subplot(10,10,idx+1);
+        img = load_img(file)
+        img = loaded_images[:,:,:,:3][idx]
+        plt.imshow(img)
+        plt.axis('off')
                   
 def sequence(start, end):
     res = []
@@ -301,8 +303,8 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
-    clustering_dataset(my_array)
-    
+    clusters  = clustering_dataset(my_array)
+    view_cluster(clusters)
     '''
     tasks = TaskGenerator()
     tasks.mode = 'train'
