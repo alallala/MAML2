@@ -120,7 +120,7 @@ def view_cluster(groups,cluster,loaded_images):
         print(f"Clipping cluster size from {len(indexes)} to 30")
         indexes = indexes[:29]
     # plot each image in the cluster
-    for idx in range(indexes):
+    for idx in range(len(indexes)):
         plt.subplot(10,10,idx+1);
         img = loaded_images[:,:,:,:3][idx]
         plt.imshow(img)
