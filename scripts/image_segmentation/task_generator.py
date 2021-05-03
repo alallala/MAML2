@@ -26,6 +26,99 @@ import tifffile
 from skimage.transform import resize
 
 
+
+# for loading/processing the images  
+from keras.preprocessing.image import load_img 
+from keras.preprocessing.image import img_to_array 
+from keras.applications.vgg16 import preprocess_input 
+
+# models 
+from keras.applications.vgg16 import VGG16 
+from keras.models import Model
+
+# clustering and dimension reduction
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
+# for everything else
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from random import randint
+import pandas as pd
+import pickle
+
+def clustering_dataset(loaded_images):
+     
+    model_cls = VGG16()
+    model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
+
+    def extract_features(img, model_cls):
+        
+        reshaped_img = img.reshape(1,224,224,3) 
+        # prepare image for model
+        imgx = preprocess_input(reshaped_img)
+        # get the feature vector
+        features = model_cls.predict(imgx, use_multiprocessing=True)
+        return features
+       
+    data = {}
+  
+    # lop through each image in the dataset
+    for idx in range(0,len(loaded_images)):
+        # try to extract the features and update the dictionary
+        try:
+            feat = extract_features(loaded_images[:,:,:,:3][idx],model_cls)
+            data[idx] = feat
+        # if something fails, save the extracted features as a pickle file (optional)
+        except IOError as exc:
+            raise RuntimeError('Failed to extract features') from exc
+              
+     
+    # get a list of the images indexes
+    images_indexes = np.array(list(data.keys()))
+
+    # get a list of just the features
+    feat = np.array(list(data.values()))
+
+    # reshape so that there are 210 samples of 4096 vectors
+    feat = feat.reshape(-1,4096)
+
+    # reduce the amount of dimensions in the feature vector
+    pca = PCA(n_components=100, random_state=22)
+    pca.fit(feat)
+    x = pca.transform(feat)
+
+    # cluster feature vectors
+    kmeans = KMeans(n_clusters=10,n_jobs=-1, random_state=22)
+    kmeans.fit(x)
+
+    # holds the cluster id and the images { id: [images] }
+    groups = {}
+    for img_idx, cluster in zip(images_indexes,kmeans.labels_):
+        if cluster not in groups.keys():
+            groups[cluster] = []
+            groups[cluster].append(img_idx)
+        else:
+            groups[cluster].append(img_idx)
+
+    # function that lets you view a cluster (based on identifier)        
+    def view_cluster(cluster):
+        plt.figure(figsize = (25,25));
+        # gets the list of images indexes for a cluster
+        indexes = groups[cluster]
+        # only allow up to 30 images to be shown at a time
+        if len(indexes) > 30:
+            print(f"Clipping cluster size from {len(indexes)} to 30")
+            indexes = indexes[:29]
+        # plot each image in the cluster
+        for idx in range(indexes):
+            plt.subplot(10,10,idx+1);
+            img = load_img(file)
+            img = loaded_images[:,:,:,:3][idx]
+            plt.imshow(img)
+            plt.axis('off')
+                  
 def sequence(start, end):
     res = []
     x = start
@@ -41,6 +134,7 @@ def load_file(f,start,end):
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
     img = np.asarray(img, dtype=np.float32)
     return img
+    
         
 class TaskGenerator:
     def __init__(self, args=None):
@@ -202,6 +296,11 @@ class TaskGenerator:
         return batch_set
 
 if __name__ == '__main__':
+
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
+    clustering_dataset(my_array)
+    
+    '''
     tasks = TaskGenerator()
     tasks.mode = 'train'
     for i in range(20):
@@ -209,7 +308,7 @@ if __name__ == '__main__':
         # tasks.print_label_map()
         print (len(batch_set))
         time.sleep(5)
-    
+    '''
     '''
     @TODO
     change to np.random.choice
