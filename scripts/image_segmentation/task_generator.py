@@ -289,33 +289,23 @@ if __name__ == '__main__':
     
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
-        
-      
-    #cluster_id = np.random.choice(big_clusters,1)[0]
+          
+    cluster_id = np.random.choice(big_clusters,1)[0]
     #print("cluster {} images:\n".format(cluster_id))
-    
-    for cluster_id in groups.keys():
-    
-        plt.ion()
-        
-        plt.figure(figsize = (25,25));
-        # gets the list of images indexes for a cluster
-        indexes = groups[cluster_id]
-        # only allow up to 30 images to be shown at a time
-        if len(indexes) > 30:
-            print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:29]
-        # plot each image in the cluster
-        for idx in range(len(indexes)):
-            plt.subplot(10,10,idx+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
-            plt.imshow(to_display)
-            plt.axis('off')
-        plt.show()
-        plt.draw()
-        plt.pause(0.0001)
-        plt.clf()
-       
+    plt.figure(figsize = (25,25));
+    # gets the list of images indexes for a cluster
+    indexes = groups[cluster_id]
+    # only allow up to 30 images to be shown at a time
+    if len(indexes) > 30:
+        print(f"Clipping cluster size from {len(indexes)} to 30")
+        indexes = indexes[:29]
+    # plot each image in the cluster
+    for idx in range(len(indexes)):
+        plt.subplot(10,10,idx+1);
+        to_display = array_to_img(my_array[idx][:,:,:3])
+        plt.imshow(to_display)
+        plt.axis('off')
+    plt.show()
     
     '''
     tasks = TaskGenerator()
