@@ -57,8 +57,9 @@ def clustering_dataset(loaded_images):
 
     def extract_features(img, model_cls):
         
-        reshaped_img = img.reshape(1,256,256,3)
-        reshaped_img = resize(reshaped_img, (224, 224))
+        reshaped_img = img.reshape(256,256,3)
+        resized_img = resize(reshaped_img, (224, 224))
+        reshaped_img = resized_img.reshape(1,224,224,3)
         # prepare image for model
         imgx = preprocess_input(reshaped_img)
         # get the feature vector
