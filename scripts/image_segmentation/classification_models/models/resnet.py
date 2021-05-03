@@ -1,11 +1,24 @@
 import os
 import collections
-import tensorflow.keras as keras
+
 
 from classification_models.models._common_blocks import ChannelSE
 from classification_models.weights import load_model_weights
-     
 
+def get_submodules_from_kwargs(kwargs):
+    backend = kwargs.get('backend', backend)
+    layers = kwargs.get('layers', layers)
+    models = kwargs.get('models', models)
+    utils = kwargs.get('utils', keras_utils)
+    for key in kwargs.keys():
+        if key not in ['backend', 'layers', 'models', 'utils']:
+            raise TypeError('Invalid keyword argument: %s', key)
+    return backend, layers, models, utils
+    
+backend = None
+layers = None
+models = None
+keras_utils = None
 
 ModelParams = collections.namedtuple(
     'ModelParams',
@@ -197,7 +210,7 @@ def ResNet(model_params, input_shape=None, input_tensor=None, include_top=True,
     """
 
     global backend, layers, models, keras_utils
-    backend, layers, models, keras_utils = keras.backend, keras.layers, keras.models, keras.utils
+    backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
 
     if input_tensor is None:
         img_input = layers.Input(shape=input_shape, name='data')
@@ -310,8 +323,8 @@ def ResNet34(input_shape=None, input_tensor=None, weights=None, classes=1000, in
         input_tensor=input_tensor,
         include_top=include_top,
         classes=classes,
-        weights=weights
-        #**kwargs
+        weights=weights,
+        **kwargs
     )
 
 

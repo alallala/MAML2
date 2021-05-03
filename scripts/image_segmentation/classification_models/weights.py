@@ -1,6 +1,12 @@
-from tensorflow import keras
-
-
+def get_submodules_from_kwargs(kwargs):
+    backend = kwargs.get('backend', backend)
+    layers = kwargs.get('layers', layers)
+    models = kwargs.get('models', models)
+    utils = kwargs.get('utils', keras_utils)
+    for key in kwargs.keys():
+        if key not in ['backend', 'layers', 'models', 'utils']:
+            raise TypeError('Invalid keyword argument: %s', key)
+    return backend, layers, models, utils
     
 __all__ = ['load_model_weights']
 
@@ -13,7 +19,7 @@ def _find_weights(model_name, dataset, include_top):
 
 
 def load_model_weights(model, model_name, dataset, classes, include_top, **kwargs):
-    keras_utils = keras.utils 
+    _, _, _, keras_utils = get_submodules_from_kwargs(kwargs)
 
     weights = _find_weights(model_name, dataset, include_top)
 
