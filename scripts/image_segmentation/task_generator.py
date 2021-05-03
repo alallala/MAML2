@@ -284,7 +284,7 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,2000)
     groups = clustering_dataset(my_array)
     
     big_clusters = []
@@ -294,7 +294,7 @@ if __name__ == '__main__':
             big_clusters.append(group)
       
     cluster_id = np.random.choice(big_clusters,1)[0]
-    print("cluster {} images:\n".format(cluster_id))
+    print("\ncluster {} images:\n".format(cluster_id))
     plt.figure(figsize = (25,25));
     # gets the list of images indexes for a cluster
     indexes = groups[cluster_id]
