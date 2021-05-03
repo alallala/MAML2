@@ -78,8 +78,8 @@ def restore_model(model, weights_dir):
     ckpt.restore(latest_weights)
     return model
  
- 
 
+    
 def accuracy_fn(y, pred_y):
     '''
     :param pred_y: Prediction output of model
@@ -87,7 +87,8 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    return F.iou_score(y,pred_y,treshold=0.5)
+    #pred_y = tf.round(pred_y)
+    return F.f_score(y,pred_y,threshold=0.5)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -357,14 +358,22 @@ def maml_train(model, batch_generator):
     
     # Record training history
     os.chdir(args.his_dir)
+    '''
+    losses_plot, = plt.plot(losses, label = "Train Acccuracy", color='coral')
+    accs_plot, = plt.plot(accs,'--',label = "Train Loss", color='royalblue')
+    # accs_plot = plt.plot(accs, '--',color='blue')
+    plt.legend([losses_plot, accs_plot], ['Train Loss', 'Train Accuracy'])
+    plt.title('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
+    '''
     
-    fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(10,3))
+    fig, (ax1, ax2) = plt.subplots(2, 1)
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
     ax1.plot(losses, label = "Train Acccuracy", color='coral')
     ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
 
     fig.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
     #plt.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
+
     train_hist = '{}-{}-way{}-shot-train.txt'.format(args.dataset, n_way,k_shot)
     acc_hist = '{}-{}-way{}-shot-acc.txt'.format(args.dataset, n_way,k_shot)
     test_acc_hist = '{}-{}-way{}-shot-acc-test.txt'.format(args.dataset, n_way,k_shot)
