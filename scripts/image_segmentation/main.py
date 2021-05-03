@@ -87,8 +87,11 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    #pred_y = tf.round(pred_y)
-    return F.iou_score(y,pred_y,threshold=0.5)
+    pred_y = tf.round(pred_y)
+    intersection = np.logical_and(y, pred_y)
+    union = np.logical_or(y, pred_y)
+    iou_score = np.sum(intersection) / np.sum(union)
+    return np.mean(iou_score)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -359,7 +362,7 @@ def maml_train(model, batch_generator):
     # Record training history
     os.chdir(args.his_dir)
     
-    fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(10,5))
+    fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(10,3))
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
     ax1.plot(losses, label = "Train Acccuracy", color='coral')
     ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
