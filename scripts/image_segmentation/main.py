@@ -78,8 +78,37 @@ def restore_model(model, weights_dir):
     ckpt.restore(latest_weights)
     return model
  
-
+ 
+def get_iou_vector(A, B):
+    # Numpy version
     
+    batch_size = A.shape[0]
+    metric = 0.0
+    for batch in range(batch_size):
+        t, p = A[batch], B[batch]
+        true = np.sum(t)
+        pred = np.sum(p)
+        
+        # deal with empty mask first
+        if true == 0:
+            metric += (pred == 0)
+            continue
+        
+        # non empty mask case.  Union is never empty 
+        # hence it is safe to divide by its number of pixels
+        intersection = np.sum(t * p)
+        union = true + pred - intersection
+        iou = intersection / union
+        
+        # iou metrric is a stepwise approximation of the real iou over 0.5
+        iou = np.floor(max(0, (iou - 0.45)*20)) / 10
+        
+        metric += iou
+        
+    # teake the average over all images in batch
+    metric /= batch_size
+    return metric
+
 def accuracy_fn(y, pred_y):
     '''
     :param pred_y: Prediction output of model
@@ -87,18 +116,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-   
-    y_pred_class = tf.cast(pred_y > 0.5, dtype=tf.float32)
-
-    correct_prediction = tf.equal(y_pred_class, y)
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-
-    tp = tf.reduce_sum(y_pred_class * y)
-    fp = tf.reduce_sum(tf.nn.relu(pred_y - y))
-    fn = tf.reduce_sum(tf.nn.relu(y - pred_y))
-
-    iou = tp / (tp + fp + fn)
-    return iou
+    return tf.py_func(get_iou_vector, [y, pred_y > 0.5], tf.float64
     
     '''
     accuracy = tf.keras.metrics.Accuracy()
