@@ -292,7 +292,7 @@ if __name__ == '__main__':
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
         size_clusters.append(len(groups[group]))
-        all_indexes.append(idx for idx in list(groups[group].values()))
+        all_indexes.append(idx for idx in groups[group])
       
     #cluster_id = np.random.choice(big_clusters,1)[0]
     #print("cluster {} images:\n".format(cluster_id))
