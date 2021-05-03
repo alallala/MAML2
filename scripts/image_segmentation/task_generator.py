@@ -104,6 +104,8 @@ def clustering_dataset(loaded_images):
             groups[cluster].append(img_idx)
         else:
             groups[cluster].append(img_idx)
+    print("clusters and their images\n")
+    print(groups.items())
             
     return groups
 
