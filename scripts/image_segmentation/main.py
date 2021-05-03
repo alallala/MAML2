@@ -88,7 +88,7 @@ def accuracy_fn(y, pred_y):
     :return accuracy value:
     '''
    
-    y_pred_class = tf.to_float(pred_y > 0.5)
+    y_pred_class = tf.cast(pred_y > 0.5)
 
     correct_prediction = tf.equal(y_pred_class, y)
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
