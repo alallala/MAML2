@@ -88,8 +88,11 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    #pred_y = tf.round(pred_y)
-    return F.f_score(y,pred_y,threshold=0.5) 
+    pred_y = tf.round(pred_y)
+    m = tf.keras.metrics.MeanIoU(num_classes=2)
+    _ = m.update_state(y,pred_y)
+    return m.result()
+
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -109,6 +112,7 @@ def compute_loss(model, x, y):
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
+    
     loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
     return loss, pred_y
     
