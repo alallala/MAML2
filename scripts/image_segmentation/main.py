@@ -111,9 +111,7 @@ def compute_loss(model, x, y):
     loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
     return loss, pred_y
     '''
-    logits = model(x) 
-    act = tf.keras.layers.Activation('sigmoid')
-    pred_y = act(logits)
+    pred_y = model(x) 
     #pred_y = tf.round(pred_y)
     loss = JaccardLoss()
     return loss(y,pred_y)
