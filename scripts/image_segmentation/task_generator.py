@@ -27,9 +27,6 @@ from skimage.transform import resize
 from tensorflow import keras 
 from keras.preprocessing.image import array_to_img
 
-
-
-
 # for loading/processing the images  
 from keras.preprocessing.image import load_img 
 from keras.preprocessing.image import img_to_array 
@@ -44,14 +41,11 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
 # for everything else
-import os
-import numpy as np
 import matplotlib.pyplot as plt
 from random import randint
-import pandas as pd
-import pickle
 
-from skimage.transform import resize
+
+
 
 def clustering_dataset(loaded_images):
      
@@ -113,21 +107,6 @@ def clustering_dataset(loaded_images):
             
     return groups
 
-# function that lets you view a cluster (based on identifier)        
-def view_cluster(groups,cluster,loaded_images):
-    plt.figure(figsize = (25,25));
-    # gets the list of images indexes for a cluster
-    indexes = groups[cluster]
-    # only allow up to 30 images to be shown at a time
-    if len(indexes) > 30:
-        print(f"Clipping cluster size from {len(indexes)} to 30")
-        indexes = indexes[:29]
-    # plot each image in the cluster
-    for idx in range(len(indexes)):
-        plt.subplot(10,10,idx+1);
-        to_display = array_to_img(loaded_images[idx][:,:,3:])
-        plt.imshow(to_display)
-        plt.axis('off')
                   
 def sequence(start, end):
     res = []
@@ -308,9 +287,22 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
-    clusters = clustering_dataset(my_array)
+    groups = clustering_dataset(my_array)
     cluster_id = 3
-    view_cluster(clusters,cluster_id,my_array)
+    
+    plt.figure(figsize = (25,25));
+    # gets the list of images indexes for a cluster
+    indexes = groups[cluster_id]
+    # only allow up to 30 images to be shown at a time
+    if len(indexes) > 30:
+        print(f"Clipping cluster size from {len(indexes)} to 30")
+        indexes = indexes[:29]
+    # plot each image in the cluster
+    for idx in range(len(indexes)):
+        plt.subplot(10,10,idx+1);
+        to_display = array_to_img(my_array[idx][:,:,3:])
+        plt.imshow(to_display)
+        plt.axis('off')
     
     '''
     tasks = TaskGenerator()
