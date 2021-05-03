@@ -102,8 +102,6 @@ def clustering_dataset(loaded_images):
             groups[cluster].append(img_idx)
         else:
             groups[cluster].append(img_idx)
-    print("clusters and their images\n")
-    print(groups.items())
             
     return groups
 
@@ -288,8 +286,14 @@ if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
     groups = clustering_dataset(my_array)
-    cluster_id = 3
     
+    big_clusters = []
+    for group in groups.keys():
+        print("cluster {} has {} images".format{group,len(groups[group])})
+        if len(groups[group])>30:
+            big_clusters.append(group)
+      
+    cluster_id = np.random.choice(big_clusters,1)
     plt.figure(figsize = (25,25));
     # gets the list of images indexes for a cluster
     indexes = groups[cluster_id]
