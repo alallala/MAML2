@@ -24,6 +24,9 @@ import cv2
 import time
 import tifffile
 from skimage.transform import resize
+from tensorflow import keras 
+from keras.preprocessing.image import array_to_img
+
 
 
 
@@ -122,8 +125,8 @@ def view_cluster(groups,cluster,loaded_images):
     # plot each image in the cluster
     for idx in range(len(indexes)):
         plt.subplot(10,10,idx+1);
-        img = loaded_images[:,:,:,:3][idx]
-        plt.imshow(img)
+        to_display = array_to_img(loaded_images[idx][:,:,3:])
+        plt.imshow(to_display)
         plt.axis('off')
                   
 def sequence(start, end):
@@ -308,6 +311,7 @@ if __name__ == '__main__':
     clusters = clustering_dataset(my_array)
     cluster_id = 3
     view_cluster(clusters,cluster_id,my_array)
+    
     '''
     tasks = TaskGenerator()
     tasks.mode = 'train'
