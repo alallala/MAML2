@@ -79,35 +79,6 @@ def restore_model(model, weights_dir):
     return model
  
  
-def get_iou_vector(A, B):
-    # Numpy version
-    
-    batch_size = A.shape[0]
-    metric = 0.0
-    for batch in range(batch_size):
-        t, p = A[batch], B[batch]
-        true = np.sum(t)
-        pred = np.sum(p)
-        
-        # deal with empty mask first
-        if true == 0:
-            metric += (pred == 0)
-            continue
-        
-        # non empty mask case.  Union is never empty 
-        # hence it is safe to divide by its number of pixels
-        intersection = np.sum(t * p)
-        union = true + pred - intersection
-        iou = intersection / union
-        
-        # iou metrric is a stepwise approximation of the real iou over 0.5
-        iou = np.floor(max(0, (iou - 0.45)*20)) / 10
-        
-        metric += iou
-        
-    # teake the average over all images in batch
-    metric /= batch_size
-    return metric
 
 def accuracy_fn(y, pred_y):
     '''
@@ -116,8 +87,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    return tf.py_function(get_iou_vector, [y, tf.round(pred_y)], tf.float64)
-    
+    return F.iou_score(y,pred_y,treshold=0.5)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
