@@ -89,7 +89,7 @@ def accuracy_fn(y, pred_y):
     :return accuracy value:
     '''
     #pred_y = tf.round(pred_y)
-    return F.iou_score(y,pred_y,threshold=0.5,class_indexes=[0,1])
+    return F.iou_score(y,pred_y,threshold=0.5)
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -532,7 +532,6 @@ if __name__ == '__main__':
     print ('Build model\n')
     model = ml.initialize_Unet()
     model = ml.initialize(model) 
-    print(model.summary())
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
     print("\ntasks generation\n")
