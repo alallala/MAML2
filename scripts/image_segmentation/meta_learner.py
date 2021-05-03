@@ -177,7 +177,7 @@ class MetaLearner():
         self.classes = args.classes   
         '''it should be 1+1 (background + cloud) ???'''
         self.decoder_filters =(256, 128, 64, 32, 16) 
-        self.backbone_name='vgg16',
+        self.backbone_name='resnet34',
         self.input_shape=(None, None, 3),
         self.activation='sigmoid',
         self.weights=None,
@@ -204,7 +204,7 @@ class MetaLearner():
         #                     'Got: {}'.format(self.decoder_block_type))
 
         backbone = Backbones.get_backbone(
-            name='vgg16', #self.backbone_name
+            name='resnet34', #self.backbone_name
             input_shape=(None,None,3), #self.input_shape,
             weights='imagenet', #self.encoder_weights, or None or imagenet
             include_top=False,
@@ -212,7 +212,7 @@ class MetaLearner():
         )
 
         #if self.encoder_features == 'default':
-        self.encoder_features = Backbones.get_feature_layers('vgg16', n=4) #self.backbone_name
+        self.encoder_features = Backbones.get_feature_layers('resnet34', n=4) #self.backbone_name
  
         model = build_unet(
             backbone=backbone,
