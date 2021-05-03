@@ -94,8 +94,8 @@ def accuracy_fn(y, pred_y):
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     tp = tf.reduce_sum(y_pred_class * y)
-    fp = tf.reduce_sum(tf.nn.relu(y_pred - y))
-    fn = tf.reduce_sum(tf.nn.relu(y - y_pred))
+    fp = tf.reduce_sum(tf.nn.relu(pred_y - y))
+    fn = tf.reduce_sum(tf.nn.relu(y - pred_y))
 
     iou = tp / (tp + fp + fn)
     return iou
