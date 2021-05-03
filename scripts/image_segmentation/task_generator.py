@@ -85,7 +85,7 @@ def clustering_dataset(loaded_images):
     feat = feat.reshape(-1,4096)
 
     # reduce the amount of dimensions in the feature vector
-    pca = PCA(n_components=200, random_state=22)
+    pca = PCA(n_components=100, random_state=22)
     pca.fit(feat)
     x = pca.transform(feat)
 
@@ -284,36 +284,38 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,2000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
     groups = clustering_dataset(my_array)
     
-    big_clusters = []
+    all_indexes = []
+    size_clusters = []
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
-        if len(groups[group])>=30:
-            big_clusters.append(group)
+        size_clusters.append(len(groups[group]))
+        all_indexes.append(idx for idx in list(groups[group].values()))
       
-    cluster_id = np.random.choice(big_clusters,1)[0]
-    # print("\ncluster {} images:\n".format(cluster_id))
-    plt.ion()
+    #cluster_id = np.random.choice(big_clusters,1)[0]
+    #print("cluster {} images:\n".format(cluster_id))
     plt.figure(figsize = (25,25));
     # gets the list of images indexes for a cluster
-    for key in groups.keys():
-        indexes = groups[key]
-        print("\ncluster {} contains the following images\n{}:".format(key,groups[key]))
-        # only allow up to 30 images to be shown at a time
-        if len(indexes) > 30:
-            print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:29]
-        # plot each image in the cluster
-        for idx in range(len(indexes)):
-            plt.subplot(10,10,idx+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
-            plt.imshow(to_display)
-            plt.axis('off')
-        
-        plt.show()
-        plt.close()
+    # indexes = groups[cluster_id]
+    # only allow up to 30 images to be shown at a time
+    '''
+    if len(indexes) > 30:
+        print(f"Clipping cluster size from {len(indexes)} to 30")
+        indexes = indexes[:29]
+    '''
+    # plot each image in the cluster
+    i = 0
+    for idx in range(len(indexes)):
+        if i<size_clusters[i]:
+            title = "cluster "+str(i)
+        plt.subplot(10,10,idx+1,title=title);
+        to_display = array_to_img(my_array[idx][:,:,:3])
+        plt.imshow(to_display)
+        plt.axis('off')
+        i+=1
+    plt.show()
     
     '''
     tasks = TaskGenerator()
