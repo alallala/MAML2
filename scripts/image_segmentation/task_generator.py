@@ -85,7 +85,7 @@ def clustering_dataset(loaded_images):
     feat = feat.reshape(-1,4096)
 
     # reduce the amount of dimensions in the feature vector
-    pca = PCA(n_components=100, random_state=22)
+    pca = PCA(n_components=400, random_state=22)
     pca.fit(feat)
     x = pca.transform(feat)
 
