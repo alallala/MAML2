@@ -290,7 +290,7 @@ if __name__ == '__main__':
     big_clusters = []
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
-        if len(groups[group])>=30:
+        if len(groups[group])>=10:
             big_clusters.append(group)
       
     cluster_id = np.random.choice(big_clusters,1)[0]
