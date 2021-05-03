@@ -89,7 +89,7 @@ def accuracy_fn(y, pred_y):
     :return accuracy value:
     '''
     #pred_y = tf.round(pred_y)
-    return F.iou_score(y,pred_y,threshold=0.5,per_image=True)
+    return F.iou_score(y,pred_y,threshold=0.5) 
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
@@ -313,18 +313,18 @@ def maml_train(model, batch_generator):
         # Write to Tensorboard
         with summary_writer.as_default():
             tf.summary.scalar('query loss', tf.reduce_mean(batch_loss), step=step)
-            tf.summary.scalar('query accuracy', tf.reduce_mean(batch_acc), step=step)
+            tf.summary.scalar('query iou score', tf.reduce_mean(batch_acc), step=step)
         
         # Print train result
         if step % print_steps == 0 or step == 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
             batch_acc = [acc.numpy() for acc in batch_acc]
             '''uncomment to display loss and acc for each task in meta batch'''
-            #print ('[Iter. {}] Task loss: {:.3f}; Task accuracy: {:.3f};'.format(step, batch_loss, batch_acc))
+            #print ('[Iter. {}] Task loss: {:.3f}; Task iou score: {:.3f};'.format(step, batch_loss, batch_acc))
             '''to visualize average over tasks in meta batch'''
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
-            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks Accuracy: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
+            print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks iou score: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
             # print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
@@ -341,7 +341,7 @@ def maml_train(model, batch_generator):
             test_loss, test_acc = _maml_finetune_step(test_set)  
             with summary_writer.as_default():
                 tf.summary.scalar('Validation loss', tf.reduce_mean(test_loss), step=step)
-                tf.summary.scalar('Validation accuracy', tf.reduce_mean(test_acc), step=step)
+                tf.summary.scalar('Validation iou score', tf.reduce_mean(test_acc), step=step)
             # Tensor to list            
             test_loss = [loss.numpy() for loss in test_loss]
             test_acc = [acc.numpy() for acc in test_acc]
@@ -352,8 +352,8 @@ def maml_train(model, batch_generator):
             mean_test_loss = np.array(test_loss).mean()
             mean_test_acc = np.array(test_accs).mean()
             '''uncomment to visualize loss and acc for each validation task in the meta batch'''
-            #print ('Validation Losses: {:.3f}, Validation Accuracys: {:.3f}'.format(test_loss, test_acc))
-            print('avg Validation tasks loss: {:.3f}, avg Validation tasks accyracy: {:.3f}'.format(mean_test_loss,mean_test_acc))
+            #print ('Validation Losses: {:.3f}, Validation iou score: {:.3f}'.format(test_loss, test_acc))
+            print('avg Validation tasks loss: {:.3f}, avg Validation tasks iou score: {:.3f}'.format(mean_test_loss,mean_test_acc))
             #print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss))
 
             print ('=====================================================================')
@@ -373,7 +373,7 @@ def maml_train(model, batch_generator):
     
     fig, (ax1, ax2) = plt.subplots(2, 1)
     ax1.set_title('train loss')
-    ax2.set_title('train accuracy')
+    ax2.set_title('train iou score')
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
     ax1.plot(losses, label = "Train Acccuracy", color='coral')
     ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
@@ -486,7 +486,7 @@ def eval_model(model, batch_generator, num_steps=None):
         plt.plot(a_x, a_y, linestyle='--', color='royalblue')
         plt.xlabel('Fine Tune Step', fontsize=12)
         plt.fill_between(a_x, [a+0.1 for a in a_y], [a-0.1 for a in a_y], facecolor='royalblue', alpha=0.3)
-        legend=['Fine Tune Points','Fine Tune Points','Loss', 'Accuracy']
+        legend=['Fine Tune Points','Fine Tune Points','Loss', 'iou score']
         plt.legend(legend)
         plt.title('Task {} Fine Tuning Process'.format(idx+1))
         plt.show()
