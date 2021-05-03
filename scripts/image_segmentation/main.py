@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
+from losses import DiceLoss
 from base import functional as F  
 
 from IPython.display import Image, display
@@ -103,13 +104,20 @@ def compute_loss(model, x, y):
     :param loss_fn: Loss function used to compute loss value
 
     :return Loss value
-    '''
+    
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
     loss = tf.reduce_mean(tf.losses.binary_crossentropy(y, pred_y))
     return loss, pred_y
-
+    '''
+    logits = model(x) 
+    act = tf.keras.layers.Activation('sigmoid')
+    pred_y = act(logits)
+    loss = DiceLoss()
+    return loss(y,pred_y,threshold=0.5)
+    
+    
 def compute_gradients(model, x, y):
     '''
     :param model: Neural network
