@@ -284,7 +284,7 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,2000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
     groups = clustering_dataset(my_array)
     
     for group in groups.keys():
