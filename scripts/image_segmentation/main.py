@@ -88,10 +88,10 @@ def accuracy_fn(y, pred_y):
     :return accuracy value:
     '''
     pred_y = tf.round(pred_y)
-    intersection = np.logical_and(y, pred_y)
-    union = np.logical_or(y, pred_y)
-    iou_score = np.sum(intersection) / np.sum(union)
-    return np.mean(iou_score)
+    I = tf.reduce_sum(pred_y * y, axis=(1, 2))
+    U = tf.reduce_sum(pred_y + y, axis=(1, 2)) - I
+    return tf.reduce_mean(I / U)
+    
     '''
     accuracy = tf.keras.metrics.Accuracy()
     _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
