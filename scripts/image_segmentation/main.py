@@ -358,15 +358,8 @@ def maml_train(model, batch_generator):
     
     # Record training history
     os.chdir(args.his_dir)
-    '''
-    losses_plot, = plt.plot(losses, label = "Train Acccuracy", color='coral')
-    accs_plot, = plt.plot(accs,'--',label = "Train Loss", color='royalblue')
-    # accs_plot = plt.plot(accs, '--',color='blue')
-    plt.legend([losses_plot, accs_plot], ['Train Loss', 'Train Accuracy'])
-    plt.title('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
-    '''
     
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(10,5))
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
     ax1.plot(losses, label = "Train Acccuracy", color='coral')
     ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
