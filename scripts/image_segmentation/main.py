@@ -112,6 +112,7 @@ def compute_loss(model, x, y):
     return loss, pred_y
     '''
     pred_y = model(x) 
+    print(pred_y.shape)
     #pred_y = tf.round(pred_y)
     loss = JaccardLoss()
     return loss(y,pred_y)
