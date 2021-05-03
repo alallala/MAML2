@@ -5,8 +5,14 @@ import tensorflow.keras as keras
 from classification_models.models._common_blocks import ChannelSE
 from classification_models.weights import load_model_weights
 
-
-   
+def get_submodules_from_kwargs(kwargs):
+    backend = keras.backend
+    layers = keras.layers
+    models = keras.models
+    utils = keras.utils
+    
+    return backend, layers, models, utils
+    
 backend = keras.backend
 layers = keras.layers
 models = keras.models
