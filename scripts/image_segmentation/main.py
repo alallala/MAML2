@@ -87,10 +87,18 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    pred_y = tf.round(pred_y)
-    I = tf.reduce_sum(pred_y * y, axis=(1, 2))
-    U = tf.reduce_sum(pred_y + y, axis=(1, 2)) - I
-    return tf.reduce_mean(I / U)
+   
+    y_pred_class = tf.to_float(pred_y > 0.5)
+
+    correct_prediction = tf.equal(y_pred_class, y)
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+    tp = tf.reduce_sum(y_pred_class * y)
+    fp = tf.reduce_sum(tf.nn.relu(y_pred - y))
+    fn = tf.reduce_sum(tf.nn.relu(y - y_pred))
+
+    iou = tp / (tp + fp + fn)
+    return iou
     
     '''
     accuracy = tf.keras.metrics.Accuracy()
