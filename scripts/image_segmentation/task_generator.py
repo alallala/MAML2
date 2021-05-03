@@ -313,6 +313,9 @@ if __name__ == '__main__':
             plt.axis('off')
         plt.show()
         plt.draw()
+        plt.pause(0.0001)
+        plt.clf()
+       
     
     '''
     tasks = TaskGenerator()
