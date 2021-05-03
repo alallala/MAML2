@@ -116,7 +116,7 @@ def accuracy_fn(y, pred_y):
     
     :return accuracy value:
     '''
-    return tf.py_func(get_iou_vector, [y, pred_y > 0.5], tf.float64
+    return tf.py_func(get_iou_vector, [y, pred_y > 0.5], tf.float64)
     
     '''
     accuracy = tf.keras.metrics.Accuracy()
