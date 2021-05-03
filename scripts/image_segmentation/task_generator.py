@@ -90,7 +90,7 @@ def clustering_dataset(loaded_images):
     x = pca.transform(feat)
 
     # cluster feature vectors
-    kmeans = KMeans(n_clusters=10,n_jobs=-1, random_state=22)
+    kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
     kmeans.fit(x)
 
     # holds the cluster id and the images { id: [images] }
