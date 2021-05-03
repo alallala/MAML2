@@ -210,7 +210,7 @@ def ResNet(model_params, input_shape=None, input_tensor=None, include_top=True,
     """
 
     global backend, layers, models, keras_utils
-    backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
+    backend, layers, models, keras_utils = keras.backend, keras.layers, keras.models, keras.utils
 
     if input_tensor is None:
         img_input = layers.Input(shape=input_shape, name='data')
