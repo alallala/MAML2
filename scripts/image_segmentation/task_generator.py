@@ -300,7 +300,7 @@ if __name__ == '__main__':
     # plot each image in the cluster
     for idx in range(len(indexes)):
         plt.subplot(10,10,idx+1);
-        to_display = array_to_img(my_array[idx][:,:,3:])
+        to_display = array_to_img(my_array[idx][:,:,:3])
         plt.imshow(to_display)
         plt.axis('off')
         plt.show()
