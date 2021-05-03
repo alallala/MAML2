@@ -15,10 +15,10 @@ def get_submodules_from_kwargs(kwargs):
             raise TypeError('Invalid keyword argument: %s', key)
     return backend, layers, models, utils
     
-backend = None
-layers = None
-models = None
-keras_utils = None
+backend = keras.backend
+layers = keras.layers
+models = keras.models
+keras_utils = keras.utils
 
 ModelParams = collections.namedtuple(
     'ModelParams',
