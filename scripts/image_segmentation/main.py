@@ -358,13 +358,21 @@ def maml_train(model, batch_generator):
     
     # Record training history
     os.chdir(args.his_dir)
+    '''
     losses_plot, = plt.plot(losses, label = "Train Acccuracy", color='coral')
     accs_plot, = plt.plot(accs,'--',label = "Train Loss", color='royalblue')
     # accs_plot = plt.plot(accs, '--',color='blue')
     plt.legend([losses_plot, accs_plot], ['Train Loss', 'Train Accuracy'])
     plt.title('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
-    plt.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
+    '''
+    
+    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
+    ax1.plot(losses, label = "Train Acccuracy", color='coral')
+    ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
 
+    fig.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
+    #plt.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
     train_hist = '{}-{}-way{}-shot-train.txt'.format(args.dataset, n_way,k_shot)
     acc_hist = '{}-{}-way{}-shot-acc.txt'.format(args.dataset, n_way,k_shot)
     test_acc_hist = '{}-{}-way{}-shot-acc-test.txt'.format(args.dataset, n_way,k_shot)
