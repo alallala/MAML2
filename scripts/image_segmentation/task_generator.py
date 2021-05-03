@@ -306,12 +306,11 @@ if __name__ == '__main__':
         indexes = indexes[:29]
     '''
     # plot each image in the cluster
-    i = 0
-    for idx in all_indexes:
+    for i in range(0,len(all_indexes)):
         if i<size_clusters[i]:
             title = "cluster "+str(i)
-        plt.subplot(10,10,idx+1,title=title);
-        to_display = array_to_img(my_array[idx][:,:,:3])
+        plt.subplot(10,10,all_indexes[i]+1,title=title);
+        to_display = array_to_img(my_array[all_indexes[i]][:,:,:3])
         plt.imshow(to_display)
         plt.axis('off')
         i+=1
