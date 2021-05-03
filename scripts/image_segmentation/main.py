@@ -367,10 +367,13 @@ def maml_train(model, batch_generator):
     '''
     
     fig, (ax1, ax2) = plt.subplots(2, 1)
+    ax1.set_title('train loss')
+    ax2.set_title('train accuracy')
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
     ax1.plot(losses, label = "Train Acccuracy", color='coral')
     ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
-
+    plt.xlabel("meta training iterations")
+    
     fig.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
     #plt.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
 
