@@ -114,8 +114,9 @@ def compute_loss(model, x, y):
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
+    pred_y = tf.round(pred_y)
     loss = DiceLoss()
-    return loss(y,pred_y,threshold=0.5)
+    return loss(y,pred_y)
     
     
 def compute_gradients(model, x, y):
