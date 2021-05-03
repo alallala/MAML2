@@ -66,7 +66,7 @@ def average(x, per_image=False, class_weights=None, **kwargs):
 #   Metric Functions
 # ----------------------------------------------------------------
 
-def iou_score(gt, pr, class_weights=1., class_indexes=None, smooth=SMOOTH, per_image=False, threshold=None, **kwargs):
+def iou_score(gt, pr, class_weights=1., class_indexes=None, smooth=SMOOTH, per_image=False, threshold=0.5, **kwargs):
     r""" The `Jaccard index`_, also known as Intersection over Union and the Jaccard similarity coefficient
     (originally coined coefficient de communauté by Paul Jaccard), is a statistic used for comparing the
     similarity and diversity of sample sets. The Jaccard coefficient measures similarity between finite sample sets,

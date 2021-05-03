@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from task_generator import TaskGenerator
 from meta_learner import MetaLearner
 from losses import BinaryCELoss
-from losses import DiceLoss
+from losses import JaccardLoss
 from base import functional as F  
 
 from IPython.display import Image, display
@@ -114,8 +114,8 @@ def compute_loss(model, x, y):
     logits = model(x) 
     act = tf.keras.layers.Activation('sigmoid')
     pred_y = act(logits)
-    pred_y = tf.round(pred_y)
-    loss = DiceLoss()
+    #pred_y = tf.round(pred_y)
+    loss = JaccardLoss()
     return loss(y,pred_y)
     
     
