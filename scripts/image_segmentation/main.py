@@ -6,7 +6,6 @@
 # -*- coding: UTF-8 -*-
 
 import os
-import cv2
 import sys
 import random
 import datetime
