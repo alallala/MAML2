@@ -45,7 +45,7 @@ from random import randint
 
 def autoencoder_and_cluster(loaded_images):
 
-    def construct_ae_model(imput_shape):
+    def construct_ae_model(input_shape):
         input_img = keras.Input(shape=input_shape)
 
         x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
