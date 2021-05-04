@@ -50,26 +50,20 @@ def autoencoder_and_cluster(loaded_images):
 
     def construct_ae_model(input_shape):
     
-        latent_dim = 10
+        #latent_dim = 10
 
-        img_shape = input_shape
-        encoder = Sequential([
-            Flatten(input_shape=img_shape),
-            Dense(192, activation='sigmoid'),
-            Dense(64, activation='sigmoid'),
-            Dense(32, activation='sigmoid'),
-            Dense(latent_dim, name='encoder_output')
-        ])
+        input_img = keras.Input(shape=input_shape)
+        encoded = layers.Dense(128, activation='relu')(input_img)
+        encoded = layers.Dense(64, activation='relu')(encoded)
+        encoded = layers.Dense(32, activation='relu')(encoded)
 
-        decoder = Sequential([
-            Dense(64, activation='sigmoid', input_shape=(latent_dim,)),
-            Dense(128, activation='sigmoid'),
-            Dense(img_shape[0] * img_shape[1], activation='relu'),
-            Reshape(img_shape)
-        ])
+        decoded = layers.Dense(64, activation='relu')(encoded)
+        decoded = layers.Dense(128, activation='relu')(decoded)
+        decoded = layers.Dense(256*256*3, activation='sigmoid')(decoded)
+                
+        autoencoder = keras.Model(input_img, decoded)
+        encoder = keras.Model(input_img,encoded)
         
-        autoencoder = Model(inputs=encoder.input, outputs=decoder(encoder.output))
-        encoder = Model(inputs=encoder.input, output=encoder.output)
         return autoencoder,encoder
     
         '''
