@@ -83,7 +83,7 @@ def autoencoder_and_cluster(loaded_images):
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
     x_test = resize(x_test, (len(x_test),128, 128))
  
-    ae_model, encoder = construct_ae_model((128,128,3))
+    ae_model, encoder = construct_ae_model(input_shape=(128,128,3))
     print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
