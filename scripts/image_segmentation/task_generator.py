@@ -52,12 +52,12 @@ def autoencoder_and_cluster(loaded_images):
         x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
         x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
         x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        x = keras.layers.Conv2D(4, (3, 3), activation='relu', padding='same')(x)
         encoded = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
 
         # at this point the dimensionality is reduced 
         
-        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
+        x = keras.layers.Conv2D(4, (3, 3), activation='relu', padding='same')(encoded)
         x = keras.layers.UpSampling2D((2, 2))(x)
         x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
         x = keras.layers.UpSampling2D((2, 2))(x)
@@ -75,21 +75,21 @@ def autoencoder_and_cluster(loaded_images):
     #prepare data to train the autoencoder
     x_train = fit_images[:800,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
-    x_train = resize(x_train, (len(x_train),28, 28))
+    #x_train = resize(x_train, (len(x_train),256, 256))
     x_val = fit_images[800:1000,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
-    x_val = resize(x_val, (len(x_val),28, 28))
+    #x_val = resize(x_val, (len(x_val),256, 256))
     x_test = fit_images[1000:,:,:,:]
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
-    x_test = resize(x_test, (len(x_test),28, 28))
+    #x_test = resize(x_test, (len(x_test),256, 256))
  
-    ae_model, encoder = construct_ae_model(input_shape=(28,28,3))
+    ae_model, encoder = construct_ae_model(input_shape=input_shape)
     print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     
     #model train
-    ae_model.fit(x_train, x_train, epochs=20, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction
     #encoded_imgs = encoder.predict(x_test)
