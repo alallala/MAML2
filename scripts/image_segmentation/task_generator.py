@@ -46,8 +46,33 @@ from random import randint
 def autoencoder_and_cluster(loaded_images):
 
     def construct_ae_model(input_shape):
-        input_img = keras.Input(shape=input_shape)
+        
+        input = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
 
+        ### ENCODER ###
+        x = keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', activation='relu')(input)
+        x = keras.layers.MaxPool2D(pool_size=(2, 2))(x)
+
+        x = keras.layers.Conv2D(filters=8, kernel_size=(3, 3), padding='same', activation='relu')(x)
+        x = keras.layers.MaxPool2D(pool_size=(2, 2))(x)
+
+        x = keras.layers.Conv2D(filters=4, kernel_size=(3, 3), padding='same', activation='relu')(x)
+        encoded = keras.layers.MaxPool2D(pool_size=(2, 2), name='encoder')(x)
+
+        ### DECODER ###
+        x = keras.layers.Conv2D(filters=4, kernel_size=(3, 3), padding='same', activation='relu')(encoded)
+        x = keras.layers.UpSampling2D(size=(2, 2))(x)
+
+        x = keras.layers.Conv2D(filters=8, kernel_size=(3, 3), padding='same', activation='relu')(x)
+        x = keras.layers.UpSampling2D(size=(2, 2))(x)
+
+        x = keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', activation='relu')(x)
+        x = keras.layers.UpSampling2D(size=(2, 2))(x)
+
+        decoded = keras.layers.Conv2D(filters=3, kernel_size=(3, 3), padding='same',
+                        activation='sigmoid')(x)
+
+        '''
         x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
         x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
         x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
@@ -64,9 +89,10 @@ def autoencoder_and_cluster(loaded_images):
         x = keras.layers.Conv2D(16, (3, 3), activation='relu')(x)
         x = keras.layers.UpSampling2D((2, 2))(x)
         decoded = keras.layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
-
-        autoencoder = keras.Model(input_img, decoded)
-        encoder = keras.Model(input_img, encoded)
+        '''
+        encoder = keras.Model(inputs=input, outputs=encoded),
+        autoencoder = keras.Model(inputs=input, outputs=decoded)
+        
         return autoencoder,encoder
        
     fit_images = loaded_images[:,:,:,:3] #remove mask channel
