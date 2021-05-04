@@ -10,7 +10,7 @@ import tensorflow.keras as keras
 import tensorflow.keras.backend as keras_backend
 import os
 import numpy as np 
-import cv2
+
 
 from seg_commonblocks import Conv2dBn
 from seg_utils import freeze_model, filter_keras_submodules

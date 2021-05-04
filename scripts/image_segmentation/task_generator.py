@@ -20,21 +20,20 @@ from tqdm import tqdm
 from tqdm._tqdm import trange
 from PIL import Image
 import tensorflow as tf
-import cv2
 import time
 import tifffile
 from skimage.transform import resize
 from tensorflow import keras 
-from keras.preprocessing.image import array_to_img
+from tensorflow.keras.preprocessing.image import array_to_img
 
 # for loading/processing the images  
-from keras.preprocessing.image import load_img 
-from keras.preprocessing.image import img_to_array 
-from keras.applications.vgg16 import preprocess_input 
+from tensorflow.keras.preprocessing.image import load_img 
+from tensorflow.keras.preprocessing.image import img_to_array 
+from tensorflow.keras.applications.vgg16 import preprocess_input 
 
 # models 
-from keras.applications.vgg16 import VGG16 
-from keras.models import Model
+from tensorflow.keras.applications.vgg16 import VGG16 
+from tensorflow.keras.models import Model
 
 # clustering and dimension reduction
 from sklearn.cluster import KMeans
@@ -44,10 +43,61 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from random import randint
 
+def autoencoder_and_cluster(loaded_images):
 
+    def construct_ae_model(imput_shape):
+        input_img = keras.Input(shape=input_shape)
 
+        x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
+        x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        encoded = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
 
-def clustering_dataset(loaded_images):
+        # at this point the dimensionality is reduced 
+        
+        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
+        x = keras.layers.UpSampling2D((2, 2))(x)
+        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        x = keras.layers.UpSampling2D((2, 2))(x)
+        x = keras.layers.Conv2D(16, (3, 3), activation='relu')(x)
+        x = keras.layers.UpSampling2D((2, 2))(x)
+        decoded = keras.layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
+
+        autoencoder = keras.Model(input_img, decoded)
+        encoder = keras.Model(input_img, encoded)
+        return autoencoder,encoder
+       
+    fit_images = loaded_images[:,:,:,:3] #remove mask channel
+    input_shape = fit_images.shape[1:] #(256,256,3)
+    print("input shape",input_shape)
+    
+    ae_model, encoder = construct_ae_model(input_shape)
+    print(ae_model.summary())
+    ae_model.compile(optimizer='adam', loss='binary_crossentropy')
+    
+    '''
+    #prepare data to train the autoencoder
+    x_train = fit_images[:800,:,:,:]
+    x_train = np.reshape(x_train,(len(x_train),input_shape[0],input[1],input_shape[2]))
+    x_val = fit_images[800:1000,:,:,:]
+    x_val = np.reshape(x_val,len(x_val),input_shape[0],input[1],input_shape[2]))
+    x_test = fit_images[1000:,:,:,:]
+    x_test = np.reshape(x_test,len(x_test),input_shape[0],input[1],input_shape[2]))
+    
+    
+    #model train
+    ae_model.fit(x_train, x_train, epochs=20, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    
+    #perform dimensionality reduction
+    encoded_imgs = encoder.predict(x_test)
+    '''
+    
+    
+    
+
+def pca_and_cluster(loaded_images):
      
     model_cls = VGG16()
     model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
@@ -285,8 +335,10 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    groups = clustering_dataset(my_array)
-    
+    autoencoder_and_cluster(my_array)
+    '''
+    groups = pca_and_cluster(my_array)
+         
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
         
@@ -309,6 +361,8 @@ if __name__ == '__main__':
             plt.imshow(to_display)
             plt.axis('off')
         plt.show()
+        
+    '''    
         
     '''
     tasks = TaskGenerator()
