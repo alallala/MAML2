@@ -87,14 +87,14 @@ def autoencoder_and_cluster(loaded_images):
     print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
-    '''
+    
     #model train
     ae_model.fit(x_train, x_train, epochs=20, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction
-    encoded_imgs = encoder.predict(x_test)
+    #encoded_imgs = encoder.predict(x_test)
     
-    '''
+    
     
 
 def pca_and_cluster(loaded_images):
