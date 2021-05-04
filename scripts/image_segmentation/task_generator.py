@@ -71,30 +71,30 @@ def autoencoder_and_cluster(loaded_images):
        
     fit_images = loaded_images[:,:,:,:3] #remove mask channel
     input_shape = fit_images.shape[1:] #(256,256,3)
-    print("input shape",input_shape)
-    
-    ae_model, encoder = construct_ae_model(input_shape)
+   
+    #prepare data to train the autoencoder
+    x_train = fit_images[:800,:,:,:]
+    x_train = np.reshape(x_train,(len(x_train),input_shape[0],input[1],input_shape[2]))
+    x_train = resize(x_train, (128, 128))
+    x_val = fit_images[800:1000,:,:,:]
+    x_val = np.reshape(x_val,len(x_val),input_shape[0],input[1],input_shape[2]))
+    x_val = resize(x_val, (128, 128))
+    x_test = fit_images[1000:,:,:,:]
+    x_test = np.reshape(x_test,len(x_test),input_shape[0],input[1],input_shape[2]))
+    x_test = resize(x_test, (128, 128))
+ 
+    ae_model, encoder = construct_ae_model((128,128,3))
     print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     '''
-    #prepare data to train the autoencoder
-    x_train = fit_images[:800,:,:,:]
-    x_train = np.reshape(x_train,(len(x_train),input_shape[0],input[1],input_shape[2]))
-    x_val = fit_images[800:1000,:,:,:]
-    x_val = np.reshape(x_val,len(x_val),input_shape[0],input[1],input_shape[2]))
-    x_test = fit_images[1000:,:,:,:]
-    x_test = np.reshape(x_test,len(x_test),input_shape[0],input[1],input_shape[2]))
-    
-    
     #model train
     ae_model.fit(x_train, x_train, epochs=20, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction
     encoded_imgs = encoder.predict(x_test)
+    
     '''
-    
-    
     
 
 def pca_and_cluster(loaded_images):
