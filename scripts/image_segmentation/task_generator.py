@@ -63,7 +63,7 @@ def autoencoder_and_cluster(loaded_images):
         x = keras.layers.UpSampling2D((2, 2))(x)
         x = keras.layers.Conv2D(16, (3, 3), activation='relu')(x)
         x = keras.layers.UpSampling2D((2, 2))(x)
-        decoded = keras.layers.Conv2D(1, (3, 3), activation='sigmoid', padding='same')(x)
+        decoded = keras.layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 
         autoencoder = keras.Model(input_img, decoded)
         encoder = keras.Model(input_img, encoded)
