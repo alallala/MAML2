@@ -74,16 +74,14 @@ def autoencoder_and_cluster(loaded_images):
    
     #prepare data to train the autoencoder
     x_train = fit_images[:800,:,:,:]
-    print(x_train.shape)
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
     x_train = resize(x_train, (len(x_train),128, 128))
-    print(x_train.shape)
     x_val = fit_images[800:1000,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
-    x_val = resize(x_val, (128, 128))
+    x_val = resize(x_val, (len(x_val),128, 128))
     x_test = fit_images[1000:,:,:,:]
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
-    x_test = resize(x_test, (128, 128))
+    x_test = resize(x_test, (len(x_test),128, 128))
  
     ae_model, encoder = construct_ae_model((128,128,3))
     print(ae_model.summary())
