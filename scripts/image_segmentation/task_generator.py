@@ -43,10 +43,36 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from random import randint
 
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Dense
+
 def autoencoder_and_cluster(loaded_images):
 
     def construct_ae_model(input_shape):
+    
+        latent_dim = 10
+
+        img_shape = input_shape
+        encoder = Sequential([
+            Flatten(input_shape=img_shape),
+            Dense(192, activation='sigmoid'),
+            Dense(64, activation='sigmoid'),
+            Dense(32, activation='sigmoid'),
+            Dense(latent_dim, name='encoder_output')
+        ])
+
+        decoder = Sequential([
+            Dense(64, activation='sigmoid', input_shape=(latent_dim,)),
+            Dense(128, activation='sigmoid'),
+            Dense(img_shape[0] * img_shape[1], activation='relu'),
+            Reshape(img_shape)
+        ])
         
+        autoencoder = Model(inputs=encoder.input, outputs=decoder(encoder.output))
+        encoder = Model(inputs=encoder.input, output=encoder.output)
+        return autoencoder,encoder
+    
+        '''
         input = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
 
         ### ENCODER ###
@@ -72,54 +98,35 @@ def autoencoder_and_cluster(loaded_images):
         decoded = keras.layers.Conv2D(filters=3, kernel_size=(3, 3), padding='same',
                         activation='sigmoid')(x)
 
-        '''
-        x = keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input_img)
-        x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-        x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-        x = keras.layers.Conv2D(4, (3, 3), activation='relu', padding='same')(x)
-        encoded = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-
-        # at this point the dimensionality is reduced 
-        
-        x = keras.layers.Conv2D(4, (3, 3), activation='relu', padding='same')(encoded)
-        x = keras.layers.UpSampling2D((2, 2))(x)
-        x = keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
-        x = keras.layers.UpSampling2D((2, 2))(x)
-        x = keras.layers.Conv2D(16, (3, 3), activation='relu')(x)
-        x = keras.layers.UpSampling2D((2, 2))(x)
-        decoded = keras.layers.Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
-        '''
         encoder = keras.Model(inputs=input, outputs=encoded),
         autoencoder = keras.Model(inputs=input, outputs=decoded)
         
         return autoencoder,encoder
-       
+        '''
     fit_images = loaded_images[:,:,:,:3] #remove mask channel
     input_shape = fit_images.shape[1:] #(256,256,3)
    
     #prepare data to train the autoencoder
     x_train = fit_images[:800,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
-    #x_train = resize(x_train, (len(x_train),256, 256))
+    
     x_val = fit_images[800:1000,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
-    #x_val = resize(x_val, (len(x_val),256, 256))
+    
     x_test = fit_images[1000:,:,:,:]
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
-    #x_test = resize(x_test, (len(x_test),256, 256))
  
     ae_model, encoder = construct_ae_model(input_shape=input_shape)
-    print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
-    
     
     #model train
     ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
-    #perform dimensionality reduction
-    #encoded_imgs = encoder.predict(x_test)
-    
+    #perform dimensionality reduction on train dataset to be used for segmentation 
+    '''
+    encoded_imgs = encoder.predict(x_train[1000:,:,:,])
+    encoded_imgs = encoded_imgs.reshape(-1,4096)
+    '''
     
     
 
@@ -157,7 +164,7 @@ def pca_and_cluster(loaded_images):
     # get a list of just the features
     feat = np.array(list(data.values()))
 
-    # reshape so that there are 210 samples of 4096 vectors
+    # reshape so that there are samples of 4096 vectors
     feat = feat.reshape(-1,4096)
 
     # reduce the amount of dimensions in the feature vector
