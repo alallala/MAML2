@@ -44,7 +44,7 @@ import matplotlib.pyplot as plt
 from random import randint
 
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Flatten
 
 def autoencoder_and_cluster(loaded_images):
 
