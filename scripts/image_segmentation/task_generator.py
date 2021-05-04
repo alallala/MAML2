@@ -117,6 +117,7 @@ def autoencoder_and_cluster(loaded_images):
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
  
     ae_model, encoder = construct_ae_model(input_shape=input_shape)
+    print(ae_model.summary())
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
