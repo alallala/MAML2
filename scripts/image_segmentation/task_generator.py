@@ -146,7 +146,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     images_indexes = np.array(list(data.keys()))
 
     # get a list of just the features
-    fit_images = np.array(list(data.values()))
+    feat = np.array(list(data.values()))
 
     # reshape so that there are samples with dimensionality of 4096 
     fit_images = feat.reshape(-1,n_dim)
