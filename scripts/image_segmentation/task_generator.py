@@ -141,7 +141,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
       
 
-def pca_and_cluster(loaded_images,False,n_dim,n_clu):
+def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
 
     if cnn:
         model_cls = VGG16()
