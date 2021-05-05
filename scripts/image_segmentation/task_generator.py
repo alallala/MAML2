@@ -115,7 +115,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
-    ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(x_train, x_train, epochs=3, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
