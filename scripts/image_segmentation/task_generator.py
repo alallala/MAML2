@@ -133,7 +133,7 @@ def autoencoder_and_cluster(loaded_images):
     kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
     kmeans.fit(encoded_imgs)
 
-    images_indexes = [i for i in range(len(encoded_imgs))]:
+    images_indexes = [i for i in range(len(encoded_imgs))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
     for img_idx, cluster in zip(images_indexes, kmeans.labels_):
