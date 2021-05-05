@@ -149,7 +149,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     fit_images = np.array(list(data.values()))
 
     # reshape so that there are samples with dimensionality of 4096 
-    #fit_images = feat.reshape(-1,n_dim)
+    fit_images = feat.reshape(-1,n_dim)
 
     #encoded_imgs = encoder.predict(fit_images)
     
