@@ -127,10 +127,9 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
     kmeans.fit(encoded_imgs)
 
-    images_indexes = [i for i in range(len(encoded_imgs))]
+    images_indexes = [i for i in range(len(loaded_images))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
-    print(images_indexes,kmeans.labels_)
     
     for img_idx, cluster in zip(images_indexes, kmeans.labels_):
         if cluster not in groups.keys():
@@ -211,7 +210,6 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
             
     return groups
 
-
 def show_clusters(images,groups):
           
     for cluster_id in groups.keys():
@@ -226,9 +224,7 @@ def show_clusters(images,groups):
         if len(indexes) > 30:
             print(f"Clipping cluster size from {len(indexes)} to 30")  
             indexes = indexes[:29]
-        
-        #random.shuffle(indexes)
-        
+                
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
             plt.subplot(10,10,i+1);
