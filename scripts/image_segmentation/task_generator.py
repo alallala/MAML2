@@ -100,10 +100,13 @@ def autoencoder_and_cluster(loaded_images):
     input_shape = fit_images.shape[1:] #(256,256,3)
    
     #prepare data to train the autoencoder
-    x_train = fit_images[:1500,:,:,:]
+    data_autoencoder = fit_images
+    random.shuffle(data_autoencoder)
+    
+    x_train = data_autoencoder[:1500,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
     
-    x_val = fit_images[1500:,:,:,:]
+    x_val = data_autoencoder[1500:,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
     #x_test = fit_images[1000:,:,:,:]
