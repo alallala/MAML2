@@ -237,27 +237,27 @@ def show_clusters(cluster_id):
             plt.axis('off')
         plt.show()
      '''
-     print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
-     print(groups[cluster_id])
-     print("\n")
-     plt.figure(figsize = (25,25));
+    print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
+    print(groups[cluster_id])
+    print("\n")
+    plt.figure(figsize = (25,25));
         # gets the list of images indexes for a cluster
-        indexes = groups[cluster_id]
-        # only allow up to 30 images to be shown at a time
-        
-        if len(indexes) > 30:
-            print(f"Clipping cluster size from {len(indexes)} to 30")  
-            indexes = indexes[:29]
-        
-        #random.shuffle(indexes)
-        
-        # plot each image in the cluster
-        for i,idx in enumerate(indexes):
-            plt.subplot(10,10,i+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
-            plt.imshow(to_display)
-            plt.axis('off')
-        plt.show()
+    indexes = groups[cluster_id]
+    # only allow up to 30 images to be shown at a time
+    
+    if len(indexes) > 30:
+        print(f"Clipping cluster size from {len(indexes)} to 30")  
+        indexes = indexes[:29]
+    
+    #random.shuffle(indexes)
+    
+    # plot each image in the cluster
+    for i,idx in enumerate(indexes):
+        plt.subplot(10,10,i+1);
+        to_display = array_to_img(my_array[idx][:,:,:3])
+        plt.imshow(to_display)
+        plt.axis('off')
+    plt.show()
                   
 def sequence(start, end):
     res = []
