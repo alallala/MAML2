@@ -96,11 +96,10 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         
         return autoencoder
         
-    fit_images = loaded_images[:,:,:,:3] #remove mask channel
-    input_shape = fit_images.shape[1:] #(256,256,3)
+    input_shape = loaded_images[:,:,:,:3].shape[1:] #(256,256,3)
    
     #prepare data to train the autoencoder
-    data_autoencoder = fit_images
+    data_autoencoder = loaded_images[:,:,:,:3]
     random.shuffle(data_autoencoder)
     
     x_train = data_autoencoder[:1500,:,:,:]
@@ -121,14 +120,33 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
 
-    encoded_imgs = encoder.predict(fit_images)
-    
-    encoded_imgs = encoded_imgs.reshape(-1,n_dim)
+    data = {}
+      
+    # lop through each image in the dataset
+    for idx in range(0,len(loaded_images)):
+        # try to extract the features and update the dictionary
+        try:
+            feat = encoder.predict(loaded_images[:,:,:,:3][idx])
+            data[idx] = feat
+        except IOError as exc:
+            raise RuntimeError('Failed to extract features') from exc
+              
+     
+    # get a list of the images indexes
+    images_indexes = np.array(list(data.keys()))
 
+    # get a list of just the features
+    feat = np.array(list(data.values()))
+
+    # reshape so that there are samples with dimensionality of 4096 
+    fit_images = feat.reshape(-1,n_dim)
+
+    #encoded_imgs = encoder.predict(fit_images)
+    
     
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
-    kmeans.fit(encoded_imgs)
+    kmeans.fit(fit_images)
 
     images_indexes = [i for i in range(len(loaded_images))]
     # holds the cluster id and the images { id: [images] }
