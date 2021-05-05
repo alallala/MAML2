@@ -114,7 +114,7 @@ def autoencoder_and_cluster(loaded_images):
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
-    ae_model.fit(x_train, x_train, epochs=20, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
@@ -181,7 +181,8 @@ def pca_and_cluster(loaded_images):
     
     # reduce the amount of dimensions in the feature vector
     fit_images = loaded_images[:,:,:,:3]
-    fit_images = fit_images.reshape(-1,256*256*3)
+    h,w,c = loaded_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
+    fit_images = fit_images.reshape(-1,h*w*c)
     print("fit images shape: ",fit_images.shape)
     pca = PCA(n_components=100, random_state=22)
     pca.fit(fit_images) #pca.fit(feat)
@@ -384,10 +385,12 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    #groups = autoencoder_and_cluster(my_array)
     
+    #autoencoder
+    groups = autoencoder_and_cluster(my_array)
     
-    groups = pca_and_cluster(my_array[1000:,:,:,:])
+    #pca
+    #groups = pca_and_cluster(my_array[1000:,:,:,:])
          
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
