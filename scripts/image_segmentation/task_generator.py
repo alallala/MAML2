@@ -226,9 +226,9 @@ def show_clusters(groups):
         indexes = groups[cluster_id]
         # only allow up to 30 images to be shown at a time
         
-        if len(indexes) > 200:
+        if len(indexes) > 30:
             print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:200]
+            indexes = indexes[:29]
         
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
