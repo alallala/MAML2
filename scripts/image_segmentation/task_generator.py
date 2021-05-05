@@ -183,7 +183,7 @@ def pca_and_cluster(loaded_images):
     fit_images = loaded_images[:,:,:,:3]
     fit_images = fit_images.reshape(-1,256*256*3)
     print("fit images shape: ",fit_images.shape)
-    pca = PCA(n_components=32, random_state=22)
+    pca = PCA(n_components=100, random_state=22)
     pca.fit(fit_images) #pca.fit(feat)
     x = pca.transform(fit_images) #x = pca.transform(feat)
 
