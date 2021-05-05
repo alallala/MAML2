@@ -48,7 +48,7 @@ def autoencoder_and_cluster(loaded_images):
 
     def construct_ae_model(input_shape):
     
-        latent_dim = 32
+        latent_dim = 100
         
         inputs = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
         
