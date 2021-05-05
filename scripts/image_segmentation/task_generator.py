@@ -88,7 +88,7 @@ def autoencoder_and_cluster(loaded_images):
         decoder = Model(inputs=latentInputs, outputs=output)
         encoder = keras.Model(inputs=input, outputs=latent),
         # our autoencoder is the encoder + decoder
-        autoencoder = Model(inputs=input, outputs= output,
+        autoencoder = Model(inputs=input, outputs= decoder(encoder(input)),
             name="autoencoder")
         '''
         encoder = keras.Model(inputs=input, outputs=encoded),
