@@ -184,8 +184,8 @@ def pca_and_cluster(loaded_images):
     fit_images = fit_images.reshape(-1,256*256*3)
     print("fit images shape: ",fit_images.shape)
     pca = PCA(n_components=32, random_state=22)
-    pca.fit(loaded_images[:,:,:,:3]) #pca.fit(feat)
-    x = pca.transform(loaded_images[:,:,:,:3]) #x = pca.transform(feat)
+    pca.fit(fit_images) #pca.fit(feat)
+    x = pca.transform(fit_images) #x = pca.transform(feat)
 
     # cluster feature vectors
     kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
