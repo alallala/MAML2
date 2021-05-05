@@ -48,7 +48,7 @@ def autoencoder_and_cluster(loaded_images):
 
     def construct_ae_model(input_shape):
     
-        latent_dim = 100
+        latent_dim = 1000
         
         inputs = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
         
@@ -114,7 +114,7 @@ def autoencoder_and_cluster(loaded_images):
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
-    ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(x_train, x_train, epochs=100, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
