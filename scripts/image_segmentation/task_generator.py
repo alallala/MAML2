@@ -415,7 +415,7 @@ if __name__ == '__main__':
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
     print("dataset of 2000 images of size 256x256x3= 196608\nreduction to size 1000\nclustering on 10 groups\n")
     #autoencoder
-    '''
+    
     print("\ndimensionality reduction with autoencoder and clustering")
     groups_ae = autoencoder_and_cluster(my_array,1000,10)
     show_clusters(my_array,groups_ae)
@@ -424,5 +424,5 @@ if __name__ == '__main__':
     print("\ndimensionality reduction with pca and clustering")
     groups_pca = pca_and_cluster(my_array,True,1000,10)
     show_clusters(my_array,groups_pca)
-       
+    '''   
    
