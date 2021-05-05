@@ -44,11 +44,11 @@ import matplotlib.pyplot as plt
 from random import randint
 
 
-def autoencoder_and_cluster(loaded_images):
+def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
 
     def construct_ae_model(input_shape):
     
-        latent_dim = 1000
+        latent_dim = n_dim
         
         inputs = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
         
@@ -109,9 +109,7 @@ def autoencoder_and_cluster(loaded_images):
     x_val = data_autoencoder[1500:,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
-    #x_test = fit_images[1000:,:,:,:]
-    #x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
- 
+    
     ae_model = construct_ae_model(input_shape=input_shape)
     
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
@@ -125,9 +123,8 @@ def autoencoder_and_cluster(loaded_images):
 
     encoded_imgs = encoder.predict(fit_images)
     
-    #encoded_imgs = encoded_imgs.reshape(-1,32)
-    
-    kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
+    #clustering
+    kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
     kmeans.fit(encoded_imgs)
 
     images_indexes = [i for i in range(len(encoded_imgs))]
@@ -144,55 +141,59 @@ def autoencoder_and_cluster(loaded_images):
     
       
 
-def pca_and_cluster(loaded_images):
-    ''' 
-    model_cls = VGG16()
-    model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
+def pca_and_cluster(loaded_images,cnn=False,n_dim,n_clu):
 
-    def extract_features(img, model_cls):
-        
-        reshaped_img = img.reshape(256,256,3)
-        resized_img = resize(reshaped_img, (224, 224))
-        reshaped_img = resized_img.reshape(1,224,224,3)
-        # prepare image for model
-        imgx = preprocess_input(reshaped_img)
-        # get the feature vector
-        features = model_cls.predict(imgx, use_multiprocessing=True)
-        return features
-       
-    data = {}
-  
-    # lop through each image in the dataset
-    for idx in range(0,len(loaded_images)):
-        # try to extract the features and update the dictionary
-        try:
-            feat = extract_features(loaded_images[:,:,:,:3][idx],model_cls)
-            data[idx] = feat
-        except IOError as exc:
-            raise RuntimeError('Failed to extract features') from exc
-              
-     
-    # get a list of the images indexes
-    images_indexes = np.array(list(data.keys()))
+    if cnn:
+        model_cls = VGG16()
+        model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
 
-    # get a list of just the features
-    feat = np.array(list(data.values()))
+        def extract_features(img, model_cls):
+            
+            reshaped_img = img.reshape(256,256,3)
+            resized_img = resize(reshaped_img, (224, 224))
+            reshaped_img = resized_img.reshape(1,224,224,3)
+            # prepare image for model
+            imgx = preprocess_input(reshaped_img)
+            # get the feature vector
+            features = model_cls.predict(imgx, use_multiprocessing=True)
+            return features
+           
+        data = {}
+      
+        # lop through each image in the dataset
+        for idx in range(0,len(loaded_images)):
+            # try to extract the features and update the dictionary
+            try:
+                feat = extract_features(loaded_images[:,:,:,:3][idx],model_cls)
+                data[idx] = feat
+            except IOError as exc:
+                raise RuntimeError('Failed to extract features') from exc
+                  
+         
+        # get a list of the images indexes
+        images_indexes = np.array(list(data.keys()))
 
-    # reshape so that there are samples of 4096 vectors
-    feat = feat.reshape(-1,4096)
-    '''
+        # get a list of just the features
+        feat = np.array(list(data.values()))
+
+        # reshape so that there are samples with dimensionality of 4096 
+        feat_images = feat.reshape(-1,4096)
     
-    # reduce the amount of dimensions in the feature vector
-    fit_images = loaded_images[:,:,:,:3]
-    h,w,c = loaded_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
-    fit_images = fit_images.reshape(-1,h*w*c)
-    print("fit images shape: ",fit_images.shape)
-    pca = PCA(n_components=100, random_state=22)
-    pca.fit(fit_images) #pca.fit(feat)
-    x = pca.transform(fit_images) #x = pca.transform(feat)
+    else:
+    
+        fit_images = loaded_images[:,:,:,:3]
+        h,w,c = fit_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
+        
+        #reshape data to be suitable for pca (n dim<=2)
+        fit_images = fit_images.reshape(-1,h*w*c)
+        #print("fit images shape: ",fit_images.shape)
+        
+    pca = PCA(n_components=n_dim, random_state=22)
+    pca.fit(fit_images) 
+    x = pca.transform(fit_images) 
 
     # cluster feature vectors
-    kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
+    kmeans = KMeans(n_clusters=n_clu,n_jobs=-1, random_state=22)
     kmeans.fit(x)
 
     images_indexes = [i for i in range(len(loaded_images))]
@@ -208,6 +209,30 @@ def pca_and_cluster(loaded_images):
             
     return groups
 
+
+def show_clusters(groups):
+    
+    for group in groups.keys():
+        print("cluster {} has {} images".format(group,len(groups[group])))
+        
+    #cluster_id = np.random.choice(big_clusters,1)[0]
+    #print("\ncluster {} images:\n".format(cluster_id))
+    for cluster_id in groups.keys():
+        print("\nCLUSTER {}:".format(cluster_id))
+        plt.figure(figsize = (25,25));
+        # gets the list of images indexes for a cluster
+        indexes = groups[cluster_id]
+        # only allow up to 30 images to be shown at a time
+        if len(indexes) > 30:
+            print(f"Clipping cluster size from {len(indexes)} to 30")
+            indexes = indexes[:29]
+        # plot each image in the cluster
+        for i,idx in enumerate(indexes):
+            plt.subplot(10,10,i+1);
+            to_display = array_to_img(my_array[idx][:,:,:3])
+            plt.imshow(to_display)
+            plt.axis('off')
+        plt.show()
                   
 def sequence(start, end):
     res = []
@@ -388,46 +413,15 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    
+    print("dataset of 2000 images of size 256x256x3= 196608\nreduction to size 1000\nclustering on 10 groups\n")
     #autoencoder
-    groups = autoencoder_and_cluster(my_array)
+    print("\ndimensionality reduction with autoencoder and clustering")
+    groups_ae = autoencoder_and_cluster(my_array,1000,10)
+    show_clusters(groups_ae)
     
     #pca
-    #groups = pca_and_cluster(my_array[1000:,:,:,:])
-         
-    for group in groups.keys():
-        print("cluster {} has {} images".format(group,len(groups[group])))
-        
-    #cluster_id = np.random.choice(big_clusters,1)[0]
-    #print("\ncluster {} images:\n".format(cluster_id))
-    for cluster_id in groups.keys():
-        print("CLUSTER {}:".format(cluster_id))
-        plt.figure(figsize = (25,25));
-        # gets the list of images indexes for a cluster
-        indexes = groups[cluster_id]
-        # only allow up to 30 images to be shown at a time
-        if len(indexes) > 30:
-            print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:29]
-        # plot each image in the cluster
-        for i,idx in enumerate(indexes):
-            plt.subplot(10,10,i+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
-            plt.imshow(to_display)
-            plt.axis('off')
-        plt.show()
-        
-    '''    
-        
-    tasks = TaskGenerator()
-    tasks.mode = 'train'
-    for i in range(20):
-        batch_set = tasks.train_batch()
-        # tasks.print_label_map()
-        print (len(batch_set))
-        time.sleep(5)
-        
-    @TODO
-    change to np.random.choice
-    And find out the reason why so many repeat
-    '''
+    print("\ndimensionality reduction with pca and clustering")
+    groups_pca = pca_and_cluster(my_array,False,1000,10)
+    show_clusters(groups_pca)
+            
+   
