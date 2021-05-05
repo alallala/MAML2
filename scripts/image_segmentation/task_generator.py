@@ -125,8 +125,8 @@ def autoencoder_and_cluster(loaded_images):
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
     print(encoder.summary())
 
-    #encoded_imgs = encoder.predict(x_train[1000:,:,:,])
-    #print(encoded_imgs.shape)
+    encoded_imgs = encoder.predict(x_train[1000:,:,:,])
+    print(encoded_imgs.shape)
     '''
     encoded_imgs = encoded_imgs.reshape(-1,4096)
     '''
