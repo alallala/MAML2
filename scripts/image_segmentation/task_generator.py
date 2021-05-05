@@ -130,6 +130,8 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     images_indexes = [i for i in range(len(encoded_imgs))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
+    print(images_indexes,kmeans.labels_)
+    
     for img_idx, cluster in zip(images_indexes, kmeans.labels_):
         if cluster not in groups.keys():
             groups[cluster] = []
@@ -225,7 +227,7 @@ def show_clusters(groups):
             print(f"Clipping cluster size from {len(indexes)} to 30")  
             indexes = indexes[:29]
         
-        random.shuffle(indexes)
+        #random.shuffle(indexes)
         
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
