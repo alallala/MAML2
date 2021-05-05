@@ -123,6 +123,9 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
 
     encoded_imgs = encoder.predict(fit_images)
     
+    encoded_imgs = encoded_imgs.reshape(-1,n_dim)
+
+    
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
     kmeans.fit(encoded_imgs)
@@ -226,16 +229,14 @@ def show_clusters(images,groups):
             indexes = indexes[:29]
                 
         # plot each image in the cluster
-        '''
+        
         for i,idx in enumerate(indexes):
             print(i,idx)
             plt.subplot(10,10,i+1);
-        '''
-        for idx in indexes:
             to_display = array_to_img(images[idx][:,:,:3])
             plt.imshow(to_display)
             plt.axis('off')
-            plt.show()
+        plt.show()
     
                   
 def sequence(start, end):
