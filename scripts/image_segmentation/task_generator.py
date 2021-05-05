@@ -118,13 +118,15 @@ def autoencoder_and_cluster(loaded_images):
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
-    ae_model.fit(x_train, x_train, epochs=100, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(x_train, x_train, epochs=1, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
-    
-    encoded_imgs = encoder.predict(x_train[1000:,:,:,])
-    print(encoded_imgs.shape)
+    encoder = Model(ae_model.input, ae_model.layers[-2].output)
+    print(encoder.summary())
+
+    #encoded_imgs = encoder.predict(x_train[1000:,:,:,])
+    #print(encoded_imgs.shape)
     '''
     encoded_imgs = encoded_imgs.reshape(-1,4096)
     '''
