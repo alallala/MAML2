@@ -427,6 +427,6 @@ if __name__ == '__main__':
     #pca
     print("\ndimensionality reduction with pca and clustering")
     groups_pca = pca_and_cluster(my_array,True,1000,10)
-    show_clusters(groups_pca)
+    show_clusters(my_array,groups_pca)
        
    
