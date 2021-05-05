@@ -146,10 +146,10 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     images_indexes = np.array(list(data.keys()))
 
     # get a list of just the features
-    feat = np.array(list(data.values()))
+    fit_images = np.array(list(data.values()))
 
     # reshape so that there are samples with dimensionality of 4096 
-    fit_images = feat.reshape(-1,n_dim)
+    #fit_images = feat.reshape(-1,n_dim)
 
     #encoded_imgs = encoder.predict(fit_images)
     
@@ -258,7 +258,7 @@ def show_clusters(images,groups):
         # plot each image in the cluster
         
         for i,idx in enumerate(indexes):
-            print(i,idx)
+           
             plt.subplot(10,10,i+1);
             to_display = array_to_img(images[idx][:,:,:3])
             plt.imshow(to_display)
