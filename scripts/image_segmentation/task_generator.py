@@ -93,11 +93,8 @@ def autoencoder_and_cluster(loaded_images):
         # our autoencoder is the encoder + decoder
         autoencoder = Model(inputs, decoder(encoder(inputs)),
             name="autoencoder")
-        '''
-        encoder = keras.Model(inputs=input, outputs=encoded),
-        autoencoder = keras.Model(inputs=input, outputs=decoded)
-        '''
-        return autoencoder,encoder
+        
+        return autoencoder
         
     fit_images = loaded_images[:,:,:,:3] #remove mask channel
     input_shape = fit_images.shape[1:] #(256,256,3)
@@ -112,8 +109,7 @@ def autoencoder_and_cluster(loaded_images):
     x_test = fit_images[1000:,:,:,:]
     x_test = x_test.reshape(len(x_test),input_shape[0],input_shape[1],input_shape[2])
  
-    ae_model, encoder = construct_ae_model(input_shape=input_shape)
-    print(ae_model.summary())
+    ae_model = construct_ae_model(input_shape=input_shape)
     
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
@@ -123,10 +119,8 @@ def autoencoder_and_cluster(loaded_images):
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
-    print(encoder.summary())
 
     encoded_imgs = encoder.predict(x_test)
-    print(encoded_imgs.shape)
     
     #encoded_imgs = encoded_imgs.reshape(-1,32)
     
@@ -145,11 +139,10 @@ def autoencoder_and_cluster(loaded_images):
             
     return groups
     
-    
-    
+      
 
 def pca_and_cluster(loaded_images):
-     
+    ''' 
     model_cls = VGG16()
     model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
 
@@ -184,16 +177,19 @@ def pca_and_cluster(loaded_images):
 
     # reshape so that there are samples of 4096 vectors
     feat = feat.reshape(-1,4096)
-
+    '''
+    
     # reduce the amount of dimensions in the feature vector
-    pca = PCA(n_components=400, random_state=22)
-    pca.fit(feat)
-    x = pca.transform(feat)
+    pca = PCA(n_components=32, random_state=22)
+    pca.fit(loaded_images) #pca.fit(feat)
+    x = pca.transform(loaded_images) #x = pca.transform(feat)
 
     # cluster feature vectors
     kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
     kmeans.fit(x)
 
+    images_indexes = [i for i in range(len(loaded_images))]
+    
     # holds the cluster id and the images { id: [images] }
     groups = {}
     for img_idx, cluster in zip(images_indexes,kmeans.labels_):
@@ -385,16 +381,14 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    groups = autoencoder_and_cluster(my_array)
-    for group in groups.keys():
-        print("cluster {} has {} images".format(group,len(groups[group])))
-    '''
-    groups = pca_and_cluster(my_array)
+    #groups = autoencoder_and_cluster(my_array)
+    
+    
+    groups = pca_and_cluster(my_array[1000:,:,:,:])
          
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
         
-      
     #cluster_id = np.random.choice(big_clusters,1)[0]
     #print("\ncluster {} images:\n".format(cluster_id))
     for cluster_id in groups.keys():
@@ -416,7 +410,6 @@ if __name__ == '__main__':
         
     '''    
         
-    '''
     tasks = TaskGenerator()
     tasks.mode = 'train'
     for i in range(20):
@@ -424,8 +417,7 @@ if __name__ == '__main__':
         # tasks.print_label_map()
         print (len(batch_set))
         time.sleep(5)
-    '''
-    '''
+        
     @TODO
     change to np.random.choice
     And find out the reason why so many repeat
