@@ -214,7 +214,7 @@ def show_clusters(groups):
     
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
-        print(groups[groupp])
+        print(groups[group])
         print("\n")
         
     #cluster_id = np.random.choice(big_clusters,1)[0]
@@ -225,11 +225,11 @@ def show_clusters(groups):
         # gets the list of images indexes for a cluster
         indexes = groups[cluster_id]
         # only allow up to 30 images to be shown at a time
-        '''
-        if len(indexes) > 30:
+        
+        if len(indexes) > 200:
             print(f"Clipping cluster size from {len(indexes)} to 30")
-            indexes = indexes[:29]
-        '''
+            indexes = indexes[:200]
+        
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
             plt.subplot(10,10,i+1);
