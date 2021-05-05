@@ -212,8 +212,8 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
     return groups
 
 
-def show_clusters(groups):
-    '''        
+def show_clusters(images,groups):
+          
     for cluster_id in groups.keys():
         print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
         print(groups[cluster_id])
@@ -232,33 +232,11 @@ def show_clusters(groups):
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
             plt.subplot(10,10,i+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
+            to_display = array_to_img(images[idx][:,:,:3])
             plt.imshow(to_display)
             plt.axis('off')
         plt.show()
-     '''
-    cluster_id = 0
-    print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
-    print(groups[cluster_id])
-    print("\n")
-    plt.figure(figsize = (25,25));
-        # gets the list of images indexes for a cluster
-    indexes = groups[cluster_id]
-    # only allow up to 30 images to be shown at a time
     
-    if len(indexes) > 30:
-        print(f"Clipping cluster size from {len(indexes)} to 30")  
-        indexes = indexes[:29]
-    
-    #random.shuffle(indexes)
-    
-    # plot each image in the cluster
-    for i,idx in enumerate(indexes):
-        plt.subplot(10,10,i+1);
-        to_display = array_to_img(my_array[idx][:,:,:3])
-        plt.imshow(to_display)
-        plt.axis('off')
-    plt.show()
                   
 def sequence(start, end):
     res = []
@@ -443,7 +421,7 @@ if __name__ == '__main__':
     #autoencoder
     print("\ndimensionality reduction with autoencoder and clustering")
     groups_ae = autoencoder_and_cluster(my_array,1000,10)
-    show_clusters(groups_ae)
+    show_clusters(my_array,groups_ae)
     '''
     #pca
     print("\ndimensionality reduction with pca and clustering")
