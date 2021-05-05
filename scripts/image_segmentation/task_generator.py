@@ -70,8 +70,8 @@ def autoencoder_and_cluster(loaded_images):
         ### DECODER ###
         
         latentInputs = Input(shape=(latent_dim,))
-		x = Dense(np.prod(volumeSize[1:]))(latentInputs)
-		x = Reshape((volumeSize[1], volumeSize[2], volumeSize[3]))(x)
+        x = Dense(np.prod(volumeSize[1:]))(latentInputs)
+        x = Reshape((volumeSize[1], volumeSize[2], volumeSize[3]))(x)
         
         x = keras.layers.Conv2D(filters=4, kernel_size=(3, 3), padding='same', activation='relu')(encoded)
         x = keras.layers.UpSampling2D(size=(2, 2))(x)
@@ -87,9 +87,9 @@ def autoencoder_and_cluster(loaded_images):
                         
         decoder = Model(inputs=latentInputs, outputs=outputs)
         encoder = keras.Model(inputs=input, outputs=latent),
-		# our autoencoder is the encoder + decoder
-		autoencoder = Model(inputs=input, decoder(encoder(inputs)),
-			name="autoencoder")
+        # our autoencoder is the encoder + decoder
+        autoencoder = Model(inputs=input, decoder(encoder(inputs)),
+            name="autoencoder")
         '''
         encoder = keras.Model(inputs=input, outputs=encoded),
         autoencoder = keras.Model(inputs=input, outputs=decoded)
