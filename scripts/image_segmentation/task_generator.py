@@ -212,7 +212,7 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
     return groups
 
 
-def show_clusters(cluster_id):
+def show_clusters(groups):
     '''        
     for cluster_id in groups.keys():
         print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
@@ -237,6 +237,7 @@ def show_clusters(cluster_id):
             plt.axis('off')
         plt.show()
      '''
+    cluster_id = 0
     print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
     print(groups[cluster_id])
     print("\n")
@@ -442,7 +443,7 @@ if __name__ == '__main__':
     #autoencoder
     print("\ndimensionality reduction with autoencoder and clustering")
     groups_ae = autoencoder_and_cluster(my_array,1000,10)
-    show_clusters(0)
+    show_clusters(groups_ae)
     '''
     #pca
     print("\ndimensionality reduction with pca and clustering")
