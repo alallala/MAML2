@@ -73,7 +73,7 @@ def autoencoder_and_cluster(loaded_images):
         x = keras.layers.Dense(np.prod(volumeSize[1:]))(latentInputs)
         x = keras.layers.Reshape((volumeSize[1], volumeSize[2], volumeSize[3]))(x)
         
-        x = keras.layers.Conv2D(filters=4, kernel_size=(3, 3), padding='same', activation='relu')(encoded)
+        x = keras.layers.Conv2D(filters=4, kernel_size=(3, 3), padding='same', activation='relu')(x)
         x = keras.layers.UpSampling2D(size=(2, 2))(x)
 
         x = keras.layers.Conv2D(filters=8, kernel_size=(3, 3), padding='same', activation='relu')(x)
