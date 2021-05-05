@@ -120,13 +120,23 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
 
+
+    def extract_features(img, model):
+            
+            reshaped_img = img.reshape(1,256,256,3)
+            # prepare image for model
+            imgx = preprocess_input(reshaped_img)
+            # get the feature vector
+            features = model.predict(imgx, use_multiprocessing=True)
+            return features
+            
     data = {}
       
     # lop through each image in the dataset
     for idx in range(0,len(loaded_images)):
         # try to extract the features and update the dictionary
         try:
-            feat = encoder.predict(loaded_images[:,:,:,:3][idx])
+            feat = encoder.extract_features(loaded_images[:,:,:,:3][idx],encoder)
             data[idx] = feat
         except IOError as exc:
             raise RuntimeError('Failed to extract features') from exc
@@ -142,7 +152,6 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     fit_images = feat.reshape(-1,n_dim)
 
     #encoded_imgs = encoder.predict(fit_images)
-    
     
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
