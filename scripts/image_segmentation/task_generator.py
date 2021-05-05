@@ -197,7 +197,7 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
     kmeans = KMeans(n_clusters=n_clu,n_jobs=-1, random_state=22)
     kmeans.fit(x)
 
-    images_indexes = [i for i in range(len(loaded_images))]
+    images_indexes = [i for i in range(0,len(loaded_images))]
     
     # holds the cluster id and the images { id: [images] }
     groups = {}
@@ -226,13 +226,16 @@ def show_clusters(images,groups):
             indexes = indexes[:29]
                 
         # plot each image in the cluster
+        '''
         for i,idx in enumerate(indexes):
             print(i,idx)
             plt.subplot(10,10,i+1);
+        '''
+        for idx in indexes:
             to_display = array_to_img(images[idx][:,:,:3])
             plt.imshow(to_display)
             plt.axis('off')
-        plt.show()
+            plt.show()
     
                   
 def sequence(start, end):
