@@ -136,7 +136,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     for idx in range(0,len(loaded_images)):
         # try to extract the features and update the dictionary
         try:
-            feat = encoder.extract_features(loaded_images[:,:,:,:3][idx],encoder)
+            feat = extract_features(loaded_images[:,:,:,:3][idx],encoder)
             data[idx] = feat
         except IOError as exc:
             raise RuntimeError('Failed to extract features') from exc
