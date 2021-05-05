@@ -182,7 +182,7 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
     else:
     
         fit_images = loaded_images[:,:,:,:3]
-        h,w,c = fit_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
+        h,w,c = loaded_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
         
         #reshape data to be suitable for pca (n dim<=2)
         fit_images = fit_images.reshape(-1,h*w*c)
@@ -214,6 +214,8 @@ def show_clusters(groups):
     
     for group in groups.keys():
         print("cluster {} has {} images".format(group,len(groups[group])))
+        print(groups[groupp])
+        print("\n")
         
     #cluster_id = np.random.choice(big_clusters,1)[0]
     #print("\ncluster {} images:\n".format(cluster_id))
@@ -223,9 +225,11 @@ def show_clusters(groups):
         # gets the list of images indexes for a cluster
         indexes = groups[cluster_id]
         # only allow up to 30 images to be shown at a time
+        '''
         if len(indexes) > 30:
             print(f"Clipping cluster size from {len(indexes)} to 30")
             indexes = indexes[:29]
+        '''
         # plot each image in the cluster
         for i,idx in enumerate(indexes):
             plt.subplot(10,10,i+1);
@@ -418,10 +422,10 @@ if __name__ == '__main__':
     print("\ndimensionality reduction with autoencoder and clustering")
     groups_ae = autoencoder_and_cluster(my_array,1000,10)
     show_clusters(groups_ae)
-    
+    '''
     #pca
     print("\ndimensionality reduction with pca and clustering")
     groups_pca = pca_and_cluster(my_array,False,1000,10)
     show_clusters(groups_pca)
-            
+    '''     
    
