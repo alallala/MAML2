@@ -127,9 +127,24 @@ def autoencoder_and_cluster(loaded_images):
 
     encoded_imgs = encoder.predict(x_test)
     print(encoded_imgs.shape)
-    '''
-    encoded_imgs = encoded_imgs.reshape(-1,4096)
-    '''
+    
+    #encoded_imgs = encoded_imgs.reshape(-1,32)
+    
+    kmeans = KMeans(n_clusters=5,n_jobs=-1, random_state=22)
+    kmeans.fit(encoded_imgs)
+
+    images_indexes = [i for i in range(len(encoded_imgs)):
+    # holds the cluster id and the images { id: [images] }
+    groups = {}
+    for img_idx, cluster in zip(images_indexes, kmeans.labels_):
+        if cluster not in groups.keys():
+            groups[cluster] = []
+            groups[cluster].append(img_idx)
+        else:
+            groups[cluster].append(img_idx)
+            
+    return groups
+    
     
     
 
@@ -181,8 +196,7 @@ def pca_and_cluster(loaded_images):
 
     # holds the cluster id and the images { id: [images] }
     groups = {}
-    total_clusters = kmeans.labels_
-    for img_idx, cluster in zip(images_indexes,total_clusters):
+    for img_idx, cluster in zip(images_indexes,kmeans.labels_):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
@@ -371,7 +385,9 @@ class TaskGenerator:
 if __name__ == '__main__':
 
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    autoencoder_and_cluster(my_array)
+    groups = autoencoder_and_cluster(my_array)
+    for group in groups.keys():
+        print("cluster {} has {} images".format(group,len(groups[group])))
     '''
     groups = pca_and_cluster(my_array)
          
