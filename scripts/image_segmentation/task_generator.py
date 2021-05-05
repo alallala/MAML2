@@ -50,10 +50,11 @@ def autoencoder_and_cluster(loaded_images):
     
         latent_dim = 32
         
-        input = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
-
+        inputs = keras.layers.Input(shape=input_shape) # input is an 256x256 RGB image
+        
+        x = inputs
         ### ENCODER ###
-        x = keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', activation='relu')(input)
+        x = keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', activation='relu')(x)
         x = keras.layers.MaxPool2D(pool_size=(2, 2))(x)
 
         x = keras.layers.Conv2D(filters=8, kernel_size=(3, 3), padding='same', activation='relu')(x)
@@ -65,7 +66,9 @@ def autoencoder_and_cluster(loaded_images):
 
         volumeSize = keras.backend.int_shape(x)
         x = keras.layers.Flatten()(x)
-        latent = keras.layers.Dense(latent_dim)(x)        
+        latent = keras.layers.Dense(latent_dim)(x)  
+
+        encoder = Model(inputs, latent, name="encoder")
         
         ### DECODER ###
         
@@ -86,9 +89,9 @@ def autoencoder_and_cluster(loaded_images):
                         activation='sigmoid')(x)
                         
         decoder = Model(inputs=latentInputs, outputs=output)
-        encoder = keras.Model(inputs=input, outputs=latent),
+        
         # our autoencoder is the encoder + decoder
-        autoencoder = Model(inputs=input, outputs= decoder(encoder(input)),
+        autoencoder = Model(inputs=input, outputs= decoder(encoder(inputs)),
             name="autoencoder")
         '''
         encoder = keras.Model(inputs=input, outputs=encoded),
