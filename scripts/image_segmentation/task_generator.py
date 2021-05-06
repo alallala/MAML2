@@ -562,9 +562,7 @@ if __name__ == '__main__':
                   yaxis= dict(title= 'PC2',ticklen= 5,zeroline= False)
                  )
 
-    x = np.random.randn(10,1)
-fig = go.Figure(data=[go.Scatter3d(x=x, y=x, z=x,mode='markers')])
-fig.show()
+ 
     fig = dict(data = data, layout = layout)
 
     iplot(fig)
