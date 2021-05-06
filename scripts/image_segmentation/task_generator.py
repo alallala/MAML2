@@ -209,7 +209,6 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
         
         #reshape data to be suitable for pca (n dim<=2)
         fit_images = fit_images.reshape(-1,h*w*c)
-        #print("fit images shape: ",fit_images.shape)
         
     pca = PCA(n_components=n_dim, random_state=22)
     pca.fit(fit_images) 
@@ -411,13 +410,13 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,100)
     print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
     
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,100,10)
+    groups = autoencoder_and_cluster(my_array,100,2)
     
     #pca
     '''
@@ -457,6 +456,7 @@ if __name__ == '__main__':
         for image_index in groups[cluster_id]:
             data.append(my_array[image_index][:,:,:3])
         data = np.array(data).reshape(-1,256*256*3)
+        print(data.shape)
         cluster_3d[cluster_id] = pca_3d.fit_transform(data)
         
         
