@@ -458,7 +458,10 @@ if __name__ == '__main__':
         data = []
         for image_index in groups[cluster_id]:
             data.append(my_array[image_index][:,:,:3])
-        data = np.array(data).reshape(-1,256*256*3)
+            
+        data = np.array(data)
+        data = scaler.fit_transform(data)
+        data.reshape(-1,256*256*3)
         
         cluster_3d[cluster_id] = pca_3d.fit_transform(data)
         
