@@ -39,6 +39,7 @@ from tensorflow.keras.models import Model
 # clustering and dimension reduction
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 # for everything else
 import matplotlib.pyplot as plt
@@ -451,7 +452,7 @@ if __name__ == '__main__':
         plt.show()
         
     #visualize clusters in 3D
-    scaler = sklearn.preprocessing.StandardScaler()    
+    scaler = StandardScaler()    
     pca_3d = PCA(n_components=3)
     cluster_3d = {}
     for cluster_id in groups.keys():
