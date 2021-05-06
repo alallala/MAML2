@@ -173,6 +173,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
             groups[cluster] = []
             groups[cluster].append(img_idx)
             to_display = img_to_array(loaded_images[img_idx][:,:,:3])
+            plt.imshow(to_display)
         else:
             groups[cluster].append(img_idx)
             
@@ -432,8 +433,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    #groups = autoencoder_and_cluster(my_array,1000,2)
-    groups= pca_and_cluster(my_array,True,2,2)
+    groups = autoencoder_and_cluster(my_array,1000,2)
     
     for cluster_id in groups.keys():
     
