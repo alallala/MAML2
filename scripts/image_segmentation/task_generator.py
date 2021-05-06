@@ -173,10 +173,11 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
-            to_display = img_to_array(loaded_images[img_idx][:,:,:3])
+            to_display = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(loaded_images[img_idx][:,:,:3]))
         else:
             groups[cluster].append(img_idx)
-            to_display = img_to_array(loaded_images[img_idx][:,:,:3])
+            to_display = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(loaded_images[img_idx][:,:,:3]))
+            
         display(to_display)
         
     return groups
