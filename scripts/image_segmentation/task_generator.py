@@ -412,7 +412,7 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,100)
     print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
     
     #autoencoder
@@ -462,7 +462,10 @@ if __name__ == '__main__':
         
         cluster_3d[cluster_id] = pca_3d.fit_transform(data)
         
-    key_list = list(groups.keys())    
+    key_list = list(groups.keys())  
+    
+    print("1PC\n")
+    print(cluster_3d[key_list[0]][:,:1].flatten())
       
     trace1 = go.Scatter3d(
                         x = cluster_3d[key_list[0]][:,:1].flatten(),
