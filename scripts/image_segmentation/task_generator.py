@@ -454,7 +454,11 @@ if __name__ == '__main__':
     pca_3d = PCA(n_components=3)
     clusters_3d = {}
     for cluster_id in groups.keys():
-        clusters_3d[cluster_id] = pca_3d.fit_transform(groups[cluster_id])
+        data = []
+        for image_index in groups[cluster_id]:
+            data.append(my_array[image_index][:,:,:3])
+        cluster_3d[cluster_id] = pca_3d.fit_transform(data)
+        
         
         
     trace1 = go.Scatter3d(
