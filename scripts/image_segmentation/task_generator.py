@@ -427,6 +427,7 @@ if __name__ == '__main__':
     groups = autoencoder_and_cluster(my_array,1000,10)
     
     for cluster_id in groups.keys():
+    
         print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
         print(groups[cluster_id])
         print("\n")
@@ -444,9 +445,10 @@ if __name__ == '__main__':
         for i,idx in enumerate(indexes):
            
             plt.subplot(10,10,i+1);
-            to_display = array_to_img(my_array[idx][:,:,:3])
+            to_display = array_to_img(my_array[:,:,:,:3][idx])
             plt.imshow(to_display)
             plt.axis('off')
+            
         plt.show()
         
     '''
