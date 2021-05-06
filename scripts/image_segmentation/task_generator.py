@@ -172,7 +172,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
-            to_display(img_to_array(loaded_images[img_idx][:,:,:3]))
+            to_display = img_to_array(loaded_images[img_idx][:,:,:3])
         else:
             groups[cluster].append(img_idx)
             
