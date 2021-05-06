@@ -449,9 +449,7 @@ if __name__ == '__main__':
         plt.show()
         
     #visualize clusters in 3D
-    
-    init_notebook_mode(connected=True)
-    
+        
     pca_3d = PCA(n_components=3)
     cluster_3d = {}
     for cluster_id in groups.keys():
@@ -466,8 +464,11 @@ if __name__ == '__main__':
       
     trace1 = go.Scatter3d(
                         x = cluster_3d[key_list[0]][:,:1],
+                        x = x.flatten()
                         y = cluster_3d[key_list[0]][:,1:2],
+                        y = y.flatten()
                         z = cluster_3d[key_list[0]][:,2:],
+                        z = z.flatten()
                         mode = "markers",
                         name = "Cluster"+str(key_list[0]),
                         marker = dict(color = 'rgba(255, 128, 255, 0.8)'),
@@ -564,6 +565,9 @@ if __name__ == '__main__':
                   yaxis= dict(title= 'PC2',ticklen= 5,zeroline= False)
                  )
 
+    x = np.random.randn(10,1)
+fig = go.Figure(data=[go.Scatter3d(x=x, y=x, z=x,mode='markers')])
+fig.show()
     fig = dict(data = data, layout = layout)
 
     iplot(fig)
