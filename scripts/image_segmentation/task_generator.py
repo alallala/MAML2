@@ -216,7 +216,7 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
         feat = np.array(list(data.values()))
 
         # reshape so that there are samples with dimensionality of 4096 
-        fit_images = feat.reshape(-1,4096)
+        fit_images = feat.reshape(-1,2)
     
     else:
     
