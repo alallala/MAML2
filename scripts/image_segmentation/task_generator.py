@@ -216,7 +216,7 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
         feat = np.array(list(data.values()))
 
         # reshape so that there are samples with dimensionality of 4096 
-        fit_images = feat.reshape(-1,2)
+        fit_images = feat.reshape(-1,4096)
     
     else:
     
@@ -433,7 +433,7 @@ if __name__ == '__main__':
     
     print("\ndimensionality reduction with autoencoder and clustering")
     #groups = autoencoder_and_cluster(my_array,1000,2)
-    groups= pca_and_cluster(my_array,True,1000,2)
+    groups= pca_and_cluster(my_array,True,2,2)
     
     for cluster_id in groups.keys():
     
