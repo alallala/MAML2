@@ -418,7 +418,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,3,2)
+    groups = autoencoder_and_cluster(my_array,2,2)
     
     #pca
     '''
@@ -452,7 +452,7 @@ if __name__ == '__main__':
         
     #visualize clusters in 3D
         
-    pca_3d = PCA(n_components=3)
+    pca_3d = PCA(n_components=2)
     cluster_3d = {}
     for cluster_id in groups.keys():
         data = []
@@ -468,19 +468,19 @@ if __name__ == '__main__':
     
     print(cluster_3d[key_list[0]][:,:1])
       
-    trace1 = go.Scatter3d(
+    trace1 = go.Scatter2d(
                         x = cluster_3d[key_list[0]][:,:1].flatten(),
                         y = cluster_3d[key_list[0]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[0]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[0]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster"+str(key_list[0]),
                         marker = dict(color = 'rgba(255, 128, 255, 0.8)'),
                         text = None)
 
-    trace2 = go.Scatter3d(
+    trace2 = go.Scatter2d(
                         x = cluster_3d[key_list[1]][:,:1].flatten(),
                         y = cluster_3d[key_list[1]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[1]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[1]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[1]),
                         marker = dict(color = 'rgba(255, 0, 255, 0.8)'),
