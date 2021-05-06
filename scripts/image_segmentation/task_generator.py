@@ -148,7 +148,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     # get a list of just the features
     feat = np.array(list(data.values()))
 
-    # reshape so that there are samples with dimensionality of 4096 
+    # reshape so that there are samples with dimensionality of n_dim 
     fit_images = feat.reshape(-1,n_dim)
 
     #encoded_imgs = encoder.predict(fit_images)
@@ -157,7 +157,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
     kmeans.fit(fit_images)
 
-    images_indexes = [i for i in range(len(loaded_images))]
+    # images_indexes = [i for i in range(len(loaded_images))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
     
