@@ -418,7 +418,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,2,10)
+    groups = autoencoder_and_cluster(my_array,2,5)
     
     #pca
     '''
@@ -512,7 +512,7 @@ if __name__ == '__main__':
                         name = "Cluster" + str(key_list[4]),
                         marker = dict(color = 'rgba(255, 70, 111, 0.8)'),
                         text = None)
-                        
+    '''                    
     trace6 = go.Scatter(
                         x = cluster_3d[key_list[5]][:,:1].flatten(),
                         y = cluster_3d[key_list[5]][:,1:2].flatten(),
@@ -557,8 +557,8 @@ if __name__ == '__main__':
                         name = "Cluster" + str(key_list[9]),
                         marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
                         text = None)
-                        
-    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+    '''                    
+    data = [trace1, trace2, trace3, trace4, trace5] #, trace6, trace7, trace8, trace9, trace10]
 
 
     title = "Visualizing Clusters in Three Dimensions Using PCA"
