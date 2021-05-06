@@ -451,7 +451,7 @@ if __name__ == '__main__':
         plt.show()
         
     #visualize clusters in 3D
-        
+    scaler = sklearn.preprocessing.StandardScaler()    
     pca_3d = PCA(n_components=3)
     cluster_3d = {}
     for cluster_id in groups.keys():
