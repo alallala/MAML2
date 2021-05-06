@@ -155,10 +155,10 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     '''
     
     encoded_imgs = encoder.predict(loaded_images[:,:,:,:3])
-    print("encoded_imgs shape before reshape: ",encoded_img.shape)
+    print("encoded_imgs shape before reshape: ",encoded_imgs.shape)
     
     encoded_imgs = encoded_imgs.reshape(-1,n_dim)
-    print("encoded_imgs shape after reshape: ",encoded_img.shape)
+    print("encoded_imgs shape after reshape: ",encoded_imgs.shape)
 
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
