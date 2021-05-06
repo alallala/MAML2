@@ -468,7 +468,7 @@ if __name__ == '__main__':
     
     print(cluster_3d[key_list[0]][:,:1])
       
-    trace1 = go.Scatter2d(
+    trace1 = go.Scatter(
                         x = cluster_3d[key_list[0]][:,:1].flatten(),
                         y = cluster_3d[key_list[0]][:,1:2].flatten(),
                         #z = cluster_3d[key_list[0]][:,2:].flatten(),
@@ -477,7 +477,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(255, 128, 255, 0.8)'),
                         text = None)
 
-    trace2 = go.Scatter2d(
+    trace2 = go.Scatter(
                         x = cluster_3d[key_list[1]][:,:1].flatten(),
                         y = cluster_3d[key_list[1]][:,1:2].flatten(),
                         #z = cluster_3d[key_list[1]][:,2:].flatten(),
