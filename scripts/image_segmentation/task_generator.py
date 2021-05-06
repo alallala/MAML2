@@ -25,6 +25,7 @@ import tifffile
 from skimage.transform import resize
 from tensorflow import keras 
 from tensorflow.keras.preprocessing.image import array_to_img
+from IPython.display import Image, display
 
 # for loading/processing the images  
 from tensorflow.keras.preprocessing.image import load_img 
@@ -172,11 +173,12 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
-            to_display = img_to_array(loaded_images[img_idx][:,:,:3])
-            plt.imshow(to_display)
+            to_display = img_to_array(loaded_images[idx][:,:,:3])
         else:
             groups[cluster].append(img_idx)
-            
+            to_display = img_to_array(loaded_images[idx][:,:,:3])
+        display(to_display)
+        
     return groups
     
       
