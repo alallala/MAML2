@@ -489,7 +489,7 @@ if __name__ == '__main__':
     trace3 = go.Scatter(
                         x = cluster_3d[key_list[2]][:,:1].flatten(),
                         y = cluster_3d[key_list[2]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[2]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[2]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[2]),
                         marker = dict(color = 'rgba(120, 70, 255, 0.8)'),
@@ -498,7 +498,7 @@ if __name__ == '__main__':
     trace4 = go.Scatter(
                         x = cluster_3d[key_list[3]][:,:1].flatten(),
                         y = cluster_3d[key_list[3]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[3]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[3]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[3]),
                         marker = dict(color = 'rgba(0, 70, 195, 0.8)'),
@@ -507,7 +507,7 @@ if __name__ == '__main__':
     trace5 = go.Scatter(
                         x = cluster_3d[key_list[4]][:,:1].flatten(),
                         y = cluster_3d[key_list[4]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[4]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[4]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[4]),
                         marker = dict(color = 'rgba(255, 70, 111, 0.8)'),
@@ -516,7 +516,7 @@ if __name__ == '__main__':
     trace6 = go.Scatter(
                         x = cluster_3d[key_list[5]][:,:1].flatten(),
                         y = cluster_3d[key_list[5]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[5]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[5]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[5]),
                         marker = dict(color = 'rgba(120, 255, 10, 0.8)'),
@@ -525,7 +525,7 @@ if __name__ == '__main__':
     trace7 = go.Scatter(
                         x = cluster_3d[key_list[6]][:,:1].flatten(),
                         y = cluster_3d[key_list[6]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[6]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[6]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[6]),
                         marker = dict(color = 'rgba(3, 222, 166, 0.8)'),
@@ -534,7 +534,7 @@ if __name__ == '__main__':
     trace8 = go.Scatter(
                         x = cluster_3d[key_list[7]][:,:1].flatten(),
                         y = cluster_3d[key_list[7]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[7]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[7]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[7]),
                         marker = dict(color = 'rgba(200, 255, 88, 0.8)'),
@@ -543,7 +543,7 @@ if __name__ == '__main__':
     trace9 = go.Scatter(
                         x = cluster_3d[key_list[8]][:,:1].flatten(),
                         y = cluster_3d[key_list[8]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[8]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[8]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[8]),
                         marker = dict(color = 'rgba(0, 60, 125, 0.8)'),
@@ -552,12 +552,12 @@ if __name__ == '__main__':
     trace10 = go.Scatter(
                         x = cluster_3d[key_list[9]][:,:1].flatten(),
                         y = cluster_3d[key_list[9]][:,1:2].flatten(),
-                        z = cluster_3d[key_list[9]][:,2:].flatten(),
+                        #z = cluster_3d[key_list[9]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster" + str(key_list[9]),
                         marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
                         text = None)
-    '''                    
+                        
     data = [trace1, trace2] #, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
 
 
