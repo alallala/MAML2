@@ -113,7 +113,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     x_train = data_autoencoder[train_indexes,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
     
-    x_val = data_autoencoder[val_indexes:,:,:,:]
+    x_val = data_autoencoder[val_indexes,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
     
