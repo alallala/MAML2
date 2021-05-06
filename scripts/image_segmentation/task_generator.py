@@ -107,10 +107,13 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     num_train = int(len(data_autoencoder)*0.8)
     
-    x_train = data_autoencoder[:num_train,:,:,:]
+    train_indexes = np.random.choice([i for i in range(0,len(data_autoencoder))], num_train).tolist()
+    val_indexes = [y for y in range(0,len(data_autoencoder)) if y not in train_indexes]
+    
+    x_train = data_autoencoder[train_indexes,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
     
-    x_val = data_autoencoder[num_train:,:,:,:]
+    x_val = data_autoencoder[val_indexes:,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
     
@@ -124,39 +127,6 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
- 
-    '''
-
-    def extract_features(img, model):
-            
-            reshaped_img = img.reshape(1,256,256,3)
-            # prepare image for model
-            imgx = preprocess_input(reshaped_img)
-            # get the feature vector
-            features = model.predict(imgx, use_multiprocessing=True)
-            return features
-            
-    data = {}
-      
-    # lop through each image in the dataset
-    for idx in range(0,len(loaded_images)):
-        # try to extract the features and update the dictionary
-        try:
-            feat = extract_features(loaded_images[:,:,:,:3][idx],encoder)
-            data[idx] = feat
-        except IOError as exc:
-            raise RuntimeError('Failed to extract features') from exc
-              
-     
-    # get a list of the images indexes
-    images_indexes = np.array(list(data.keys()))
-
-    # get a list of just the features
-    feat = np.array(list(data.values()))
-
-    # reshape so that there are samples with dimensionality of n_dim 
-    fit_images = feat.reshape(-1,n_dim)
-    '''
     
     encoded_imgs = encoder.predict(loaded_images[:,:,:,:3])
     
