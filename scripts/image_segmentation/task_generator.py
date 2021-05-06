@@ -103,6 +103,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
+    
     #random.shuffle(data_autoencoder)
     
     num_train = int(len(data_autoencoder)*0.8)
@@ -122,6 +123,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
     
     #model train
+    print("training autoencoder")
     ae_model.fit(x_train, x_train, epochs=3, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
     #perform dimensionality reduction on train dataset to be used for segmentation 
@@ -145,13 +147,9 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
-            to_display = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(loaded_images[img_idx][:,:,:3]))
         else:
             groups[cluster].append(img_idx)
-            to_display = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(loaded_images[img_idx][:,:,:3]))
-            
-        display(to_display)
-        
+                    
     return groups
     
       
@@ -403,12 +401,19 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,30)
-    print("dataset of 2000 images of size 256x256x3= 196608\nreduction to size 1000\nclustering on 10 groups\n")
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+    print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
+    
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,1000,2)
+    groups = autoencoder_and_cluster(my_array,100,10)
+    
+    #pca
+    '''
+    print("\ndimensionality reduction with pca and clustering")
+    groups = pca_and_cluster(my_array,True,1000,10)
+    '''   
     
     for cluster_id in groups.keys():
     
@@ -435,10 +440,5 @@ if __name__ == '__main__':
 
         plt.show()
         
-    '''
-    #pca
-    print("\ndimensionality reduction with pca and clustering")
-    groups_pca = pca_and_cluster(my_array,True,1000,10)
-    show_clusters(my_array,groups_pca)
-    '''   
+   
    
