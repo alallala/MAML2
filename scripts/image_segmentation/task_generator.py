@@ -43,10 +43,10 @@ from sklearn.decomposition import PCA
 # for everything else
 import matplotlib.pyplot as plt
 from random import randint
-import plotly as py
+import plotly.offline as pyo
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-
+pyo.init_notebook_mode()
 
 def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
@@ -556,17 +556,17 @@ if __name__ == '__main__':
 
 
     title = "Visualizing Clusters in Three Dimensions Using PCA"
-
+    '''
     layout = dict(title = title,
                   xaxis= dict(title= 'PC1',ticklen= 5,zeroline= False),
                   yaxis= dict(title= 'PC2',ticklen= 5,zeroline= False)
                  )
-
- 
+    '''
+    pyo.iplot(data)
+    '''
     fig = dict(data = data, layout = layout)
     iplot(fig)
-    fig.show()
-    
+    ''' 
         
         
         
