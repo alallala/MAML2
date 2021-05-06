@@ -418,7 +418,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,3,10)
+    groups = autoencoder_and_cluster(my_array,3,2)
     
     #pca
     '''
