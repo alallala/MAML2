@@ -558,7 +558,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
                         text = None)
                         
-    data = [trace1, trace2] #, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
 
 
     title = "Visualizing Clusters in Three Dimensions Using PCA"
