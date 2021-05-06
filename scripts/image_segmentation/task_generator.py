@@ -442,7 +442,6 @@ if __name__ == '__main__':
         # plot each image in the cluster
         
         for i,idx in enumerate(indexes):
-            print(i,idx) 
             plt.subplot(10,10,i+1);
             to_display = array_to_img(my_array[idx][:,:,:3])
             plt.imshow(to_display)
