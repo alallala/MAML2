@@ -26,6 +26,8 @@ from skimage.transform import resize
 from tensorflow import keras 
 from tensorflow.keras.preprocessing.image import array_to_img
 from IPython.display import Image, display
+import PIL
+from PIL import ImageOps
 
 # for loading/processing the images  
 from tensorflow.keras.preprocessing.image import load_img 
