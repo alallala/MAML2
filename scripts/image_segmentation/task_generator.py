@@ -414,13 +414,13 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,1000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
     print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
     
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,2,5)
+    groups = autoencoder_and_cluster(my_array,2,10)
     
     #pca
     '''
@@ -454,9 +454,6 @@ if __name__ == '__main__':
         
     #visualize clusters in 3D
         
-    norm = np.linalg.norm(my_array)
-    my_array = my_array/norm
-    
     pca_3d = PCA(n_components=2)
     cluster_3d = {}
     for cluster_id in groups.keys():
