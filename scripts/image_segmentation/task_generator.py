@@ -463,12 +463,9 @@ if __name__ == '__main__':
     key_list = list(groups.keys())    
       
     trace1 = go.Scatter3d(
-                        x = cluster_3d[key_list[0]][:,:1],
-                        x = x.flatten()
-                        y = cluster_3d[key_list[0]][:,1:2],
-                        y = y.flatten()
-                        z = cluster_3d[key_list[0]][:,2:],
-                        z = z.flatten()
+                        x = cluster_3d[key_list[0]][:,:1].flatten(),
+                        y = cluster_3d[key_list[0]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[0]][:,2:].flatten(),
                         mode = "markers",
                         name = "Cluster"+str(key_list[0]),
                         marker = dict(color = 'rgba(255, 128, 255, 0.8)'),
