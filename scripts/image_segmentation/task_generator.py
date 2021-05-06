@@ -485,7 +485,7 @@ if __name__ == '__main__':
                         name = "Cluster" + str(key_list[1]),
                         marker = dict(color = 'rgba(255, 0, 255, 0.8)'),
                         text = None)
-
+    '''
     trace3 = go.Scatter3d(
                         x = cluster_3d[key_list[2]][:,:1].flatten(),
                         y = cluster_3d[key_list[2]][:,1:2].flatten(),
@@ -557,8 +557,8 @@ if __name__ == '__main__':
                         name = "Cluster" + str(key_list[9]),
                         marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
                         text = None)
-                        
-    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+    '''                    
+    data = [trace1, trace2] #, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
 
 
     title = "Visualizing Clusters in Three Dimensions Using PCA"
