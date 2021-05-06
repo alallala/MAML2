@@ -103,7 +103,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
-    random.shuffle(data_autoencoder)
+    #random.shuffle(data_autoencoder)
     
     num_train = int(len(data_autoencoder)*0.8)
     
