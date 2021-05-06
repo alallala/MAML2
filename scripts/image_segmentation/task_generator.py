@@ -462,7 +462,9 @@ if __name__ == '__main__':
         data = np.array(data).reshape(-1,256*256*3)
         
         pca_data = pca_3d.fit_transform(data)
-        cluster_3d[cluster_id]  = pca_data
+        norm = np.linalg.norm(pca_data)
+        normal_array = pca_data/norm
+        cluster_3d[cluster_id] = normal_array
         
     key_list = list(groups.keys())  
     
