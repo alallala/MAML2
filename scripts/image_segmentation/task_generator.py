@@ -418,7 +418,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,2,2)
+    groups = autoencoder_and_cluster(my_array,2,10)
     
     #pca
     '''
@@ -485,8 +485,8 @@ if __name__ == '__main__':
                         name = "Cluster" + str(key_list[1]),
                         marker = dict(color = 'rgba(255, 0, 255, 0.8)'),
                         text = None)
-    '''
-    trace3 = go.Scatter3d(
+    
+    trace3 = go.Scatter(
                         x = cluster_3d[key_list[2]][:,:1].flatten(),
                         y = cluster_3d[key_list[2]][:,1:2].flatten(),
                         z = cluster_3d[key_list[2]][:,2:].flatten(),
@@ -495,7 +495,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(120, 70, 255, 0.8)'),
                         text = None)
                         
-    trace4 = go.Scatter3d(
+    trace4 = go.Scatter(
                         x = cluster_3d[key_list[3]][:,:1].flatten(),
                         y = cluster_3d[key_list[3]][:,1:2].flatten(),
                         z = cluster_3d[key_list[3]][:,2:].flatten(),
@@ -504,7 +504,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(0, 70, 195, 0.8)'),
                         text = None)   
 
-    trace5 = go.Scatter3d(
+    trace5 = go.Scatter(
                         x = cluster_3d[key_list[4]][:,:1].flatten(),
                         y = cluster_3d[key_list[4]][:,1:2].flatten(),
                         z = cluster_3d[key_list[4]][:,2:].flatten(),
@@ -513,7 +513,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(255, 70, 111, 0.8)'),
                         text = None)
                         
-    trace6 = go.Scatter3d(
+    trace6 = go.Scatter(
                         x = cluster_3d[key_list[5]][:,:1].flatten(),
                         y = cluster_3d[key_list[5]][:,1:2].flatten(),
                         z = cluster_3d[key_list[5]][:,2:].flatten(),
@@ -522,7 +522,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(120, 255, 10, 0.8)'),
                         text = None)
 
-    trace7 = go.Scatter3d(
+    trace7 = go.Scatter(
                         x = cluster_3d[key_list[6]][:,:1].flatten(),
                         y = cluster_3d[key_list[6]][:,1:2].flatten(),
                         z = cluster_3d[key_list[6]][:,2:].flatten(),
@@ -531,7 +531,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(3, 222, 166, 0.8)'),
                         text = None)
 
-    trace8 = go.Scatter3d(
+    trace8 = go.Scatter(
                         x = cluster_3d[key_list[7]][:,:1].flatten(),
                         y = cluster_3d[key_list[7]][:,1:2].flatten(),
                         z = cluster_3d[key_list[7]][:,2:].flatten(),
@@ -540,7 +540,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(200, 255, 88, 0.8)'),
                         text = None)
                         
-    trace9 = go.Scatter3d(
+    trace9 = go.Scatter(
                         x = cluster_3d[key_list[8]][:,:1].flatten(),
                         y = cluster_3d[key_list[8]][:,1:2].flatten(),
                         z = cluster_3d[key_list[8]][:,2:].flatten(),
@@ -549,7 +549,7 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(0, 60, 125, 0.8)'),
                         text = None)
                         
-    trace10 = go.Scatter3d(
+    trace10 = go.Scatter(
                         x = cluster_3d[key_list[9]][:,:1].flatten(),
                         y = cluster_3d[key_list[9]][:,1:2].flatten(),
                         z = cluster_3d[key_list[9]][:,2:].flatten(),
