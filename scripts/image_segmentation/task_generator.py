@@ -97,16 +97,17 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         return autoencoder
         
     input_shape = loaded_images[:,:,:,:3].shape[1:] #(256,256,3)
-    print("input shape: ", input_shape)
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
     random.shuffle(data_autoencoder)
     
-    x_train = data_autoencoder[:1500,:,:,:]
+    num_train = int(len(data_autoencoder)*0.8)
+    
+    x_train = data_autoencoder[:num_train,:,:,:]
     x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
     
-    x_val = data_autoencoder[1500:,:,:,:]
+    x_val = data_autoencoder[num_train:,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
     
@@ -155,27 +156,23 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     '''
     
     encoded_imgs = encoder.predict(loaded_images[:,:,:,:3])
-    print("encoded_imgs shape before reshape: ",encoded_imgs.shape)
     
     encoded_imgs = encoded_imgs.reshape(-1,n_dim)
-    print("encoded_imgs shape after reshape: ",encoded_imgs.shape)
 
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
     kmeans.fit(encoded_imgs)
     
-    print("kmeans results len and content ", len(kmeans.labels_),kmeans.labels_)
-    
-    print("len encoded_imgs {} len loaded_images {}".format(len(encoded_imgs),len(loaded_images)))
-
     images_indexes = [i for i in range(len(loaded_images))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
     
     for img_idx, cluster in zip(images_indexes, kmeans.labels_):
+        print("img_idx {} in cluster {}".format(img_idx,cluster))
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
+            to_display(img_to_array(loaded_images[img_idx][:,:,:3]))
         else:
             groups[cluster].append(img_idx)
             
@@ -430,12 +427,12 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,30)
     print("dataset of 2000 images of size 256x256x3= 196608\nreduction to size 1000\nclustering on 10 groups\n")
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,1000,10)
+    groups = autoencoder_and_cluster(my_array,1000,2)
     
     for cluster_id in groups.keys():
     
