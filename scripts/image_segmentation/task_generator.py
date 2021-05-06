@@ -432,7 +432,8 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,1000,2)
+    #groups = autoencoder_and_cluster(my_array,1000,2)
+    groups= pca_and_cluster(my_array,True,1000,2)
     
     for cluster_id in groups.keys():
     
