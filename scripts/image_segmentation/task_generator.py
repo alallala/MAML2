@@ -248,8 +248,8 @@ def load_file(f,start,end):
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
     img = np.asarray(img, dtype=np.float32)
     #img[:,:,:,:3]/255.
-    norm = np.linalg.norm(img[:,:,:,:3])
-    img[:,:,:,:3] = img[:,:,:,:3]/norm
+    #norm = np.linalg.norm(img[:,:,:,:3])
+    #img[:,:,:,:3] = img[:,:,:,:3]/norm
     return img
     
         
