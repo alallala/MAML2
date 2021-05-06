@@ -1,9 +1,9 @@
 '''
     Date: 14th Feb 2020
-    Author: HilbertXu
+    Author: Laura Gabriele
     Abstract: Code for generating meta-train tasks using clarity dataset
               Meta learning is different from general supervised learning
-              The basic training element in training process is TASK(N-way K-shot)
+              The basic training element in meta learning training process is a TASK (N-way K-shot) so a dataset
               A batch contains several tasks
               tasks: containing N-way K-shot for meta-train, N-way N-query for meta-test
 '''
@@ -25,9 +25,7 @@ import tifffile
 from skimage.transform import resize
 from tensorflow import keras 
 from tensorflow.keras.preprocessing.image import array_to_img
-from IPython.display import Image, display
-import PIL
-from PIL import ImageOps
+
 
 # for loading/processing the images  
 from tensorflow.keras.preprocessing.image import load_img 
@@ -45,9 +43,19 @@ from sklearn.decomposition import PCA
 # for everything else
 import matplotlib.pyplot as plt
 from random import randint
+import plotly as py
+import plotly.graph_objs as go
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 
 def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
+    
+    '''
+    :param loaded_images : dataset 
+    :n_dim : latent dimension for the dimensionality reduction
+    :n_clu : number of clusters
+    
+    '''
 
     def construct_ae_model(input_shape):
     
@@ -103,9 +111,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
-    
-    #random.shuffle(data_autoencoder)
-    
+        
     num_train = int(len(data_autoencoder)*0.8)
     
     train_indexes = np.random.choice([i for i in range(0,len(data_autoencoder))], num_train).tolist()
@@ -117,7 +123,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     x_val = data_autoencoder[val_indexes,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
     
-    
+    #construct model
     ae_model = construct_ae_model(input_shape=input_shape)
     
     ae_model.compile(optimizer='adam', loss='binary_crossentropy')
@@ -126,7 +132,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     print("training autoencoder")
     ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
     
-    #perform dimensionality reduction on train dataset to be used for segmentation 
+    #perform dimensionality reduction on dataset to be used for meta learning segmentation 
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
     
@@ -143,7 +149,6 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     groups = {}
     
     for img_idx, cluster in zip(images_indexes, kmeans.labels_):
-        print("img_idx {} in cluster {}".format(img_idx,cluster))
         if cluster not in groups.keys():
             groups[cluster] = []
             groups[cluster].append(img_idx)
@@ -155,7 +160,12 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
       
 
 def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
-
+    '''
+    :param loaded_images: dataset
+    :param cnn: if True extraction of features with VGG16 otherwise pca applied on dimension h*w*c
+    :param n_clu: number of clusters
+    '''
+    
     if cnn:
         model_cls = VGG16()
         model_cls = Model(inputs = model_cls.inputs, outputs = model_cls.layers[-2].output)
@@ -439,6 +449,119 @@ if __name__ == '__main__':
             plt.axis('off')
 
         plt.show()
+        
+    #visualize clusters in 3D
+    pca_3d = PCA(n_components=3)
+    clusters_3d = {}
+    for cluster_id in groups.keys():
+        clusters_3d[cluster_id] = pca_3d.fit_transform(groups[cluster_id])
+        
+        
+    trace1 = go.Scatter3d(
+                        x = cluster_3d[custer_id[0]][:,:1],
+                        y = cluster_3d[custer_id[0]][:,1:2],
+                        z = cluster_3d[custer_id[0]][:,2:],
+                        mode = "markers",
+                        name = "Cluster"+str(custer_id[0]),
+                        marker = dict(color = 'rgba(255, 128, 255, 0.8)'),
+                        text = None)
+
+    trace2 = go.Scatter3d(
+                        x = cluster_3d[custer_id[1]][:,:1],
+                        y = cluster_3d[custer_id[1]][:,1:2],
+                        z = cluster_3d[custer_id[1]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[1]),
+                        marker = dict(color = 'rgba(255, 0, 255, 0.8)'),
+                        text = None)
+
+    trace3 = go.Scatter3d(
+                        x = cluster_3d[custer_id[2]][:,:1],
+                        y = cluster_3d[custer_id[2]][:,1:2],
+                        z = cluster_3d[custer_id[2]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[2]),
+                        marker = dict(color = 'rgba(120, 70, 255, 0.8)'),
+                        text = None)
+                        
+    trace4 = go.Scatter3d(
+                        x = cluster_3d[custer_id[3]][:,:1],
+                        y = cluster_3d[custer_id[3]][:,1:2],
+                        z = cluster_3d[custer_id[3]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[3]),
+                        marker = dict(color = 'rgba(0, 70, 195, 0.8)'),
+                        text = None)   
+
+    trace5 = go.Scatter3d(
+                        x = cluster_3d[custer_id[4]][:,:1],
+                        y = cluster_3d[custer_id[4]][:,1:2],
+                        z = cluster_3d[custer_id[4]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[4]),
+                        marker = dict(color = 'rgba(255, 70, 111, 0.8)'),
+                        text = None)
+                        
+    trace6 = go.Scatter3d(
+                        x = cluster_3d[custer_id[5]][:,:1],
+                        y = cluster_3d[custer_id[5]][:,1:2],
+                        z = cluster_3d[custer_id[5]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[5]),
+                        marker = dict(color = 'rgba(120, 255, 10, 0.8)'),
+                        text = None)
+
+    trace7 = go.Scatter3d(
+                        x = cluster_3d[custer_id[6]][:,:1],
+                        y = cluster_3d[custer_id[6]][:,1:2],
+                        z = cluster_3d[custer_id[6]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[6]),
+                        marker = dict(color = 'rgba(3, 222, 166, 0.8)'),
+                        text = None)
+
+    trace8 = go.Scatter3d(
+                        x = cluster_3d[custer_id[7]][:,:1],
+                        y = cluster_3d[custer_id[7]][:,1:2],
+                        z = cluster_3d[custer_id[7]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[7]),
+                        marker = dict(color = 'rgba(200, 255, 88, 0.8)'),
+                        text = None)
+                        
+    trace9 = go.Scatter3d(
+                        x = cluster_3d[custer_id[8]][:,:1],
+                        y = cluster_3d[custer_id[8]][:,1:2],
+                        z = cluster_3d[custer_id[8]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[8]),
+                        marker = dict(color = 'rgba(255, 60, 125, 0.8)'),
+                        text = None)
+                        
+    trace10 = go.Scatter3d(
+                        x = cluster_3d[custer_id[9]][:,:1],
+                        y = cluster_3d[custer_id[9]][:,1:2],
+                        z = cluster_3d[custer_id[9]][:,2:],
+                        mode = "markers",
+                        name = "Cluster" + str(cluster_id[9]),
+                        marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
+                        text = None)
+                        
+    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+
+
+    title = "Visualizing Clusters in Three Dimensions Using PCA"
+
+    layout = dict(title = title,
+                  xaxis= dict(title= 'PC1',ticklen= 5,zeroline= False),
+                  yaxis= dict(title= 'PC2',ticklen= 5,zeroline= False)
+                 )
+
+    fig = dict(data = data, layout = layout)
+
+    iplot(fig)
+        
+        
         
    
    
