@@ -411,13 +411,13 @@ class TaskGenerator:
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,100)
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
     print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
     
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups = autoencoder_and_cluster(my_array,100,10)
+    groups = autoencoder_and_cluster(my_array,1000,10)
     
     #pca
     '''
