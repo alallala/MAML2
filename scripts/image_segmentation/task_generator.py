@@ -451,7 +451,7 @@ if __name__ == '__main__':
         
     #visualize clusters in 3D
     pca_3d = PCA(n_components=3)
-    clusters_3d = {}
+    cluster_3d = {}
     for cluster_id in groups.keys():
         data = []
         for image_index in groups[cluster_id]:
