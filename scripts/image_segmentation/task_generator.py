@@ -449,6 +449,9 @@ if __name__ == '__main__':
         plt.show()
         
     #visualize clusters in 3D
+    
+    init_notebook_mode(connected=True)
+    
     pca_3d = PCA(n_components=3)
     cluster_3d = {}
     for cluster_id in groups.keys():
@@ -460,7 +463,7 @@ if __name__ == '__main__':
         cluster_3d[cluster_id] = pca_3d.fit_transform(data)
         
     key_list = list(groups.keys())    
-        
+      
     trace1 = go.Scatter3d(
                         x = cluster_3d[key_list[0]][:,:1],
                         y = cluster_3d[key_list[0]][:,1:2],
