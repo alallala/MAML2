@@ -247,7 +247,9 @@ def load_file(f,start,end):
         seq = sequence(start,end)
         img = tifffile.imread(f,key=seq).astype(np.float32) #/255.
     img = np.asarray(img, dtype=np.float32)
-    img[:,:,:,:3]/255.
+    #img[:,:,:,:3]/255.
+    norm = np.linalg.norm(img[:,:,:,:3])
+    img[:,:,:,:3] = img[:,:,:,:3]/norm
     return img
     
         
@@ -452,6 +454,9 @@ if __name__ == '__main__':
         
     #visualize clusters in 3D
         
+    norm = np.linalg.norm(my_array)
+    my_array = my_array/norm
+    
     pca_3d = PCA(n_components=2)
     cluster_3d = {}
     for cluster_id in groups.keys():
@@ -462,9 +467,7 @@ if __name__ == '__main__':
         data = np.array(data).reshape(-1,256*256*3)
         
         pca_data = pca_3d.fit_transform(data)
-        norm = np.linalg.norm(pca_data)
-        normal_array = pca_data/norm
-        cluster_3d[cluster_id] = normal_array
+        cluster_3d[cluster_id] = pca_data
         
     key_list = list(groups.keys())  
     
