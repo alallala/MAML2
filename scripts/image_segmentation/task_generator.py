@@ -462,13 +462,11 @@ if __name__ == '__main__':
         data = np.array(data).reshape(-1,256*256*3)
         
         pca_data = pca_3d.fit_transform(data)
-        print(pca_data.shape)
         cluster_3d[cluster_id]  = pca_data
         
     key_list = list(groups.keys())  
     
-    print("1PC\n")
-    print(cluster_3d[key_list[0]][:,:1].flatten())
+    print(cluster_3d[key_list[0]][:,:1])
       
     trace1 = go.Scatter3d(
                         x = cluster_3d[key_list[0]][:,:1].flatten(),
