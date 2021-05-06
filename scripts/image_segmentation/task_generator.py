@@ -97,6 +97,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
         return autoencoder
         
     input_shape = loaded_images[:,:,:,:3].shape[1:] #(256,256,3)
+    print("input shape: ", input_shape)
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
@@ -119,7 +120,8 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     #perform dimensionality reduction on train dataset to be used for segmentation 
     
     encoder = Model(ae_model.input, ae_model.layers[-2].output)
-
+ 
+    '''
 
     def extract_features(img, model):
             
@@ -150,14 +152,23 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
 
     # reshape so that there are samples with dimensionality of n_dim 
     fit_images = feat.reshape(-1,n_dim)
-
-    #encoded_imgs = encoder.predict(fit_images)
+    '''
     
+    encoded_imgs = encoder.predict(loaded_images[:,:,:,:3])
+    print("encoded_imgs shape before reshape: ",encoded_img.shape)
+    
+    encoded_imgs = encoded_imgs.reshape(-1,n_dim)
+    print("encoded_imgs shape after reshape: ",encoded_img.shape)
+
     #clustering
     kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
-    kmeans.fit(fit_images)
+    kmeans.fit(encoded_imgs)
+    
+    print("kmeans results len and content ", len(kmeans.labels_),kmeans.labels_)
+    
+    print("len encoded_imgs {} len loaded_images {}".format(len(encoded_imgs),len(loaded_images)))
 
-    # images_indexes = [i for i in range(len(loaded_images))]
+    images_indexes = [i for i in range(len(loaded_images))]
     # holds the cluster id and the images { id: [images] }
     groups = {}
     
@@ -443,12 +454,12 @@ if __name__ == '__main__':
         # plot each image in the cluster
         
         for i,idx in enumerate(indexes):
-           
+            print(i,idx) 
             plt.subplot(10,10,i+1);
-            to_display = array_to_img(my_array[:,:,:,:3][idx])
+            to_display = array_to_img(my_array[idx][:,:,:3])
             plt.imshow(to_display)
             plt.axis('off')
-            
+
         plt.show()
         
     '''
