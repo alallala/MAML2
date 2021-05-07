@@ -421,7 +421,7 @@ if __name__ == '__main__':
     #autoencoder
     
     print("\ndimensionality reduction with autoencoder and clustering")
-    groups,encoder = autoencoder_and_cluster(my_array,3,10)
+    groups,encoder = autoencoder_and_cluster(my_array,3,20)
     
     #pca
     '''
@@ -560,10 +560,101 @@ if __name__ == '__main__':
                         marker = dict(color = 'rgba(50, 70, 40, 0.8)'),
                         text = None)
                         
-    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+    trace11 = go.Scatter3d(
+                        x = cluster_3d[key_list[10]][:,:1].flatten(),
+                        y = cluster_3d[key_list[10]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[10]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster"+str(key_list[10]),
+                        marker = dict(color = 'rgba(66, 128, 66, 0.8)'),
+                        text = None)
+
+    trace12 = go.Scatter3d(
+                        x = cluster_3d[key_list[11]][:,:1].flatten(),
+                        y = cluster_3d[key_list[11]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[11]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[11]),
+                        marker = dict(color = 'rgba(0, 0, 255, 0.8)'),
+                        text = None)
+    
+    trace13 = go.Scatter3d(
+                        x = cluster_3d[key_list[12]][:,:1].flatten(),
+                        y = cluster_3d[key_list[12]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[12]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[12]),
+                        marker = dict(color = 'rgba(255, 0, 0, 0.8)'),
+                        text = None)
+                        
+    trace14 = go.Scatter3d(
+                        x = cluster_3d[key_list[13]][:,:1].flatten(),
+                        y = cluster_3d[key_list[13]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[13]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[13]),
+                        marker = dict(color = 'rgba(0, 255, 0, 0.8)'),
+                        text = None)   
+
+    trace15 = go.Scatter3d(
+                        x = cluster_3d[key_list[14]][:,:1].flatten(),
+                        y = cluster_3d[key_list[14]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[14]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[14]),
+                        marker = dict(color = 'rgba(8, 8, 8, 0.8)'),
+                        text = None)
+                       
+    trace16 = go.Scatter3d(
+                        x = cluster_3d[key_list[15]][:,:1].flatten(),
+                        y = cluster_3d[key_list[15]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[15]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[15]),
+                        marker = dict(color = 'rgba(44, 255, 44, 0.8)'),
+                        text = None)
+
+    trace17 = go.Scatter3d(
+                        x = cluster_3d[key_list[16]][:,:1].flatten(),
+                        y = cluster_3d[key_list[16]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[16]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[16]),
+                        marker = dict(color = 'rgba(100, 100, 100, 0.8)'),
+                        text = None)
+
+    trace18 = go.Scatter3d(
+                        x = cluster_3d[key_list[17]][:,:1].flatten(),
+                        y = cluster_3d[key_list[17]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[17]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[17]),
+                        marker = dict(color = 'rgba(50, 50, 13, 0.8)'),
+                        text = None)
+                        
+    trace19 = go.Scatter3d(
+                        x = cluster_3d[key_list[18]][:,:1].flatten(),
+                        y = cluster_3d[key_list[18]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[18]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[18]),
+                        marker = dict(color = 'rgba(255, 134, 9, 0.8)'),
+                        text = None)
+                        
+    trace20 = go.Scatter3d(
+                        x = cluster_3d[key_list[19]][:,:1].flatten(),
+                        y = cluster_3d[key_list[19]][:,1:2].flatten(),
+                        z = cluster_3d[key_list[19]][:,2:].flatten(),
+                        mode = "markers",
+                        name = "Cluster" + str(key_list[19]),
+                        marker = dict(color = 'rgba(50, 70, 255, 0.8)'),
+                        text = None)
+                        
+    data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10, trace11, trace12,
+            trace13,trace14,trace15,trace16,trace17,trace18,trace19,trace20]
 
 
-    title = "Visualizing Clusters in Three Dimensions Using PCA"
+    title = "Visualizing Clusters in Three Dimensions Using autoencoder"
     
     layout = dict(title = title,
                   xaxis= dict(title= 'PC1',ticklen= 5,zeroline= False),
