@@ -319,7 +319,7 @@ class TaskGenerator:
             qry_num = int(len(all_idxs)*0.2)
         else:
             spt_num = self.spt_num
-            qry_mim = self.qry_num 
+            qry_num = self.qry_num 
             
         spt_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected groups) for support set
         for e in spt_elem:
