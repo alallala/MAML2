@@ -112,7 +112,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
-        
+    '''    
     num_train = int(len(data_autoencoder)*0.8)
     
     train_indexes = np.random.choice([i for i in range(0,len(data_autoencoder))], num_train).tolist()
@@ -123,6 +123,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     x_val = data_autoencoder[val_indexes,:,:,:]
     x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
+    '''
     
     #construct model
     ae_model = construct_ae_model(input_shape=input_shape)
@@ -131,7 +132,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     #model train
     print("training autoencoder")
-    ae_model.fit(x_train, x_train, epochs=50, batch_size=64, validation_data=(x_val, x_val), verbose=1)
+    ae_model.fit(data_autoencoder, data_autoencoder, epochs=50, batch_size=64, verbose=1) #validation_data=(x_val, x_val)
     
     #perform dimensionality reduction on dataset to be used for meta learning segmentation 
     
