@@ -539,10 +539,9 @@ if __name__ == '__main__':
     print("\ntasks generation based on {} clusters\n".format(args.n_clusters))
     batch_generator = TaskGenerator(args)
 
-    if args.mode == 'train':
-        # model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-        model = maml_train(model, batch_generator)
-    elif args.mode == 'test':
-        model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-        eval_model(model, batch_generator, num_steps=(0, 10, 50, 100))
+    '''if args.mode == 'train':'''
+    model = maml_train(model, batch_generator)
+    '''elif args.mode == 'test':''' 
+    restored_model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
+    eval_model(restored_model, batch_generator, num_steps=(0, 10, 50, 100))
         
