@@ -529,7 +529,7 @@ if __name__ == '__main__':
     # Generate args
     args = argparse.parse_args()
     
-    print ('Build segmentation model: Unet\n')
+    print ('\nBuild segmentation model: Unet\n')
     ml = MetaLearner(args=args)
     print ('Initialize model\n')
     model = ml.initialize_Unet()
