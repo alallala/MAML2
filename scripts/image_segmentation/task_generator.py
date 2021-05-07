@@ -273,8 +273,8 @@ class TaskGenerator:
             groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters) 
             #split groups indexes among train,val,test
             groups_train_keys = np.random.choice([i for i in groups.keys()], int(len(groups)*0.6))
-            groups_val_keys = np.random.choice([y for y in groups.keys()] if y not in groups_train],int(len(groups)*0.2))
-            groups_test_keys = np.random.choice([z for z in groups.keys()] if (z not in groups_train) and (z not in groups_val)],int(len(groups)*0.2))
+            groups_val_keys = np.random.choice([y for y in groups.keys() if y not in groups_train],int(len(groups)*0.2))
+            groups_test_keys = np.random.choice([z for z in groups.keys() if (z not in groups_train) and (z not in groups_val)],int(len(groups)*0.2))
             
             #list of groups 
             self.metatrain_groups = [groups[key] for key in groups_train_keys]

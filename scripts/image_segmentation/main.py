@@ -497,7 +497,7 @@ if __name__ == '__main__':
     argparse.add_argument('--dataset', type=str, help='Dataset used to train model', default='miniimagenet')
     argparse.add_argument('--visual', type=bool, help='Set True to visualize the batch data', default=False)
     argparse.add_argument('--n_dim', type=int, help='size of feature vector for dimensionality reduction', default=1000)
-    argparse.add_argument('--n_clusters', type=int, help='number of clusters to categorize dataset', default=20)
+    argparse.add_argument('--n_clusters', type=int, help='number of clusters to categorize dataset', default=30)
 
     # Task options
     argparse.add_argument('--n_way', type=int, help='Number of classes used in classification (e.g. 5-way classification)', default=1)
@@ -534,7 +534,7 @@ if __name__ == '__main__':
     model = ml.initialize(model) 
     # tf.keras.utils.plot_model(model, to_file='../model.png',show_shapes=True,show_layer_names=True,dpi=128)
     # Initialize task generator
-    print("\ntasks generation\n")
+    print("\ntasks generation based on {} clusters\n".format(args.n_clusters))
     batch_generator = TaskGenerator(args)
 
     if args.mode == 'train':
