@@ -112,18 +112,6 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
    
     #prepare data to train the autoencoder
     data_autoencoder = loaded_images[:,:,:,:3]
-    '''    
-    num_train = int(len(data_autoencoder)*0.8)
-    
-    train_indexes = np.random.choice([i for i in range(0,len(data_autoencoder))], num_train).tolist()
-    val_indexes = [y for y in range(0,len(data_autoencoder)) if y not in train_indexes]
-    
-    x_train = data_autoencoder[train_indexes,:,:,:]
-    x_train = x_train.reshape(len(x_train),input_shape[0],input_shape[1],input_shape[2])
-    
-    x_val = data_autoencoder[val_indexes,:,:,:]
-    x_val = x_val.reshape(len(x_val),input_shape[0],input_shape[1],input_shape[2])
-    '''
     
     #construct model
     ae_model = construct_ae_model(input_shape=input_shape)
@@ -263,7 +251,10 @@ class TaskGenerator:
         :param k_query: k images used for meta-test
         :param meta_batchsz: the number of tasks in a batch
         :param total_batch_num: the number of batches
+        :param dim_output: dimension to which perform dimensionality reduction
+        :param n_clusters: number of categories to generate tasks
         '''
+        
         if args is not None:
             self.dataset = args.dataset
             self.mode = args.mode
@@ -271,107 +262,99 @@ class TaskGenerator:
             self.n_way = args.n_way
             self.spt_num = args.k_shot
             self.qry_num = args.k_query
-            #self.dim_output = self.n_way 
-        
-        if self.dataset == 'clarity':
             
-            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',1000,1500)
-            for_train = int(len(data)*0.8)
-            for_val = int(for_train*0.2)
-            self.metatrain_data = data[:for_train-for_val]
-            self.metaval_data = data[for_train-for_val:for_train]
-            self.metatest_data = data[for_train:]
-  
+        if self.dataset == 'clarity':
         
-        # Record the relationship between image label and the folder name in each task
-        # self.label_map = []
-    
-    '''               
-    def shuffle_set(self, set_x, set_y):
-        # Shuffle
-        set_seed = random.randint(0, 100)
-        random.seed(set_seed)
-        random.shuffle(set_x)
-        random.seed(set_seed)
-        random.shuffle(set_y)
-        return set_x, set_y
-    
-    '''
+            self.n_clusters = args.n_clusters
+            self.n_dim = args.n_dim
+            
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+            print("\ndimensionality reduction and clusterization of dataset\n") 
+            groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters) 
+            #split groups indexes among train,val,test
+            groups_train_keys = np.random.choice([i for i in groups.keys())], int(len(groups)*0.6))
+            groups_val_keys = np.random.choice([y for y in groups.keys()) if y not in groups_train],int(len(groups)*0.2))
+            groups_test_keys = np.random.choice([z for z in groups.keys()) if (z not in groups_train) and (z not in groups_val)],int(len(groups)*0.2))
+            
+            #list of groups 
+            self.metatrain_groups = [groups[key] for key in groups_train_keys]
+            self.metaval_groups = [groups[key] for key in groups_val_keys]
+            self.metatest_groups = [groups[key] for key in groups_test_keys]
+            self.data = data
+        
     
     def convert_to_tensor(self, np_objects):
         return [tf.convert_to_tensor(obj) for obj in np_objects] 
     
-    def generate_set(self, data, shuffle=False):
+    def generate_set(self, groups, shuffle=False): #takes groups for the train task
              
         # Function for slicing the dataset
         # support set & query set
-        def _slice_set(ds):
-            spt_x = list()
-            spt_y = list()
-            qry_x = list()
-            qry_y = list()
-            all_idxs = [i for i in range(0,len(ds))]
-            spt_elem = random.sample(all_idxs, self.spt_num) #here a scenario should be chosen
-            for e in spt_elem:
-                all_idxs.remove(e)
-            qry_elem = random.sample(all_idxs, self.spt_num) #and here images from the same scenario should be used 
+        
+        ds = self.data #images
+        
+        spt_x = list()
+        spt_y = list()
+        qry_x = list()
+        qry_y = list()
+        
+        all_idxs = [] #all the indexes of the images in the selected groups
+        for g in groups:
+            for image_idx in groups[g]:
+                all_idxs.append(image_idx)
+        
+        if self.spt_num >= len(all_idxs): #in case we select two grops that have too few images
+            spt_num = int(len(all_idxs)*0.8)
+            qry_num = int(len(all_idxs)*0.2)
+        else:
+            spt_num = self.spt_num
+            qry_mim = self.qry_num 
             
-            '''
-            spt_elem = list(zip(*spt_elem))
-            qry_elem = list(zip(*qry_elem))
-            '''
-            spt_x.extend([ds[:,:,:,:3][idx] for idx in spt_elem])
-            spt_y.extend([ds[:,:,:,3:][idx] for idx in spt_elem])
-            qry_x.extend([ds[:,:,:,:3][idx] for idx in qry_elem])
-            qry_y.extend([ds[:,:,:,3:][idx] for idx in qry_elem])
+        spt_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected groups) for support set
+        for e in spt_elem:
+            all_idxs.remove(e)
+        qry_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected groups) for the query set
+        
+        spt_x.extend([ds[:,:,:,:3][idx] for idx in spt_elem]) #BGR images for support set
+        spt_y.extend([ds[:,:,:,3:][idx] for idx in spt_elem]) #corresponding masks for the support set
+        qry_x.extend([ds[:,:,:,:3][idx] for idx in qry_elem]) #BGR images for query set
+        qry_y.extend([ds[:,:,:,3:][idx] for idx in qry_elem]) #corresponding masks for the query set
 
-            # Shuffle datasets
-            '''
-            spt_x, spt_y = self.shuffle_set(spt_x, spt_y)
-            qry_x, qry_y = self.shuffle_set(qry_x, qry_y)
-            '''
-            # convert to tensor
-            spt_x, spt_y = self.convert_to_tensor((np.array(spt_x), np.array(spt_y)))
-            qry_x, qry_y = self.convert_to_tensor((np.array(qry_x), np.array(qry_y)))
-            
-            # resize images
-            spt_x = tf.image.resize(spt_x,[128,128])
-            spt_y = tf.image.resize(spt_y,[128,128])
-            qry_x = tf.image.resize(qry_x,[128,128])
-            qry_y = tf.image.resize(qry_y,[128,128])
+        # Shuffle datasets
+       
+        spt_x, spt_y = self.shuffle_set(spt_x, spt_y)
+        qry_x, qry_y = self.shuffle_set(qry_x, qry_y)
+        
+        # convert to tensor
+        spt_x, spt_y = self.convert_to_tensor((np.array(spt_x), np.array(spt_y)))
+        qry_x, qry_y = self.convert_to_tensor((np.array(qry_x), np.array(qry_y)))
+        
+        # resize images
+        spt_x = tf.image.resize(spt_x,[128,128])
+        spt_y = tf.image.resize(spt_y,[128,128])
+        qry_x = tf.image.resize(qry_x,[128,128])
+        qry_y = tf.image.resize(qry_y,[128,128])
 
-            return spt_x, spt_y, qry_x, qry_y
-            
-        return _slice_set(data)
+        return spt_x, spt_y, qry_x, qry_y
+              
               
     def train_batch(self):
         '''
         :return: a batch of support set tensor and query set tensor
         
         '''
-        data = self.metatrain_data 
+        train_groups = self.metatrain_groups 
         # Shuffle root folder in order to prevent repeat
         batch_set = []
-        # self.label_map = []
-        # Generate batch dataset
-        # batch_spt_set: [meta_batchsz, n_way * k_shot, image_size] & [meta_batchsz, n_way * k_shot, n_way]
-        # batch_qry_set: [meta_batchsz, n_way * k_query, image_size] & [meta_batchsz, n_way * k_query, n_way]
         
         for _ in range(self.meta_batchsz):
-            '''
-            sampled_folders_idx = np.array(np.random.choice(len(folders), self.n_way, False))
-            np.random.shuffle(sampled_folders_idx)
-            sampled_folders = np.array(folders)[sampled_folders_idx].tolist()
-            folder_with_label = []
-            # for i, folder in enumerate(sampled_folders):
-            #     elem = (folder, i)
-            #     folder_with_label.append(elem)
-            labels = np.arange(self.n_way)
-            np.random.shuffle(labels)
-            labels = labels.tolist()
-            folder_with_label = list(zip(sampled_folders, labels))
-            '''
-            support_x, support_y, query_x, query_y = self.generate_set(data)
+        
+            #sample nway groups from the train groups  
+            sampled_groups_idx = np.array(np.random.choice(len(train_groups), self.n_way, False)) 
+            np.random.shuffle(sampled_groups_idx)
+
+            train_task_groups = [train_groups[g] for g in sampled_groups_idx]  
+            support_x, support_y, query_x, query_y = self.generate_set(train_task_groups)
             batch_set.append((support_x, support_y, query_x, query_y))
         
         return batch_set
@@ -382,41 +365,35 @@ class TaskGenerator:
         
         '''
         if test:
-          data = self.metatest_data
-          p_str = 'test'
+            test_groups = self.metatest_groups 
+            p_str = 'test'
+            
         else:
-          data = self.metaval_data
-          p_str = 'validation'
-        print ('Sample '+p_str+' batch of tasks from {} images'.format(len(data)))
-        # Shuffle root folder in order to prevent repeat
+            test_groups = self.metaval_groups
+            p_str = 'validation'
+            
+        print ('Sample '+p_str+' batch of tasks from {} groups '.format(len(test_groups)))
+        
         batch_set = []
-        # self.label_map = [] 
-        # Generate batch dataset
-        # batch_spt_set: [meta_batchsz, n_way * k_shot, image_size] & [meta_batchsz, n_way * k_shot, n_way]
-        # batch_qry_set: [meta_batchsz, n_way * k_query, image_size] & [meta_batchsz, n_way * k_query, n_way]
+       
         for _ in range(self.meta_batchsz):
-            '''
-            sampled_folders_idx = np.array(np.random.choice(len(folders), self.n_way, False))
-            np.random.shuffle(sampled_folders_idx)
-            sampled_folders = np.array(folders)[sampled_folders_idx].tolist()
-            folder_with_label = []
-            # for i, folder in enumerate(sampled_folders):
-            #     elem = (folder, i)
-            #     folder_with_label.append(elem)
-            labels = np.arange(self.n_way)
-            np.random.shuffle(labels)
-            labels = labels.tolist()
-            folder_with_label = list(zip(sampled_folders, labels))
-            '''
-            support_x, support_y, query_x, query_y = self.generate_set(data)
+            
+            #sample nway groups from the test groups  
+            sampled_groups_idx = np.array(np.random.choice(len(test_groups), self.n_way, False)) 
+            np.random.shuffle(sampled_groups_idx)
+           
+            test_task_groups = [test_groups[g] for g in sampled_groups_idx]  
+            support_x, support_y, query_x, query_y = self.generate_set(test_task_groups)
             batch_set.append((support_x, support_y, query_x, query_y))
-        # return [meta_batchsz * (support_x, support_y, query_x, query_y)]
+           
         return batch_set
 
 if __name__ == '__main__':
 
-    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
-    print("dataset of 2000 images of size 256x256x3=196608\nreduction to size 1000\nclustering on 10 groups\n")
+    num_images = 2000
+    num_clusters = 20
+    my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,num_images)
+    print("dataset of {} images of size 256x256x3=196608\nreduction to size 1000\nclustering images in {} groups\n".format(num_images,num_clusters))
     
     #autoencoder
     
@@ -429,6 +406,7 @@ if __name__ == '__main__':
     groups = pca_and_cluster(my_array,True,1000,10)
     '''   
     
+    #visualize images in the clusters
     for cluster_id in groups.keys():
     
         print("cluster {} has {} images".format(cluster_id,len(groups[cluster_id])))
@@ -469,7 +447,7 @@ if __name__ == '__main__':
         cluster_3d[cluster_id] = encoded_imgs
         
     key_list = list(groups.keys())  
-          
+     
     trace1 = go.Scatter(
                         x = cluster_3d[key_list[0]][:,:1].flatten(),
                         y = cluster_3d[key_list[0]][:,1:2].flatten(),
