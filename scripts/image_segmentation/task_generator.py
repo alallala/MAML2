@@ -291,8 +291,16 @@ class TaskGenerator:
             self.metatrain_groups = [groups[key] for key in groups_train_keys]
             self.metaval_groups = [groups[key] for key in groups_val_keys]
             self.metatest_groups = [groups[key] for key in groups_test_keys]
-            self.data = data
-        
+            self.data = data 
+
+    def shuffle_set(self, set_x, set_y):
+        # Shuffle
+        set_seed = random.randint(0, 100)
+        random.seed(set_seed)
+        random.shuffle(set_x)
+        random.seed(set_seed)
+        random.shuffle(set_y)
+        return set_x, set_y     
     
     def convert_to_tensor(self, np_objects):
         return [tf.convert_to_tensor(obj) for obj in np_objects] 
