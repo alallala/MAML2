@@ -273,7 +273,7 @@ class TaskGenerator:
             data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
             print("\ndimensionality reduction and clusterization of dataset\n") 
             
-            if self.dim_reductiond == 'autoencoder':
+            if self.dim_reduction == 'autoencoder':
                 groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters,self.n_ae_epochs) 
                 
             elif self.dim_reduction == 'cnn_pca':
