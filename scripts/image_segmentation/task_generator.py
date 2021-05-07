@@ -310,7 +310,7 @@ class TaskGenerator:
         qry_y = list()
         
         all_idxs = [] #all the indexes of the images in the selected groups
-        for g in groups:
+        for g in range(0,len(groups)):
             for image_idx in groups[g]:
                 all_idxs.append(image_idx)
         
