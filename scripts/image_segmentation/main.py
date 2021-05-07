@@ -496,6 +496,8 @@ if __name__ == '__main__':
     # Dataset options
     argparse.add_argument('--dataset', type=str, help='Dataset used to train model', default='miniimagenet')
     argparse.add_argument('--visual', type=bool, help='Set True to visualize the batch data', default=False)
+    argparse.add_argument('--dim_reduction', type=str, help='type of dimensionality reduction, can be "cnn_pca","pca","autoencoder"', default='autoencoder')
+    argparse.add_argument('--n_ae_epochs', type=int, help='epochs for autoencoder training', default=50)
     argparse.add_argument('--n_dim', type=int, help='size of feature vector for dimensionality reduction', default=1000)
     argparse.add_argument('--n_clusters', type=int, help='number of clusters to categorize dataset', default=30)
 

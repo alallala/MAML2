@@ -49,7 +49,7 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 
 init_notebook_mode(connected=True)
 
-def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
+def autoencoder_and_cluster(loaded_images,n_dim,n_clu,num_epochs):
     
     '''
     :param loaded_images : dataset 
@@ -120,7 +120,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu):
     
     #model train
     print("training autoencoder")
-    ae_model.fit(data_autoencoder, data_autoencoder, epochs=50, batch_size=64, verbose=1) #validation_data=(x_val, x_val)
+    ae_model.fit(data_autoencoder, data_autoencoder, epochs=num_epochs, batch_size=64, verbose=1) #validation_data=(x_val, x_val)
     
     #perform dimensionality reduction on dataset to be used for meta learning segmentation 
     
@@ -264,13 +264,24 @@ class TaskGenerator:
             self.qry_num = args.k_query
             
         if self.dataset == 'clarity':
-        
+            
+            self.dim_reduction = args.dim_reduction
+            self.n_ae_epochs = args.n_ae_epochs
             self.n_clusters = args.n_clusters
             self.n_dim = args.n_dim
             
             data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
             print("\ndimensionality reduction and clusterization of dataset\n") 
-            groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters) 
+            
+            if self.dim_reductiond == 'autoencoder':
+                groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters,self.n_ae_epochs) 
+                
+            elif self.dim_reduction == 'cnn_pca':
+                groups = pca_and_cluster(data,True,self.n_dim,self.n_clusters)
+                
+            else:
+                groups = pca_and_cluster(data,False,self.n_dim,self.n_clusters) 
+                
             #split groups indexes among train,val,test
             groups_train_keys = np.random.choice([i for i in groups.keys()], int(len(groups)*0.6))
             groups_val_keys = np.random.choice([y for y in groups.keys() if y not in groups_train],int(len(groups)*0.2))
