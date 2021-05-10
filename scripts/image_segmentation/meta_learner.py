@@ -240,7 +240,7 @@ class MetaLearner():
 
     def initialize(cls,model):
     
-        ip_size = (5,128,128,3)
+        ip_size = (1,128,128,3)
         model.build(ip_size)
         
         return model
@@ -289,7 +289,7 @@ class MetaLearner():
     def hard_copy(cls,model):
         
         copied_model = cls.initialize_Unet()
-        copied_model.build((5,128,128,3))
+        copied_model.build((1,128,128,3))
         
         copied_model.get_layer("block1_conv1").kernel = model.get_layer("block1_conv1").kernel 
         copied_model.get_layer("block1_conv1").bias = model.get_layer("block1_conv1").bias
@@ -397,9 +397,7 @@ class MetaLearner():
         copied_model.get_layer("final_conv").kernel = model.get_layer("final_conv").kernel 
         copied_model.get_layer("final_conv").bias = model.get_layer("final_conv").bias
         
-        for layer in model.layers:
-            if layer.trainable == False:
-                copied_model.layer = model.layer
+        
         
         return copied_model
         
@@ -419,7 +417,7 @@ class MetaLearner():
 
         copied_model = cls.initialize_Unet()
         
-        copied_model.build((5,128,128,3)) 
+        copied_model.build((1,128,128,3)) 
         
 
         #copied_model = keras.models.clone_model(model_to_copy)
