@@ -364,13 +364,12 @@ class TaskGenerator:
         
         '''
         train_groups = self.metatrain_groups 
-        # Shuffle root folder in order to prevent repeat
         batch_set = []
         
         for _ in range(self.meta_batchsz):
         
             #sample nway groups from the train groups  
-            sampled_groups_idx = np.array(random.sample(len(train_groups), self.n_way)) 
+            sampled_groups_idx = np.array(random.sample([i for i in range(0,len(train_groups))], self.n_way)) 
             np.random.shuffle(sampled_groups_idx)
 
             train_task_groups = [train_groups[g] for g in sampled_groups_idx]  
@@ -399,7 +398,7 @@ class TaskGenerator:
         for _ in range(self.meta_batchsz):
             
             #sample nway groups from the test groups  
-            sampled_groups_idx = np.array(random.sample(len(test_groups), self.n_way)) 
+            sampled_groups_idx = np.array(random.sample([i for i in range(0,len(test_groups))], self.n_way)) 
             np.random.shuffle(sampled_groups_idx)
            
             test_task_groups = [test_groups[g] for g in sampled_groups_idx]  
