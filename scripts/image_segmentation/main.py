@@ -368,6 +368,8 @@ def maml_train(model, batch_generator):
     os.chdir(args.his_dir)
     
     fig, (ax1, ax2) = plt.subplots(2, 1)
+    fig.tight_layout()
+    fig.figsize(25,25) 
     ax1.set_title('train loss')
     ax2.set_title('train iou score')
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
