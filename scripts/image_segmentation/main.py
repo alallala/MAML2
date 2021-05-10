@@ -544,5 +544,5 @@ if __name__ == '__main__':
     '''elif args.mode == 'test':''' 
     print("\nTEST PHASE\n")
     restored_model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-    eval_model(restored_model, batch_generator, num_steps=(0, 10, 50, 100))
+    eval_model(restored_model, batch_generator, num_steps=(0, 10, 50, 100, 150, 200))
         
