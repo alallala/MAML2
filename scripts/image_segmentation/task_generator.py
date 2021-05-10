@@ -273,6 +273,7 @@ class TaskGenerator:
             data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
             print("\ndimensionality reduction and clusterization of dataset\n") 
             
+            #select strategy for dimensionality reduction 
             if self.dim_reduction == 'autoencoder':
                 groups, _ = autoencoder_and_cluster(data,self.n_dim,self.n_clusters,self.n_ae_epochs) 
                 
@@ -283,9 +284,9 @@ class TaskGenerator:
                 groups = pca_and_cluster(data,False,self.n_dim,self.n_clusters) 
                 
             #split groups indexes among train,val,test
-            groups_train_keys = np.random.choice([i for i in groups.keys()], int(len(groups)*0.6))
-            groups_val_keys = np.random.choice([y for y in groups.keys() if y not in groups_train_keys],int(len(groups)*0.2))
-            groups_test_keys = np.random.choice([z for z in groups.keys() if (z not in groups_train_keys) and (z not in groups_val_keys)],int(len(groups)*0.2))
+            groups_train_keys = random.sample([i for i in groups.keys()], int(len(groups)*0.6))
+            groups_val_keys = random.sample([y for y in groups.keys() if y not in groups_train_keys],int(len(groups)*0.2))
+            groups_test_keys = random.sample([z for z in groups.keys() if (z not in groups_train_keys) and (z not in groups_val_keys)],int(len(groups)*0.2))
             
             #list of groups 
             self.metatrain_groups = [groups[key] for key in groups_train_keys]
@@ -322,7 +323,7 @@ class TaskGenerator:
             for image_idx in groups[g]:
                 all_idxs.append(image_idx)
         
-        if self.spt_num >= len(all_idxs): #in case we select two grops that have too few images
+        if self.spt_num >= len(all_idxs): #in case we select groups that have too few images
             spt_num = int(len(all_idxs)*0.8)
             qry_num = int(len(all_idxs)*0.2)
         else:
@@ -369,7 +370,7 @@ class TaskGenerator:
         for _ in range(self.meta_batchsz):
         
             #sample nway groups from the train groups  
-            sampled_groups_idx = np.array(np.random.choice(len(train_groups), self.n_way, False)) 
+            sampled_groups_idx = np.array(random.sample(len(train_groups), self.n_way, False)) 
             np.random.shuffle(sampled_groups_idx)
 
             train_task_groups = [train_groups[g] for g in sampled_groups_idx]  
@@ -398,7 +399,7 @@ class TaskGenerator:
         for _ in range(self.meta_batchsz):
             
             #sample nway groups from the test groups  
-            sampled_groups_idx = np.array(np.random.choice(len(test_groups), self.n_way, False)) 
+            sampled_groups_idx = np.array(random.sample(len(test_groups), self.n_way, False)) 
             np.random.shuffle(sampled_groups_idx)
            
             test_task_groups = [test_groups[g] for g in sampled_groups_idx]  
