@@ -367,7 +367,7 @@ def maml_train(model, batch_generator):
     # Record training history
     os.chdir(args.his_dir)
     
-    fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(20,20))
+    fig, (ax1, ax2) = plt.subplots(2, 1,figsize=(10,10))
     fig.tight_layout()
     ax1.set_title('train loss')
     ax2.set_title('train iou score')
