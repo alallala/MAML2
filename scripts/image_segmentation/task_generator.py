@@ -410,7 +410,7 @@ if __name__ == '__main__':
 
     argparse = argparse.ArgumentParser()
     argparse.add_argument('--type_reduction', type=str, help='"autoencoder" or "cnn_pca" or "pca"', default='autoencoder')
-    argparse.add_argument('--vis_cluster_scatter', type=bool, help='visualize scatter points', default=True)
+    argparse.add_argument('--vis_cluster_scatter', type=bool, help='visualize scatter points', default=False)
     
     args = argparse.parse_args()
 
@@ -467,12 +467,11 @@ if __name__ == '__main__':
 
         plt.show()
         
-    if args.vis_cluster_scatter == True:
+    if args.type_reduction == 'autoencoder':
         print("visualize 2d clusters scatter\n")
     #visualize scatter clusters 
     
         cluster_3d = {}
-        pca = PCA(n_components=3, random_state=22)
 
         for cluster_id in groups.keys():
             data = []
@@ -481,19 +480,11 @@ if __name__ == '__main__':
             
             data = np.array(data) 
             
-            if args.type_reduction == 'autoencoder':
-                
-                encoded_imgs = encoder.predict(data)
-            
-                encoded_imgs = encoded_imgs.reshape(-1,3)
-            
-                cluster_3d[cluster_id] = encoded_imgs
-                
-            elif args.type_reduction == 'pca':
-            
-                data = data.reshape(-1,256*256*3)
-                data_pca = pca.fit_transform(data)
-                cluster_3d[cluster_id] = data_pca
+            encoded_imgs = encoder.predict(data)
+        
+            encoded_imgs = encoded_imgs.reshape(-1,3)
+        
+            cluster_3d[cluster_id] = encoded_imgs
                                
             
         key_list = list(groups.keys())  
