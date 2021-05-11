@@ -468,7 +468,7 @@ if __name__ == '__main__':
         plt.show()
         
     if args.vis_cluster_scatter == True:
-    print("visualize 2d clusters scatter\n")
+        print("visualize 2d clusters scatter\n")
     #visualize scatter clusters 
     
         cluster_3d = {}
