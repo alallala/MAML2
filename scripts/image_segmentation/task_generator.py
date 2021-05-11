@@ -417,7 +417,7 @@ if __name__ == '__main__':
     num_images = 1000
     num_clusters = 20
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,num_images)
-    print("dataset of {} images of size 256x256x3=196608\nreduction to size 1000\nclustering images in {} groups\n".format(num_images,num_clusters))
+    #print("dataset of {} images of size 256x256x3=196608\nreduction to size 1000\nclustering images in {} groups\n".format(num_images,num_clusters))
     
     if args.type_reduction == 'autoencoder':
         if args.vis_cluster_scatter == True:
@@ -468,6 +468,7 @@ if __name__ == '__main__':
         plt.show()
         
     if args.vis_cluster_scatter == True:
+    print("visualize 2d clusters scatter\n")
     #visualize scatter clusters 
     
         cluster_3d = {}
