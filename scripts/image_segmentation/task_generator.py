@@ -348,10 +348,10 @@ class TaskGenerator:
         print("\n")
         print("qry indexes:\n",qry_elem)
         
-        spt_x.extend([ds[:,:,:,:3][idx] for idx in spt_elem]) #BGR images for support set
-        spt_y.extend([ds[:,:,:,3:][idx] for idx in spt_elem]) #corresponding masks for the support set
-        qry_x.extend([ds[:,:,:,:3][idx] for idx in qry_elem]) #BGR images for query set
-        qry_y.extend([ds[:,:,:,3:][idx] for idx in qry_elem]) #corresponding masks for the query set
+        spt_x.extend([ds[:,:,:,:3][int(idx)] for idx in spt_elem]) #BGR images for support set
+        spt_y.extend([ds[:,:,:,3:][int(idx)] for idx in spt_elem]) #corresponding masks for the support set
+        qry_x.extend([ds[:,:,:,:3][int(idx)] for idx in qry_elem]) #BGR images for query set
+        qry_y.extend([ds[:,:,:,3:][int(idx)] for idx in qry_elem]) #corresponding masks for the query set
 
         
         # Shuffle datasets
