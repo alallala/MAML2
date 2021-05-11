@@ -412,6 +412,7 @@ if __name__ == '__main__':
     argparse.add_argument('--type_reduction', type=str, help='"autoencoder" or "cnn_pca" or "pca"', default='autoencoder')
     argparse.add_argument('--vis_cluster_scatter', type=str, help='visualize scatter points', default=False)
     
+    args = argparse.parse_args()
 
     num_images = 1000
     num_clusters = 20
