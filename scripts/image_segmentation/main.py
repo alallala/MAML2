@@ -322,13 +322,10 @@ def maml_train(model, batch_generator):
         if step % print_steps == 0 or step == 0:
             batch_loss = [loss.numpy() for loss in batch_loss]
             batch_acc = [acc.numpy() for acc in batch_acc]
-            '''uncomment to display loss and acc for each task in meta batch'''
-            #print ('[Iter. {}] Task loss: {:.3f}; Task iou score: {:.3f};'.format(step, batch_loss, batch_acc))
-            '''to visualize average over tasks in meta batch'''
+         
             mean_batch_loss = np.array(batch_loss).mean()
             mean_batch_acc = np.array(batch_acc).mean()
             print ('[Iter. {}] avg tasks Loss: {:.3f}, avg tasks iou score: {:.3f}'.format(step, mean_batch_loss, mean_batch_acc))
-            # print ('[Iter. {}] avg tasks Loss: {:.3f}'.format(step, mean_batch_loss)) #, mean_batch_acc))
             start = time.time()
             # Uncomment to see the sampled folders of each task
             # train_ds.print_label_map()
@@ -354,10 +351,8 @@ def maml_train(model, batch_generator):
             # avg over meta batch of tasks
             mean_test_loss = np.array(test_loss).mean()
             mean_test_acc = np.array(test_accs).mean()
-            '''uncomment to visualize loss and acc for each validation task in the meta batch'''
-            #print ('Validation Losses: {:.3f}, Validation iou score: {:.3f}'.format(test_loss, test_acc))
+            
             print('avg Validation tasks loss: {:.3f}, avg Validation tasks iou score: {:.3f}'.format(mean_test_loss,mean_test_acc))
-            #print('avg Validation tasks loss: {:.3f}'.format(mean_test_loss))
 
             print ('=====================================================================')
         # Meta train step    
@@ -412,8 +407,6 @@ def eval_model(model, batch_generator, num_steps=None):
         num_steps = (0, 1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
     # Generate a batch data
     batch_set = batch_generator.test_batch(test=True)
-    # Print the label map of each task
-    # batch_generator.print_label_map()
     # Use a copy of current model
     copied_model = model
     # Initialize optimizer
@@ -495,7 +488,7 @@ if __name__ == '__main__':
     argparse.add_argument('--mode', type=str, help='train or test', default='train')
 
     # Dataset options
-    argparse.add_argument('--dataset', type=str, help='Dataset used to train model', default='miniimagenet')
+    argparse.add_argument('--dataset', type=str, help='Dataset used to train model', default='clarity')
     argparse.add_argument('--visual', type=bool, help='Set True to visualize the batch data', default=False)
     argparse.add_argument('--dim_reduction', type=str, help='type of dimensionality reduction, can be "cnn_pca","pca","autoencoder"', default='autoencoder')
     argparse.add_argument('--n_ae_epochs', type=int, help='epochs for autoencoder training', default=50)
@@ -545,5 +538,4 @@ if __name__ == '__main__':
     '''elif args.mode == 'test':''' 
     print("\nTEST PHASE\n")
     restored_model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
-    eval_model(restored_model, batch_generator, num_steps=(0, 1, 2, 3 )) #10, 50, 100, 150, 200))
-        
+    eval_model(restored_model, batch_generator, num_steps=(0, 1, 5, 10, 50, 100))         
