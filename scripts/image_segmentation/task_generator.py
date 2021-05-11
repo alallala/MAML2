@@ -487,7 +487,7 @@ if __name__ == '__main__':
             
                 cluster_3d[cluster_id] = encoded_imgs
                 
-            elif args.type_reduction = 'pca':
+            elif args.type_reduction == 'pca':
             
                 data = data.reshape(-1,256*256*3)
                 data_pca = pca.fit_transform(data)
