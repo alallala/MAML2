@@ -432,14 +432,14 @@ if __name__ == '__main__':
             print("\ndimensionality reduction with vgg16 + pca and clustering")
             groups = pca_and_cluster(my_array,True,3,num_clusters)
         else:
-            print("\ndimensionality reduction with autoencoder and clustering")
+            print("\ndimensionality reduction with vgg16 + pca and clustering")
             groups = pca_and_cluster(my_array,True,1000,num_clusters)
     else: 
         if args.vis_cluster_scatter == True:
-            print("\ndimensionality reduction with vgg16 + pca and clustering")
+            print("\ndimensionality reduction with pca and clustering")
             groups = pca_and_cluster(my_array,False,3,num_clusters)
         else:
-            print("\ndimensionality reduction with autoencoder and clustering")
+            print("\ndimensionality reduction with pca and clustering")
             groups = pca_and_cluster(my_array,False,1000,num_clusters)
     
     #visualize images in the clusters
