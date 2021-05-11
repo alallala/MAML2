@@ -342,6 +342,8 @@ class TaskGenerator:
             spt_elem = np.concatenate((spt_elem,s_elem))
             qry_elem = np.concatenate((qry_elem,q_elem))
         
+        spt_elem.astype(int)
+        qry_elem.astype(int)
         print("spt indexes:\n",spt_elem)
         print("\n")
         print("qry indexes:\n",qry_elem)
