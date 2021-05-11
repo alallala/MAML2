@@ -270,7 +270,7 @@ class TaskGenerator:
             self.n_clusters = args.n_clusters
             self.n_dim = args.n_dim
             
-            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,2000)
+            data = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,200)
             print("\ndimensionality reduction and clusterization of dataset\n") 
             
             #select strategy for dimensionality reduction 
