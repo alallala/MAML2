@@ -326,6 +326,7 @@ class TaskGenerator:
                 all_idxs.append(image_idx)
         
             if self.spt_num >= len(all_idxs) or self.qry_num >= len(all_idxs): #in case we select groups that have too few images
+                print("little cluster")
                 spt_num = math.ceil(len(all_idxs)*0.5)
                 qry_num = math.floor(len(all_idxs)*0.5)
                 
@@ -334,9 +335,11 @@ class TaskGenerator:
                 qry_num = self.qry_num 
                 
             s_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected group) for support set
+            print(s_elem)
             for e in s_elem:
                 all_idxs.remove(e)
             q_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected group) for the query set
+            print(q_elem)
             spt_elem = np.concatenate((spt_elem,s_elem))
             qry_elem = np.concatenate((qry_elem,q_elem))
         
