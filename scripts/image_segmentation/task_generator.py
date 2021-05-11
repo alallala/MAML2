@@ -334,17 +334,17 @@ class TaskGenerator:
                 qry_num = self.qry_num 
                 
             s_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected group) for support set
-            print(s_elem)
             for e in s_elem:
                 all_idxs.remove(e)
             q_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected group) for the query set
-            print(q_elem)
             spt_elem = np.concatenate((spt_elem,s_elem))
             qry_elem = np.concatenate((qry_elem,q_elem))
         
         spt_elem.astype(int)
         qry_elem.astype(int)
-        print("spt indexes:\n",spt_elem)
+        print("spt indexes:")
+        for idx in spt_elem:
+            print(idx)
         print("\n")
         print("qry indexes:\n",qry_elem)
         
