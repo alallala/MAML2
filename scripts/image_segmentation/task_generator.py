@@ -413,7 +413,7 @@ if __name__ == '__main__':
     argparse.add_argument('--vis_cluster_scatter', type=str, help='visualize scatter points', default=False)
     
 
-    num_images = 2000
+    num_images = 1000
     num_clusters = 20
     my_array = load_file('/content/drive/MyDrive/cloud_dataset.tiff',0,num_images)
     print("dataset of {} images of size 256x256x3=196608\nreduction to size 1000\nclustering images in {} groups\n".format(num_images,num_clusters))
