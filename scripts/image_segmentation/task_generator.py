@@ -15,6 +15,7 @@ import glob
 import os
 import sys
 import random
+import math
 import numpy as np
 from tqdm import tqdm
 from tqdm._tqdm import trange
@@ -288,9 +289,9 @@ class TaskGenerator:
             groups_test_keys = random.sample([z for z in groups.keys() if (z not in groups_train_keys) and (z not in groups_val_keys)],int(len(groups)*0.2))
             
             #list of groups 
-            self.metatrain_groups = [groups[key] for key in groups_train_keys]
-            self.metaval_groups = [groups[key] for key in groups_val_keys]
-            self.metatest_groups = [groups[key] for key in groups_test_keys]
+            self.metatrain_groups = [groups[key] for key in groups_train_keys if len(groups[key]) >1] #to avoid cluster with 1 element only
+            self.metaval_groups = [groups[key] for key in groups_val_keys if len(groups[key]) >1]
+            self.metatest_groups = [groups[key] for key in groups_test_keys if len(groups[key]) >1]
             self.data = data 
 
     def shuffle_set(self, set_x, set_y):
@@ -317,28 +318,37 @@ class TaskGenerator:
         qry_x = list()
         qry_y = list()
         
-        all_idxs = [] #all the indexes of the images in the selected groups
+        spt_elem = []
+        qry_elem = []
         for g in range(0,len(groups)):
+            all_idxs = []
             for image_idx in groups[g]:
                 all_idxs.append(image_idx)
         
-        if self.spt_num >= len(all_idxs): #in case we select groups that have too few images
-            spt_num = int(len(all_idxs)*0.8)
-            qry_num = int(len(all_idxs)*0.2)
-        else:
-            spt_num = self.spt_num
-            qry_num = self.qry_num 
-            
-        spt_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected groups) for support set
-        for e in spt_elem:
-            all_idxs.remove(e)
-        qry_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected groups) for the query set
+            if self.spt_num >= len(all_idxs) or self.qry_num >= len(all_idxs): #in case we select groups that have too few images
+                spt_num = math.ceil(len(all_idxs)*0.5)
+                qry_num = math.floor(len(all_idxs)*0.5)
+                
+            else:
+                spt_num = self.spt_num
+                qry_num = self.qry_num 
+                
+            s_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected group) for support set
+            for e in spt_elem:
+                all_idxs.remove(e)
+            q_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected group) for the query set
+        
+            spt_elem = np.concatenate((spt_elem,s_elem))
+            qry_elem = np.concatenate((qry_elem,q_elem))
         
         spt_x.extend([ds[:,:,:,:3][idx] for idx in spt_elem]) #BGR images for support set
         spt_y.extend([ds[:,:,:,3:][idx] for idx in spt_elem]) #corresponding masks for the support set
         qry_x.extend([ds[:,:,:,:3][idx] for idx in qry_elem]) #BGR images for query set
         qry_y.extend([ds[:,:,:,3:][idx] for idx in qry_elem]) #corresponding masks for the query set
 
+        print("spt indexes:\n",spt_elem)
+        print("\n")
+        print("qry indexes:\n",qry_elem)
         # Shuffle datasets
        
         spt_x, spt_y = self.shuffle_set(spt_x, spt_y)
@@ -428,19 +438,11 @@ if __name__ == '__main__':
             groups,encoder = autoencoder_and_cluster(my_array,1000,num_clusters,3)
         
     elif args.type_reduction == 'cnn_pca':
-        if args.vis_cluster_scatter == True:
-            print("\ndimensionality reduction with vgg16 + pca and clustering")
-            groups = pca_and_cluster(my_array,True,3,num_clusters)
-        else:
-            print("\ndimensionality reduction with vgg16 + pca and clustering")
-            groups = pca_and_cluster(my_array,True,1000,num_clusters)
+        print("\ndimensionality reduction with vgg16 + pca and clustering")
+        groups = pca_and_cluster(my_array,True,1000,num_clusters)
     else: 
-        if args.vis_cluster_scatter == True:
-            print("\ndimensionality reduction with pca and clustering")
-            groups = pca_and_cluster(my_array,False,3,num_clusters)
-        else:
-            print("\ndimensionality reduction with pca and clustering")
-            groups = pca_and_cluster(my_array,False,1000,num_clusters)
+        print("\ndimensionality reduction with pca and clustering")
+        groups = pca_and_cluster(my_array,False,1000,num_clusters)
     
     #visualize images in the clusters
     for cluster_id in groups.keys():
