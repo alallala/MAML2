@@ -195,10 +195,10 @@ def pca_and_cluster(loaded_images,cnn,n_dim,n_clu):
     else:
     
         fit_images = loaded_images[:,:,:,:3]
-        h,w,c = loaded_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
+        #h,w,c = loaded_images.shape[1],loaded_images.shape[2],loaded_images.shape[3]
         
         #reshape data to be suitable for pca (n dim<=2)
-        fit_images = fit_images.reshape(-1,h*w*c)
+        fit_images = fit_images.reshape(-1,256*256*3)
         
     pca = PCA(n_components=n_dim, random_state=22)
     pca.fit(fit_images) 
