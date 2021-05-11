@@ -422,10 +422,10 @@ if __name__ == '__main__':
     if args.type_reduction == 'autoencoder':
         if args.vis_cluster_scatter == True:
             print("\ndimensionality reduction with autoencoder and clustering")
-            groups,encoder = autoencoder_and_cluster(my_array,3,num_clusters)
+            groups,encoder = autoencoder_and_cluster(my_array,3,num_clusters,3)
         else:
             print("\ndimensionality reduction with autoencoder and clustering")
-            groups,encoder = autoencoder_and_cluster(my_array,1000,num_clusters)
+            groups,encoder = autoencoder_and_cluster(my_array,1000,num_clusters,3)
         
     elif args.type_reduction == 'cnn_pca':
         if args.vis_cluster_scatter == True:
