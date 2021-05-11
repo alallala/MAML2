@@ -340,13 +340,10 @@ class TaskGenerator:
             spt_elem = np.concatenate((spt_elem,s_elem))
             qry_elem = np.concatenate((qry_elem,q_elem))
         
-        spt_elem.astype(int)
-        qry_elem.astype(int)
+       
         print("spt indexes:")
         for idx in spt_elem:
             print(idx)
-        print("\n")
-        print("qry indexes:\n",qry_elem)
         
         spt_x.extend([ds[:,:,:,:3][int(idx)] for idx in spt_elem]) #BGR images for support set
         spt_y.extend([ds[:,:,:,3:][int(idx)] for idx in spt_elem]) #corresponding masks for the support set
