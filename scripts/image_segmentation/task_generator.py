@@ -410,7 +410,7 @@ if __name__ == '__main__':
 
     argparse = argparse.ArgumentParser()
     argparse.add_argument('--type_reduction', type=str, help='"autoencoder" or "cnn_pca" or "pca"', default='autoencoder')
-    argparse.add_argument('--vis_cluster_scatter', type=str, help='visualize scatter points', default=False)
+    argparse.add_argument('--vis_cluster_scatter', type=bool, help='visualize scatter points', default=True)
     
     args = argparse.parse_args()
 
