@@ -496,9 +496,9 @@ if __name__ == '__main__':
     argparse.add_argument('--n_clusters', type=int, help='number of clusters to categorize dataset', default=30)
 
     # Task options
-    argparse.add_argument('--n_way', type=int, help='Number of classes used in classification (e.g. 5-way classification)', default=1)
-    argparse.add_argument('--k_shot', type=int, help='Number of images in support set', default= 5)
-    argparse.add_argument('--k_query', type=int, help='Number of images in query set(For Omniglot, equal to k_shot)', default= 5)
+    argparse.add_argument('--n_way', type=int, help='Number of scenarios for the segmentation', default=5)
+    argparse.add_argument('--k_shot', type=int, help='Number of images in support set', default= 1)
+    argparse.add_argument('--k_query', type=int, help='Number of images in query set', default= 1)
     
     # Model options
     argparse.add_argument('--backbone_name', type=str, help ='vgg16 or other', default='vgg16')
@@ -507,16 +507,16 @@ if __name__ == '__main__':
     
     # Training options
     argparse.add_argument('--meta_batchsz', type=int, help='Number of tasks in one batch', default=4)
-    argparse.add_argument('--update_steps', type=int, help='Number of inner gradient updates for each task', default=5)
+    argparse.add_argument('--update_steps', type=int, help='Number of inner gradient updates for each task', default=1)
     argparse.add_argument('--update_steps_test', type=int, help='Number of inner gradient updates for each task while testing', default=10)
     argparse.add_argument('--inner_lr', type=float, help='Learning rate of inner update steps, the step size alpha in the algorithm', default=1e-3) 
     argparse.add_argument('--meta_lr', type=float, help='Learning rate of meta update steps, the step size beta in the algorithm', default=1e-3)
-    argparse.add_argument('--total_batches', type=int, help='Total update steps for each epoch', default=10000) 
+    argparse.add_argument('--total_batches', type=int, help='Total number of iterations', default=1000) 
 
     # Log options
-    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=2000)
-    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=500)
-    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=100)
+    argparse.add_argument('--ckpt_steps', type=int, help='Number of steps for recording checkpoints', default=50)
+    argparse.add_argument('--test_steps', type=int, help='Number of steps for evaluating model', default=50)
+    argparse.add_argument('--print_steps', type=int, help='Number of steps for prints result in the console', default=10)
     argparse.add_argument('--log_dir', type=str, help='Path to the log directory', default='../../logs/')
     argparse.add_argument('--ckpt_dir', type=str, help='Path to the checkpoint directory', default='../../weights/')
     argparse.add_argument('--his_dir', type=str, help='Path to the training history directory', default='../../history/')
