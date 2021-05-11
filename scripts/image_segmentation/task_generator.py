@@ -334,7 +334,7 @@ class TaskGenerator:
                 qry_num = self.qry_num 
                 
             s_elem = random.sample(all_idxs, spt_num) #select spt_num images (belonging to the selected group) for support set
-            for e in spt_elem:
+            for e in s_elem:
                 all_idxs.remove(e)
             q_elem = random.sample(all_idxs, qry_num) #select spt_num images (belonging to the selected group) for the query set
         
