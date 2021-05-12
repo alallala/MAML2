@@ -310,16 +310,24 @@ def maml_train(model, batch_generator):
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
+        '''
         # Record Loss
         losses.append(tf.reduce_mean(batch_loss).numpy())
         accs.append(tf.reduce_mean(batch_acc).numpy())
+        '''
         # Write to Tensorboard
         with summary_writer.as_default():
             tf.summary.scalar('query loss', tf.reduce_mean(batch_loss), step=step)
             tf.summary.scalar('query iou score', tf.reduce_mean(batch_acc), step=step)
         
         # Print train result
+        
         if step % print_steps == 0 or step == 0:
+        
+            # Record Loss
+            losses.append(tf.reduce_mean(batch_loss).numpy())
+            accs.append(tf.reduce_mean(batch_acc).numpy())
+        
             batch_loss = [loss.numpy() for loss in batch_loss]
             batch_acc = [acc.numpy() for acc in batch_acc]
          
@@ -367,8 +375,8 @@ def maml_train(model, batch_generator):
     ax1.set_title('train loss')
     ax2.set_title('train iou score')
     fig.suptitle('{} {}-Way {}-Shot MAML Training Process'.format(args.dataset, n_way, k_shot))
-    ax1.plot(losses, label = "Train Acccuracy", color='coral')
-    ax2.plot(accs,'--',label = "Train Loss", color='royalblue')
+    ax1.plot(losses, label = "Train loss", color='coral')
+    ax2.plot(accs,'--',label = "Train IoU score", color='royalblue')
     plt.xlabel("meta training iterations")
     
     fig.savefig('{}-{}-way-{}-shot.png'.format(args.dataset, n_way, k_shot))
