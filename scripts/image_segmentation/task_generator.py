@@ -17,8 +17,6 @@ import sys
 import random
 import math
 import numpy as np
-from tqdm import tqdm
-from tqdm._tqdm import trange
 from PIL import Image
 import tensorflow as tf
 import time
