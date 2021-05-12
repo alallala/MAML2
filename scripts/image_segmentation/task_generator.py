@@ -280,7 +280,8 @@ class TaskGenerator:
                 
             else:
                 groups = pca_and_cluster(data,False,self.n_dim,self.n_clusters) 
-                
+            
+            random.seed(10)
             #split groups indexes among train,val,test
             groups_train_keys = random.sample([i for i in groups.keys()], int(len(groups)*0.6))
             groups_test_keys = random.sample([y for y in groups.keys() if y not in groups_train_keys],int(len(groups)*0.4))
