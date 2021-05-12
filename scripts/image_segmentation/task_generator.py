@@ -117,7 +117,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu,num_epochs):
     #construct model
     ae_model = construct_ae_model(input_shape=input_shape)
     
-    ae_model.compile(optimizer='adam', loss='binary_crossentropy')
+    ae_model.compile(optimizer='adam', loss='mse')
     
     #model train
     print("training autoencoder")
@@ -285,12 +285,12 @@ class TaskGenerator:
                 
             #split groups indexes among train,val,test
             groups_train_keys = random.sample([i for i in groups.keys()], int(len(groups)*0.6))
-            groups_val_keys = random.sample([y for y in groups.keys() if y not in groups_train_keys],int(len(groups)*0.2))
-            groups_test_keys = random.sample([z for z in groups.keys() if (z not in groups_train_keys) and (z not in groups_val_keys)],int(len(groups)*0.2))
+            groups_test_keys = random.sample([y for y in groups.keys() if y not in groups_train_keys],int(len(groups)*0.4))
+            #groups_test_keys = random.sample([z for z in groups.keys() if (z not in groups_train_keys) and (z not in groups_val_keys)],int(len(groups)*0.2))
             
             #list of groups 
             self.metatrain_groups = [groups[key] for key in groups_train_keys if len(groups[key]) >1] #to avoid cluster with 1 element only
-            self.metaval_groups = [groups[key] for key in groups_val_keys if len(groups[key]) >1]
+            #self.metaval_groups = [groups[key] for key in groups_val_keys if len(groups[key]) >1]
             self.metatest_groups = [groups[key] for key in groups_test_keys if len(groups[key]) >1]
             self.data = data 
 
@@ -382,7 +382,11 @@ class TaskGenerator:
         for _ in range(self.meta_batchsz):
         
             #sample nway groups from the train groups  
-            sampled_groups_idx = np.array(np.random.choice(len(train_groups), self.n_way, False)) 
+            if self.n_way > len(train_groups):
+                num = len(train_groups)
+            else:
+                num = self.n_way
+            sampled_groups_idx = np.array(np.random.choice(len(train_groups), num, False)) 
             np.random.shuffle(sampled_groups_idx)
 
             train_task_groups = [train_groups[g] for g in sampled_groups_idx]  
@@ -397,13 +401,14 @@ class TaskGenerator:
         
         '''
         if test:
-            test_groups = self.metatest_groups 
+            #test_groups = self.metatest_groups 
             p_str = 'test'
             
         else:
-            test_groups = self.metaval_groups
+            #test_groups = self.metaval_groups
             p_str = 'validation'
             
+        test_groups = self.metatest_groups    
         print ('Sample '+p_str+' batch of tasks from {} groups '.format(len(test_groups)))
         
         batch_set = []
@@ -411,7 +416,12 @@ class TaskGenerator:
         for _ in range(self.meta_batchsz):
             
             #sample nway groups from the test groups  
-            sampled_groups_idx = np.array(np.random.choice(len(test_groups), self.n_way, False)) 
+            if self.n_way > len(test_groups):
+                num = len(test_groups)
+            else:
+                num = self.n_way
+                
+            sampled_groups_idx = np.array(np.random.choice(len(test_groups), num, False)) 
             np.random.shuffle(sampled_groups_idx)
            
             test_task_groups = [test_groups[g] for g in sampled_groups_idx]  
