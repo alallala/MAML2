@@ -328,7 +328,7 @@ class TaskGenerator:
             if self.spt_num >= len(all_idxs) or self.qry_num >= len(all_idxs): #in case we select groups that have too few images
                 
                 if self.spt_num == 1: 
-                    spt_num = 1: 
+                    spt_num = 1 
                     qry_num = len(all_idxs)-1
                 else:   
                     spt_num = math.ceil(len(all_idxs)*0.5)
