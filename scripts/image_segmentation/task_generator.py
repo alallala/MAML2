@@ -130,7 +130,7 @@ def autoencoder_and_cluster(loaded_images,n_dim,n_clu,num_epochs):
     encoded_imgs = encoded_imgs.reshape(-1,n_dim)
 
     #clustering
-    kmeans = KMeans(n_clusters=n_clu, n_jobs=-1, random_state=22)
+    kmeans = KMeans(n_clusters=n_clu, random_state=22)
     kmeans.fit(encoded_imgs)
     
     images_indexes = [i for i in range(len(loaded_images))]
