@@ -436,6 +436,20 @@ def eval_model(model, batch_generator, num_steps=None):
             task_accs[idx] += acc.numpy()
             loss_res[idx].append((0, loss.numpy()))
             acc_res[idx].append((0, acc.numpy()))
+            
+            tot = min(5,len(pred))
+            for im in range(0,tot): 
+                print("visualize some prediction and its true mask before any update step for task:",idx) 
+                pred = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                true = query_y[im]
+             
+                to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
+                to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
+                print("true mask")
+                display(to_display_true_mask)
+                print("pred mask")
+                display(to_display_pred_mask)
+                   
         print ('\nBefore any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
         print ('Task accuracies: {}'.format(task_accs))
@@ -453,6 +467,22 @@ def eval_model(model, batch_generator, num_steps=None):
             optimizer.apply_gradients(zip(grads, model.trainable_variables))
             # Test on query set
             qry_loss, qry_pred = compute_loss(model, query_x, query_y)
+            
+            if step == 1:
+                
+                tot = min(5,len(qry_pred))
+                for im in range(0,tot): 
+                print("visualize some predictions after 1 update step and its true mask for task:",idx) 
+                pred = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                true = query_y[im]
+             
+                to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
+                to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
+                print("true mask")
+                display(to_display_true_mask)
+                print("pred mask")
+                display(to_display_pred_mask)
+            
             qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
             if step in num_steps:
@@ -460,7 +490,7 @@ def eval_model(model, batch_generator, num_steps=None):
                 acc_res[idx].append((step, qry_acc.numpy()))
                 print ('After {} steps update'.format(step))
                 print ('Task losses: {}'.format(qry_loss.numpy()))
-                print ('Task accs: {}'.format(qry_acc.numpy()))
+                print ('Task IoU score: {}'.format(qry_acc.numpy()))
                 print ('---------------------------------')
     
     for idx in range(len(batch_set)):
@@ -482,7 +512,7 @@ def eval_model(model, batch_generator, num_steps=None):
         plt.plot(l_x, l_y, linestyle='--', color='coral')
         plt.plot(a_x, a_y, linestyle='--', color='royalblue')
         plt.xlabel('Fine Tune Step', fontsize=12)
-        plt.fill_between(a_x, [a+0.1 for a in a_y], [a-0.1 for a in a_y], facecolor='royalblue', alpha=0.3)
+        #plt.fill_between(a_x, [a+0.1 for a in a_y], [a-0.1 for a in a_y], facecolor='royalblue', alpha=0.3)
         legend=['Fine Tune Points','Fine Tune Points','Loss', 'iou score']
         plt.legend(legend)
         plt.title('Task {} Fine Tuning Process'.format(idx+1))
