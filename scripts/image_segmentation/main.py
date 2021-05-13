@@ -445,15 +445,11 @@ def eval_model(model, batch_generator, num_steps=None):
              
                 to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                 to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
-                print("true mask")
-                display(to_display_true_mask)
-                print("pred mask")
-                display(to_display_pred_mask)
                 
                 f, axarr = plt.subplots(1,2,figsize=(10,10))
 
-                axarr[0].imshow(to_display_pred_mask)
-                axarr[1].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
+                axarr[0].imshow(to_display_true_mask)
+                axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
                    
         print ('\nBefore any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
@@ -484,15 +480,11 @@ def eval_model(model, batch_generator, num_steps=None):
                  
                     to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                     to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
-                    print("true mask")
-                    display(to_display_true_mask)
-                    print("pred mask")
-                    display(to_display_pred_mask)
                     
                     f, axarr = plt.subplots(1,2,figsize=(6,6))
 
-                    axarr[0].imshow(to_display_pred_mask)
-                    axarr[1].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
+                    axarr[0].imshow(to_display_true_mask)
+                    axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
             
             qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
