@@ -438,6 +438,8 @@ def eval_model(model, batch_generator, num_steps=None):
             acc_res[idx].append((0, acc.numpy()))
             
             tot = min(5,len(pred))
+            print("len predictions: ",tot)
+            print(pred.shape)
             for im in range(0,tot): 
                 print("visualize some prediction and its true mask before any update step for task:",idx) 
                 pred = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
