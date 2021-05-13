@@ -438,19 +438,22 @@ def eval_model(model, batch_generator, num_steps=None):
             acc_res[idx].append((0, acc.numpy()))
             
             tot = min(5,len(pred))
-            print("len predictions: ",tot)
-            print(pred.shape)
             for im in range(0,tot): 
                 print("visualize some prediction and its true mask before any update step for task:",idx) 
-                pred = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
-                true = query_y[im]
+                pred_mask = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                true_mask = query_y[im]
              
-                to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
-                to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
+                to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
+                to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                 print("true mask")
                 display(to_display_true_mask)
                 print("pred mask")
                 display(to_display_pred_mask)
+                
+                f, axarr = plt.subplots(1,2,figsize=(10,10))
+
+                axarr[0].imshow(to_display_pred_mask)
+                axarr[1].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                    
         print ('\nBefore any update steps, test result:')
         print ('Task losses: {}'.format(task_losses))
@@ -476,15 +479,20 @@ def eval_model(model, batch_generator, num_steps=None):
                 print("visualize some predictions after 1 update step and its true mask for task:",idx) 
 
                 for im in range(0,tot): 
-                    pred = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
-                    true = query_y[im]
+                    pred_mask = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                    true_mask = query_y[im]
                  
-                    to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
-                    to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
+                    to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
+                    to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                     print("true mask")
                     display(to_display_true_mask)
                     print("pred mask")
                     display(to_display_pred_mask)
+                    
+                    f, axarr = plt.subplots(1,2,figsize=(6,6))
+
+                    axarr[0].imshow(to_display_pred_mask)
+                    axarr[1].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
             
             qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
