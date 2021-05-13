@@ -471,17 +471,18 @@ def eval_model(model, batch_generator, num_steps=None):
             if step == 1:
                 
                 tot = min(5,len(qry_pred))
-                for im in range(0,tot): 
                 print("visualize some predictions after 1 update step and its true mask for task:",idx) 
-                pred = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
-                true = query_y[im]
-             
-                to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
-                to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
-                print("true mask")
-                display(to_display_true_mask)
-                print("pred mask")
-                display(to_display_pred_mask)
+
+                for im in range(0,tot): 
+                    pred = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
+                    true = query_y[im]
+                 
+                    to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred))
+                    to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true)) 
+                    print("true mask")
+                    display(to_display_true_mask)
+                    print("pred mask")
+                    display(to_display_pred_mask)
             
             qry_acc = accuracy_fn(query_y, qry_pred)
             # Record result
@@ -512,7 +513,7 @@ def eval_model(model, batch_generator, num_steps=None):
         plt.plot(l_x, l_y, linestyle='--', color='coral')
         plt.plot(a_x, a_y, linestyle='--', color='royalblue')
         plt.xlabel('Fine Tune Step', fontsize=12)
-        #plt.fill_between(a_x, [a+0.1 for a in a_y], [a-0.1 for a in a_y], facecolor='royalblue', alpha=0.3)
+        plt.fill_between(a_x, [a+0.1 for a in a_y], [a-0.1 for a in a_y], facecolor='royalblue', alpha=0.3)
         legend=['Fine Tune Points','Fine Tune Points','Loss', 'iou score']
         plt.legend(legend)
         plt.title('Task {} Fine Tuning Process'.format(idx+1))
