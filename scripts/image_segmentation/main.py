@@ -481,7 +481,7 @@ def eval_model(model, batch_generator, num_steps=None):
                     to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                     to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                     
-                    f, axarr = plt.subplots(1,2,figsize=(6,6)).set_title('predictions after one update step')
+                    f, axarr = plt.subplots(1,2,figsize=(6,6))
                     f.suptitle("some predictions before any update step")
                     axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                     axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
