@@ -446,9 +446,9 @@ def eval_model(model, batch_generator, num_steps=None):
                 to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                 to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                 
-                f, axarr = plt.subplots(1,2,figsize=(10,10))
+                f, axarr = plt.subplots(1,2,figsize=(6,6))
 
-                axarr[0].imshow(to_display_true_mask)
+                axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                 axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
                    
         print ('\nBefore any update steps, test result:')
@@ -472,7 +472,7 @@ def eval_model(model, batch_generator, num_steps=None):
             if step == 1:
                 
                 tot = min(5,len(qry_pred))
-                print("visualize some predictions after 1 update step and its true mask for task:",idx) 
+                print("visualize some predictions and its true mask after 1 update step for task:",idx) 
 
                 for im in range(0,tot): 
                     pred_mask = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
@@ -483,7 +483,7 @@ def eval_model(model, batch_generator, num_steps=None):
                     
                     f, axarr = plt.subplots(1,2,figsize=(6,6))
 
-                    axarr[0].imshow(to_display_true_mask)
+                    axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                     axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
             
             qry_acc = accuracy_fn(query_y, qry_pred)
