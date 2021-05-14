@@ -92,11 +92,6 @@ def accuracy_fn(y, pred_y):
     _ = m.update_state(y,pred_y)
     return m.result()
 
-    '''
-    accuracy = tf.keras.metrics.Accuracy()
-    _ = accuracy.update_state(tf.argmax(pred_y, axis=1), tf.argmax(y, axis=1))
-    return accuracy.result()
-    '''
 
 def compute_loss(model, x, y):
     '''
@@ -310,11 +305,7 @@ def maml_train(model, batch_generator):
         if visual:
             # Write histogram
             write_histogram(model, summary_writer, step)
-        '''
-        # Record Loss
-        losses.append(tf.reduce_mean(batch_loss).numpy())
-        accs.append(tf.reduce_mean(batch_acc).numpy())
-        '''
+  
         # Write to Tensorboard
         with summary_writer.as_default():
             tf.summary.scalar('query loss', tf.reduce_mean(batch_loss), step=step)
@@ -437,7 +428,7 @@ def eval_model(model, batch_generator, num_steps=None):
             loss_res[idx].append((0, loss.numpy()))
             acc_res[idx].append((0, acc.numpy()))
             
-            tot = min(5,len(pred))
+            tot = min(2,len(pred))
             for im in range(0,tot): 
                 #print("visualize some prediction and its true mask before any update step for task:",idx) 
                 pred_mask = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
@@ -447,7 +438,7 @@ def eval_model(model, batch_generator, num_steps=None):
                 to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                 
                 f, axarr = plt.subplots(1,2,figsize=(6,6))
-                f.suptitle("some predictions before any update step")
+                plt.title('prediction before any update step of test task: {}'.format(idx+1))
                 axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                 axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
                    
@@ -471,7 +462,7 @@ def eval_model(model, batch_generator, num_steps=None):
             
             if step == 1:
                 
-                tot = min(5,len(qry_pred))
+                tot = min(2,len(qry_pred))
                 #print("visualize some predictions and its true mask after 1 update step for task:",idx) 
 
                 for im in range(0,tot): 
@@ -482,7 +473,7 @@ def eval_model(model, batch_generator, num_steps=None):
                     to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                     
                     f, axarr = plt.subplots(1,2,figsize=(6,6))
-                    f.suptitle("some predictions before any update step")
+                    plt.title('some prediction after 1 update step of test task: {}'.format(idx+1))
                     axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                     axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
             
@@ -574,9 +565,9 @@ if __name__ == '__main__':
     print("\ntasks generation based on {} clusters\n".format(args.n_clusters))
     batch_generator = TaskGenerator(args)
 
-    '''if args.mode == 'train':'''
+    
     model = maml_train(model, batch_generator)
-    '''elif args.mode == 'test':''' 
+    
     print("\nTEST PHASE\n")
     restored_model = restore_model(model, '../../weights/{}/{}way{}shot'.format(args.dataset, args.n_way, args.k_shot))
     eval_model(restored_model, batch_generator, num_steps=(0, 1, 5, 10, 50, 100, 200))         
