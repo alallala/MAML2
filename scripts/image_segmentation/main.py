@@ -439,14 +439,14 @@ def eval_model(model, batch_generator, num_steps=None):
             
             tot = min(5,len(pred))
             for im in range(0,tot): 
-                print("visualize some prediction and its true mask before any update step for task:",idx) 
+                #print("visualize some prediction and its true mask before any update step for task:",idx) 
                 pred_mask = tf.round(pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
                 true_mask = query_y[im]
              
                 to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                 to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                 
-                f, axarr = plt.subplots(1,2,figsize=(6,6))
+                f, axarr = plt.subplots(1,2,figsize=(6,6)).set_title('some predictions before any update step')
 
                 axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                 axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
@@ -472,7 +472,7 @@ def eval_model(model, batch_generator, num_steps=None):
             if step == 1:
                 
                 tot = min(5,len(qry_pred))
-                print("visualize some predictions and its true mask after 1 update step for task:",idx) 
+                #print("visualize some predictions and its true mask after 1 update step for task:",idx) 
 
                 for im in range(0,tot): 
                     pred_mask = tf.round(qry_pred[im]) #round to convert sigmoid outputs from probalities to 0 or 1 values
@@ -481,7 +481,7 @@ def eval_model(model, batch_generator, num_steps=None):
                     to_display_pred_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(pred_mask))
                     to_display_true_mask = PIL.ImageOps.autocontrast(tf.keras.preprocessing.image.array_to_img(true_mask)) 
                     
-                    f, axarr = plt.subplots(1,2,figsize=(6,6))
+                    f, axarr = plt.subplots(1,2,figsize=(6,6)).set_title('predictions after one update step')
 
                     axarr[0].imshow(to_display_true_mask,cmap='gray',vmin=0,vmax=1)
                     axarr[1].imshow(to_display_pred_mask,cmap='gray',vmin=0,vmax=1)
