@@ -1,6 +1,6 @@
 """
-    Date: Feb 11st 2020
-    Author: Hilbert XU
+    Date: March 2021
+    Author: Laura Gabriele
     Abstract: Training process and functions
 """
 # -*- coding: UTF-8 -*-
