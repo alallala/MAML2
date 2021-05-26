@@ -1,6 +1,6 @@
 """
     Date: Feb 11st 2020
-    Author: Hilbert XU
+    Author: Laura Gabriele
     Abstract: MetaLeaner model
 """
 from task_generator import TaskGenerator
